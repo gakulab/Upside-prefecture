@@ -63,7 +63,7 @@ multi_stock : 系群データ
 #有効数字を999桁に設定
 options(scipen=999)
 #ディレクトリの変更
-setwd("~/Google ドライブ/GD_Research_Upside/Upside_project/Data_Working")
+setwd("~/Upside-prefecture/Data_Working")
 #漁獲量データを読み込み、dt.weightに格納 
 dt.weight<-read.csv("dataKaimenKenbetsu_modified_1962_2015.csv",stringsAsFactors = F)
 #産出額データを読み込み、dt.priceに格納
