@@ -30,6 +30,8 @@ library(RColorBrewer)
 library(ggrepel)
 library(gtable)
 library(grid)
+setwd("~/Upside-prefecture/Data_Working")
+source("ggKobe.R")
 ```
 
 
@@ -80,10 +82,29 @@ Temp_Data_Catch=read.csv("japan_20190118_mo_opt.csv", header=T,stringsAsFactors 
 translation_kanae_kei<-read.csv("kanae_kei_fishlist.csv",stringsAsFactors = F)
 #大海区は１つの県につき１つでは無いため、別ファイルで用意し、適宜使用
 add_kaiku<-read.csv("translation_prefecture_region.csv",stringsAsFactors = F)#iranai
-
+#過去の資源量データ
+past_biomass<-read.csv("2japan_GUM_results_K100_190116.csv") 
 #小数点以下の数字の有効数字を調節するfunctionを作成(cutcut)
 cutcut <- function(x,digits){
   return (floor(x * 10^digits) /10^digits)
+}
+#神戸プロットは単年で行うため任意の年を選択できるようにFunctionにしておく
+geom_kobe <- function(data,year,management="Historical",xlabs=as.character(x),ylabs=as.character(y),title=NULL){
+  years<-as.numeric(year) #year==yearだとfilter()がerrorになるので"years"にしている
+  mg<-ifelse(years>2015,as.character(management),"Historical")
+  data1 <- data %>%
+    filter(year==years & management==mg) 
+  title<-paste("KOBEplot",years,mg,sep="_")
+  g1 <- ggKobe(data1, xvar = "BvBmsy", yvar = "FvFmsy",plot_density = F,
+                    color_name = "RAM",
+                    plot_panel_colors = F,
+                    summary_points = F) +
+  theme_bw() +
+  labs(title = title)　+
+  xlab("BvBmsy") +
+  ylab("FvFmsy") +
+  geom_text(mapping=aes(label = num),hjust=0.5, vjust=-0.5) #各点に数字を振る
+plot(g1)
 }
 ```
      
@@ -106,12 +127,32 @@ dt.merge <- dt.weight1 %>%
 #佳奈恵さんの作成した予測データは後に統合する
 Temp_Data_Catch1 <- dplyr::left_join(Temp_Data_Catch,translation_kanae_kei,by="fishery") %>%
   mutate(year = time + 2015) %>%
-  select(year,fish_stock,management,biomass,harvest1,profit1) %>%
+  select(year,fish_stock,management,biomass,harvest1,profit1,BvBMSY,FvFMSY1) %>%
   filter(management %in% c("SQ","FMSY","econOpt")) %>% #政策シナリオも限定
   filter(!fish_stock %in% c("octopus_single_stock","sea_urchin_single_stock","sea_cucumber_single_stock","southern_bluefin_tuna_single_stock"))
 #岩田さん(東京海洋大)に除いた方が良いと言われた種を除く
 
- 
+msy_list <- merge(past_biomass,translation_kanae_kei,by="Fishery") %>%
+  select(fish_stock,Fishery,MSY) %>%
+  unique() %>%
+  mutate(num=1:95)
+
+#過去の資源量データの処理
+past_biomass1 <- past_biomass %>%
+  filter(Biomass>0) %>%
+  select(year,Fishery,biomass=Biomass,BvBmsy,FvFmsy) %>%
+  mutate(management="Historical") %>%
+  left_join(msy_list,by="Fishery")
+#推定の資源量データの処理
+estimate_biomass <- Temp_Data_Catch1 %>%
+  filter(management==c("SQ","FMSY","econOpt")) %>%
+  select(year,management,fish_stock,biomass,BvBmsy=BvBMSY,FvFmsy=FvFMSY1) %>%
+  filter(biomass>0)%>%
+  left_join(msy_list,by="fish_stock")
+#過去と未来を合わせた総合資源量データの作成
+all_biomass <- merge(past_biomass1,estimate_biomass,all=T) 
+
+geom_kobe(data=all_biomass,years = "2020")
 #魚種の翻訳。translation_fishには92魚種しか含まれていないが、元データが異なり、系群がついていないので実際にはtranslation_fishの方が多く魚種が含まれている。
 ```
 
@@ -152,6 +193,7 @@ dt.past <- dt.comp %>%
 
 # 統合
 dt.comp1 <- Temp_Data_Catch1 %>%
+  select(year,fish_stock,management,biomass,harvest1,profit1) %>%
   left_join(dt.past,by="fish_stock") %>%
   mutate(pref_harvest = harvest1*percentage_h) %>% #pref_harvest = その年のその県の漁獲量：単位はt
   mutate(pref_profit = profit1*percentage_h) #pref_profit = その年のその県の生産額 ：単位は$
@@ -845,6 +887,43 @@ plot(b)
 #y-axisの最大値の大きさ順に配列 -> 言い換えると最大値順
 c<-grid.arrange(yamagata,akita,aichi,niigata,hiroshima,kumamoto,kagawa,aomori,ishikawa,okayama,kyoto,osaka,shimane,iwate,yamaguchi,hokkaido,ehime,fukuoka,nagasaki,oita,miyagi,fukui,fukushima,saga,toyama,shizuoka,wakayama,ibaraki,chiba,hyogo,tottori,tokushima,kanagawa,kagoshima,mie,miyazaki,kochi,tokyo,okinawa,blank,layout_matrix = mat3)
 
+```
 
+## Section 12 過去データと結びつけたタイムシリーズ画像作成
 
+```{r}
+dt.weight2 <- dt.weight1 %>%
+  group_by(year) %>%
+  summarise(total_harvest=sum(weight_t)) %>%
+  ungroup() %>%
+  mutate(management = "Historical")
+
+dt.price2 <- dt.price1 %>%
+  group_by(year) %>%
+  summarise(total_profit=sum(value_million_JPY)) %>%
+  ungroup() %>%
+  mutate(management = "Historical")
+
+Temp_Data_Catch2 <- Temp_Data_Catch1 %>%
+  group_by(year,management) %>%
+  mutate(total_harvest=sum(harvest1)) %>% #その年の総漁獲量
+  mutate(total_profit=sum(profit1)) %>% #その年の総利益
+  ungroup()
+
+dt.ts <- left_join(dt.weight2,dt.price2,by=c("year","management"))
+dt.ts <- merge(dt.ts,Temp_Data_Catch2,all=T)
+dt.ts$total_harvest_mt <- dt.ts$total_harvest/1000000 #単位を100万tに変更
+dt.ts$management<-factor(dt.ts$management,levels = c("FMSY","SQ","econOpt","Historical"))
+
+#プロット
+g1 <- ggplot(dt.ts,aes(x=year,y=total_harvest_mt,color=management,shape=management)) +
+  geom_point() +
+  theme_linedraw(base_size = 10) +
+  scale_x_continuous(breaks = seq(1965,2065,10))+
+  ylim(0,12)+
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="#95949a","econOpt"="#0041ff"))
+plot(g1)
+
+#自作Functionで神戸プロットを作図する
+geom_kobe(data=all_biomass,year = "2060",management="econOpt")
 ```
