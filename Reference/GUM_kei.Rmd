@@ -1,3 +1,13 @@
+---
+title: "GUM"
+author: "kei kawamura"
+date: "2020/1/29"
+output: html_document
+---
+
+# run_gum_assessment {tab.set}
+
+```{r}
 #' run_gum_assessment
 #'
 #' Run assessment part of global upside model (GUM)
@@ -70,3 +80,5 @@ run_gum_assessment <- function(dat){
   return(results)
   
 }
+
+```
