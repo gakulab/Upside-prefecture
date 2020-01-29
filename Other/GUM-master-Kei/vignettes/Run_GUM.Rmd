@@ -1,0 +1,83 @@
+---
+title: "Run GUM"
+author: "Dan Ovando"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Run GUM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+---
+title: "GUM"
+author: "Dan Ovando"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Run_GUM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The GUM package runs the Global Upside Model presented in Costello et al. 2016. Once installed, you just need to pass it a data frame with at minimum variables `IdOrig` (id), `Year` (year), `Catch` (catch), and `SpeciesCat`, the numeric ISSCAAP species category. `SciName` (scientific name) helps as well. The rest should take care of itself.
+
+**Important:** You must pass a data frame and **NOT** a data table as used with *dplyr* for the analysis to work. If you converted your data to a data table while preparing it be sure to convert it back to a true data frame using `data.frame()`
+
+Additional parameters that can be supplied to the data frame as available are: 
+
+Variable  | Description
+----------|------------
+MaxLength | The maximum length
+AgeMat    | Age at Maturity
+VonBertK  | Von Bert Growth Rate
+Temp      | Preferred temperature
+b_to_k_ratio | Ratio of bmsy to K
+
+Even if you only have these for selected stocks, the model will try and fill in missing values from FishBase. 
+
+
+First, let's take a look at some sample data
+```{r example, warning=F, message=F}
+library(GUM)
+library(tidyverse)
+ devtools::load_all('GUM')
+head(sample_data)
+
+```
+
+There's about 100 stocks in there, so let's subset this down to something smaller, and with less data to test the package
+
+```{r test}
+
+
+
+stocks = unique(sample_data$IdOrig)
+
+sub = sample(stocks, 10, replace = F)
+
+small_dat = filter(sample_data, IdOrig %in% sub)
+
+less_dat = small_dat %>% dplyr::select(IdOrig,SciName,SpeciesCat,CommName,Year,Catch,BvBmsy) %>%
+  mutate(IdOrig = as.character(IdOrig))
+
+no_dat <- less_dat %>%
+  mutate(SpeciesCat = 36, SciName = 'Blah')
+
+results = run_gum_assessment(dat = less_dat)
+
+results_no_sciname = run_gum_assessment(dat = no_dat) #test when no scientific name
+
+```
+
+```{r plotthings}
+
+ggplot(results,aes(MSY)) + 
+  geom_histogram()
+
+ggplot(results_no_sciname,aes(MSY)) + 
+  geom_histogram()
+
+a = ggKobe(dat = results)
+a
+```

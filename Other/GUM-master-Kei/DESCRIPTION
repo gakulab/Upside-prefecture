@@ -1,0 +1,21 @@
+Package: GUM
+Title: Run Global Upsides Model
+Version: 0.5
+Authors@R: c(person("Dan", "Ovando", email = "dovando@bren.ucsb.edu",
+                  role = c("aut", "cre")),person("Tyler", "Clavelle", email = "tclavelle@bren.ucsb.edu",
+                  role = c("aut")))
+Description: This package takes at minimum catch data and scientific names and applied the paired panel regression model to CatchMSY approach used in Costello et al 2016
+Depends:
+    R (>= 3.2.1),
+    dplyr,
+    tidyr,
+    zoo,
+    readr
+Imports:
+  ggplot2
+License: MIT
+LazyData: true
+RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

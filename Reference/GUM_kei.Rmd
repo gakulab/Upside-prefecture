@@ -5,7 +5,111 @@ date: "2020/1/29"
 output: html_document
 ---
 
-# run_gum_assessment {tab.set}
+# Practice {.tabset .tabset-fade} 
+
+---
+title: "GUM"
+author: "Dan Ovando"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Run_GUM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The GUM package runs the Global Upside Model presented in Costello et al. 2016. Once installed, you just need to pass it a data frame with at minimum variables `IdOrig` (id), `Year` (year), `Catch` (catch), and `SpeciesCat`, the numeric ISSCAAP species category. `SciName` (scientific name) helps as well. The rest should take care of itself.
+
+**Important:** You must pass a data frame and **NOT** a data table as used with *dplyr* for the analysis to work. If you converted your data to a data table while preparing it be sure to convert it back to a true data frame using `data.frame()`
+
+Additional parameters that can be supplied to the data frame as available are: 
+
+Variable  | Description
+----------|------------
+MaxLength | The maximum length (最大体長)
+AgeMat    | Age at Maturity (成熟年齢)
+VonBertK  | Von Bert Growth Rate (成長率)
+Temp      | Preferred temperature (最適温度)
+b_to_k_ratio | Ratio of bmsy to K (BmsyとKの割合)
+
+Even if you only have these for selected stocks, the model will try and fill in missing values from FishBase. 
+
+~~~ Kei Note ~~~
+ISSCAAP short for International Standard Statistical Classification of Aquatic Animals and Plants 
+This explanation said data frame that using GUM require at minimum IdOring, Year, Catch and SpeciesCat. But, What id is IdOrig?
+Note!! fishbase_lifehistory,isscaap and regs is included sysdata.rda file. Don't need create these data frame on this code.
+regsに含まれている6つの回帰はそれぞれ説明変数が少しだけ違っている
+[M1]LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back + 
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch + 
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax + 
+    MaxLength + AgeMat + VonBertK + Temp + SpeciesCatName
+[M2]LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back + 
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch + 
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax + 
+    MaxLength + AgeMat + VonBertK + SpeciesCatName                             #Tempが抜けた
+[M3]LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back + 
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch + 
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax + 
+    MaxLength + VonBertK + SpeciesCatName                                      #AgeMatが抜けた
+[M4]LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back + 
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch + 
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax + 
+    VonBertK + SpeciesCatName                                                  #MaxLengthが抜けた
+[M6]LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back + 
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch + 
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax + 
+    SpeciesCatName                                                             #VonBertKが抜けた
+1個ずつ説明変数が抜けている。logBvBmsy==TorFでmodel_workedがつけられ、TRUEでモデルナンバーが最も小さいのを選択するので、logBvBmsyが算出できた中で最も説明変数が多いものを選択している。抜けていく説明変数は個体の特徴を表したものであるため、[M6]の様に生活史情報がなくても名前だけでシミューションを回すことも可能である。
+~~~~~~~~~~~~~~~~
+
+First, let's take a look at some sample data
+```{r example, warning=F, message=F}
+library(remotes) #自作パッケージなのでCRANではなくGithubからインストールする必要があるためremoteパッケージを使う
+remotes::install_github("DanOvando/GUM")
+#setwd("~/研究/自分用/GUM-master/data")
+#sample_data <- load("sample_data.rda") #rdaファイルのloadがうまくいかない。右下Filesペインで直接選択して読み込む。
+file.sources_r = list.files(path = "~/研究/自分用/GUM-master/R",pattern = ".R") #.Rファイルを一括指定
+file.sources_rda = list.files(path = "~/研究/自分用/GUM-master/R",pattern=".rda") #.rdaファイルを一括指定
+setwd("~/研究/自分用/GUM-master/R")
+lapply(file.sources_r, source,.GlobalEnv) #.Rファイルを一括読み込み
+lapply(file.sources_rda,load,.GlobalEnv) #.rdaファイルを一括読み込み
+
+library(GUM)
+library(tidyverse)
+# devtools::load_all('GUM')
+head(sample_data)
+
+#There's about 100 stocks in there, so let's subset this down to something smaller, and with less data to test the package
+
+stocks = unique(sample_data$IdOrig) #IdOrigの中身を確認
+
+sub = sample(stocks, 10, replace = F) #10種を非復元抽出
+
+small_dat = filter(sample_data, IdOrig %in% sub) #10種のデータをsample_dataから抽出
+
+less_dat = small_dat %>% dplyr::select(IdOrig,SciName,SpeciesCat,CommName,Year,Catch,BvBmsy)%>% 
+  mutate(IdOrig = as.character(IdOrig)) #必要なデータの抽出、データ型の変換
+
+no_dat <- less_dat %>% 
+  mutate(SpeciesCat = 36, SciName = 'Blah') #全カテゴリー種を36、学名をBlahに変更
+
+#シミュレーションを行う部分。しかし、関数化されて中身が見えない。次セクション以降で説明する。
+results = run_gum_assessment_Kei(dat = less_dat) #stocks()が無いというエラーが返ってくる -> rfishbaseパケにstocks()が入っている
+
+results_no_sciname = run_gum_assessment(dat = no_dat) #test when no scientific name
+
+#plotthings
+ggplot(results,aes(MSY)) + 
+  geom_histogram()
+
+ggplot(results_no_sciname,aes(MSY)) + 
+  geom_histogram()
+
+a = ggKobe(dat = results) #神戸プロットの作成
+a
+```
+
+# run_gum_assessment()
 
 ```{r}
 #' run_gum_assessment
@@ -15,7 +119,10 @@ output: html_document
 #'
 #' @return results a data frame with assessment results
 #' @export
-run_gum_assessment <- function(dat){
+
+dat <- sample_data
+
+run_gum_assessment_Kei <- function(dat){
   
   
   #空データの作成
@@ -26,11 +133,11 @@ run_gum_assessment <- function(dat){
   if (any(c('SpeciesCat', 'SpeciesCatName') %in% colnames(dat)) == F & 'SciName' %in% colnames(dat)) {
     #この意味は、SpeciesCat,SpeciesCatNameを持っていない場合には補填するということでろう。
     dat <- dat %>%
-      left_join(isscaap_links, by = 'SciName')
+      left_join(isscaap_links, by = 'SciName') #isscaap_linksは魚種名変換用ファイル
     #警告文も付与。種のカテゴリ番号・名前を表す列がないので、FAOデータベースを検索と言っている。
     warning('No species category number or name provided - looking up from FAO database')
-  }#列名にSpeciesCat,SpeciesCatName,を含まずにSciNameも含まないデータの場合、試行を停止して警告文を発している。
-  else if ((any(c('SpeciesCat', 'SpeciesCatName') %in% colnames(dat)) == F & ('SciName' %in% colnames(dat)) == F)){
+  }else if ((any(c('SpeciesCat', 'SpeciesCatName') %in% colnames(dat)) == F & ('SciName' %in% colnames(dat)) == F)){
+    #列名にSpeciesCat,SpeciesCatName,を含まずにSciNameも含まないデータの場合、試行を停止して警告文を発している。
     #最低でもカテゴリ番号・名前、学術名の内一つがないとモデルを試行することができないと言っている
     stop(" Can't run model without either species catgory number / name (SpeciesCat/SpeciesCatName) and/or scientific name.
        Provide at least one of these")
@@ -38,27 +145,28 @@ run_gum_assessment <- function(dat){
   }
   
   # Obtain predicted log B/Bmsy from each model　ー　各モデルから推測された対数B/Bmsyを取得する
-  #見知らぬ関数apply_prm()が出現。
-  for (i in 1 :length(regs) ){
-    temp_predicted[[i]] = apply_prm(dat = dat, reg = regs[[i]]) %>%
-      mutate(model = names(regs[i]), model_number = as.numeric(gsub('M','',model)))
+  #見知らぬ関数apply_prm()が出現。後に解説する。
+  #regsの説明が無い、sysdata.rdaに入っている。
+  for (i in 1 :length(regs) ){ 
+    temp_predicted[[i]] = apply_prm(dat = dat, reg = regs[[i]]) %>% 
+      mutate(model = names(regs[i]), model_number = as.numeric(gsub('M','',model))) 
   }
-  data <- bind_rows(temp_predicted) %>%
-    mutate(model_worked = is.na(LogBvBmsy) == F) %>%
-    filter(model_worked == T) %>% #drop models that didn't work
-    ungroup() %>%
-    group_by(IdOrig) %>%
-    filter(model_number == min(model_number)) %>%
-    mutate(BvBmsy = exp(LogBvBmsy)) %>%
+  data <- bind_rows(temp_predicted) %>% #dataに初めに作った空のリストtemp_predictedを積み重ね。bind_rows()はリストを引数にできる
+    mutate(model_worked = is.na(LogBvBmsy) == F) %>% #LogBvBmsyがNAである場合model_workedの列にFを付与する
+    filter(model_worked == T) %>% #drop models that didn't work 
+    ungroup() %>% 
+    group_by(IdOrig) %>% 
+    filter(model_number == min(model_number)) %>% #各IdOrigにおいて、モデル番号が小さいもの１つを残す。理由は不明。
+    mutate(BvBmsy = exp(LogBvBmsy)) %>% #対数を元に戻す
     rename(year = Year, catch = Catch)#keep the best model that ran for each fishery
   
-  data <- FindResilience(data) %>%
+  data <- FindResilience_Kei(data) %>% #FindResilience()でレジリエンスを付与
     rename(res = Res)
   
-  stocks <- unique(data$IdOrig)
+  stocks <- unique(data$IdOrig) 
   
   # sub <- sample(stocks, 10, replace = F)
-  #
+  # 
   # data <- filter(data, IdOrig %in% sub)
   #
   # stocks <- unique(data$IdOrig)
@@ -70,7 +178,9 @@ run_gum_assessment <- function(dat){
     
   }
   
+  #run_post_prm_pt_cmsy()の説明は後述
   apply_fun <- function(i,data,stocks){
+    #idOrigごとに試行する
     out = run_post_prm_pt_cmsy(dat = filter(data, IdOrig == stocks[i]))$CatchMSY
   }
   
@@ -82,3 +192,230 @@ run_gum_assessment <- function(dat){
 }
 
 ```
+
+# apply_prm
+
+```{r}
+#' apply_prm
+#'
+#' \code{apply_prm} applied panel regression model to new data
+#' @param dat data frame
+#' @param reg the regression model being used 
+#' @param CatchLags number of years of catch lags 
+#' @param LifeHistoryVars life history variables needed
+#' @param IdVar the variable marking id
+#' @param CatchVariables catch related variables
+#' @param min_catch_years minimum number of catch years
+#'
+#' @return data with PRM predicted log BvBmsy
+#' @export
+apply_prm <- function(dat,reg,CatchLags = 4, LifeHistoryVars = c('MaxLength','AgeMat','VonBertK','Temp','SpeciesCat','SpeciesCatName','b_to_k_ratio'),
+                      IdVar = 'IdOrig',   CatchVariables =  c('YearsBack','ScaledCatch',paste('ScaledCatch',1:CatchLags,'Back',sep=''),'MaxCatch','TimeToMaxCatch','InitialScaledCatchSlope'
+                                                              ,'MeanScaledCatch','CatchToRollingMax'),
+                      min_catch_years = 10){
+
+  dat$BvBmsy <- NA #housekeeping <-よく分からないこの文脈でハウスキーピングって？
+
+  if (is.numeric(dat$year) == F){dat$year == as.numeric(dat$year)}
+
+  # Filter out things that don't have enough catch years
+  not_enough_catch  <- dat %>%
+    group_by(IdOrig) %>%
+    summarize(catch_years = sum(is.na(Catch) == F & Catch > 0)) %>%
+    subset(catch_years < min_catch_years)
+
+  dat <- dat %>%
+    filter(!IdOrig %in% not_enough_catch$IdOrig)
+
+  Fisheries <- unique(dat$IdOrig)
+
+  # Format data for regression
+  formatted <- lapply(1:length(Fisheries),FormatForRegression, Data = dat, Fisheries = Fisheries, DependentVariable = 'BvBmsy',
+                      CatchVariables = CatchVariables, CatchLags = 4, LifeHistoryVars = LifeHistoryVars,
+                      IsLog = T, IdVar = 'IdOrig') %>%
+    bind_rows()
+
+  # Add in life history
+  formatted <- assign_life_history(dat = formatted,LifeHistoryVars = LifeHistoryVars)
+
+  # Change species category factors to match model
+  reg_factors <- reg$xlevels$SpeciesCatName
+
+  AllPossible = formatted %>%
+    select(SpeciesCatName, SpeciesCat) %>%
+    unique()
+
+  adjusted_data = AssignNearestSpeciesCategory(Data = formatted, AvailableCategories = reg_factors, AllCategories = AllPossible)
+
+  # Predict log B/Bmsy
+  predicted = predict.lm(reg,adjusted_data$Data, se.fit = T)
+
+  formatted$LogBvBmsy = predicted$fit
+
+  formatted$regression_LogBvBmsy = predicted$fit
+
+  formatted$BvBmsySD = predicted$se.fit
+
+  return(formatted)
+}
+
+
+```
+
+# FindResilience
+
+```{r}
+library(rfishbase) #stocks()がこのパッケージ内に入っている
+
+#' Find Resilience
+#'
+#' Finds Fishbase resilience
+#' @param Data the data
+#'
+#' @return Fishbase resilience
+#' @export
+FindResilience_Kei<-function(Data)
+{
+  ResData<-unique(Data[c("IdOrig","SciName", "VonBertK","AgeMat")])
+  #ResNames<-validate_names(ResData$SciName)
+  
+  ## 以下を変更　##
+  ResData$SciName <- as.character(ResData$SciName)
+  #　初期状態ではstocks()のオプションであるfieldsにResilienceのみが指定されており、
+  #魚種と対応していない結果だけをreturnし、それをNAを取り除いて用いてmergeして
+  #ResilienceデータをResDataに付与していた。これは危険な手法であるとともに、正常に動いてすらいなかった。
+  #unique()も必要である。
+  RESout<-stocks(ResData$SciName,fields = c("Species","Resilience")) #fieldsオプションはreturnする列の指定を行う
+  RESout <- RESout %>%
+    drop_na(Resilience) %>%
+    rename(SciName=Species,Res = Resilience) %>%
+    unique()
+ #stocks()のfieldオプションで選択できる情報一覧
+ #[1] "SpecCode"          "Species"           "StockCode"         "SynOC"             "StockDefs"        
+ #[6] "StockDefsGeneral"  "Level"             "LocalUnique"       "IUCN_Code"         "IUCN_Assessment"  
+ #[11] "IUCN_DateAssessed" "Protected"         "StocksRefNo"       "CITES_Code"        "CITES_Date"       
+ #[16] "CITES_Ref"         "CITES_Remarks"     "CMS"               "Northernmost"      "NorthSouthN"      
+ #[21] "Southermost"       "NorthSouthS"       "Westernmost"       "WestEastW"         "Easternmost"      
+ #[26] "WestEastE"         "BoundingRef"       "BoundingMethod"    "TempMin"           "TempMax"          
+ #[31] "TempRef"           "TempPreferred"     "TempPref25"        "TempPref50"        "TempPref75"       
+ #[36] "TempPrefRef"       "EnvTemp"           "Resilience"        "ResilienceRemark"  "pHMin"            
+ #[41] "pHMax"             "pHRef"             "dHMin"             "dHMax"             "dHRef"            
+ #[46] "GenBankID"         "RfeID"             "FIGIS_ID"          "EcotoxID"          "SCRFA_data"       
+ #[51] "GMAD_ID"           "SAUP"              "SAUP_ID"           "SAUP_Group"        "AusMuseum"        
+ #[56] "FishTrace"         "IUCN_ID"           "IUCN_IDAssess"     "BOLD_ID"           "IGFAName"         
+ #[61] "EssayID"           "ICESStockID"       "OsteoBaseID"       "DORIS_ID"          "Aquamaps"         
+ #[66] "Morphology"        "Occurrence"        "Strains"           "Ecology"           "Diseases"         
+ #[71] "Abnorm"            "Metabolism"        "Predators"         "Spawning"          "Fecundity"        
+ #[76] "Speed"             "Diet"              "Eggs"              "EggDevelop"        "Food"             
+ #[81] "Larvae"            "LarvDyn"           "LarvSpeed"         "PopDyn"            "LengthWeight"     
+ #[86] "Gillarea"          "Maturity"          "MatSizes"          "Processing"        "Reproduction"     
+ #[91] "Introductions"     "Abundance"         "Vision"            "Genetics"          "Aquaculture"      
+ #[96] "CountryComp"       "Allele"            "GeneticStudies"    "Ration"            "Foods"            
+ #[101] "Ecotoxicology"     "Brains"            "Catches"           "FAOAqua"           "LengthRelations"  
+ #[106] "LengthFrequency"   "Sounds"            "Broodstock"        "EggNursery"        "FryNursery"       
+ #[111] "LarvalNursery"     "Entered"           "DateEntered"       "Modified"          "DateModified"     
+ #[116] "Expert"            "DateChecked"       "TS"            
+  #resilience情報がある種は情報が増えたが、無い種は無いままである。従って、RESoutよりもResDataの方がデータは大きい
+  ResData<-merge(ResData, RESout, all.x=T, all.y=F)
+    
+
+  # ResData$k<-NA
+  # ResData$tm<-NA
+  # ResData$Res<-NA
+  # 
+  Data$Res = NA
+  # 
+  Data$Value = NA
+  # 
+  # ResData<-ResData[is.na(ResData$VonBertK)==F | is.na(ResData$AgeMat)==F,]
+  # 
+  
+  # VonBertKは成長率を表す。
+  # # Assign resilience based on life history values
+  # ResData$k[ResData$VonBertK>0.3]<-"High" 
+  # ResData$k[ResData$VonBertK>=0.16 & ResData$VonBertK<=0.3]<-"Medium"
+  # ResData$k[ResData$VonBertK>=0.05 & ResData$VonBertK<0.16]<-"Low"
+  # ResData$k[ResData$VonBertK<0.05]<-"Very Low"
+  # 
+  
+  # AgeMatは成熟年齢を指す。
+  # ResData$tm[ResData$AgeMat<1]<-"High" #1年で成熟するというのはresilienceが高いことを示唆していると思われる
+  # ResData$tm[ResData$AgeMat>=1 & ResData$AgeMat<=4]<-"Medium"
+  # ResData$tm[ResData$AgeMat>4 & ResData$AgeMat<=10]<-"Low"
+  # ResData$tm[ResData$AgeMat>10]<-"Very Low"
+  # 
+  # ResData$Res[grepl("Very Low", ResData$k) | grepl("Very Low", ResData$tm)]<-"Very low"
+  # ResData$Res[(grepl("Low", ResData$k) | grepl("Low", ResData$tm)) & is.na(ResData$Res)==T]<-"Low"
+  # ResData$Res[(grepl("Medium", ResData$k) | grepl("Medium", ResData$tm)) & is.na(ResData$Res)==T]<-"Medium"
+  # ResData$Res[(grepl("High", ResData$k) | grepl("High", ResData$tm)) & is.na(ResData$Res)==T]<-"High"
+
+  # Fill in resilience for stocks with data
+  for(a in 1:nrow(ResData))
+  {
+    #このコードの目的はresilience情報をDataに付与することである。つまり、既存の(Data内の)Res列をResDataのResに置き換えたいのである。
+    #mergeやjoin系で結合することも可能である。しかし、下手に変更せず以下の通りに行うのが安全であろう。
+    
+    #IdOrigごとに試行していく。まずは、IdOrigの場所をWhereResに格納
+    WhereRes<-Data$IdOrig==ResData$IdOrig[a] 
+　　
+    #DataにResilienceを付与。mergeで一括して操作すれば良いのでは？とこの時点では思う。
+    #こちら方mergeよりもが結合過程(進捗状況やerror表示地点)が見られて安心ではあるが、speedはどうなのだろうか？
+    Data$Res[WhereRes]<-ResData$Res[a]
+   
+    #試行の進捗状況を表示
+    show(paste((a/nrow(ResData)*100),"% Done with Resilience",sep=""))
+  }
+
+  #resilience情報がない場合はMediumにする
+  Data$Res[is.na(Data$Res)]<-'Medium'
+
+  # Calculate frequency of resilience categories for each ISSCAAP group 各カテゴリーの頻度を集計
+  Data$Value[is.na(Data$Res)==F]<-1
+
+  ResCount<- Data %>%
+    group_by(SpeciesCatName,Res) %>%
+    summarize(Count=sum(Value,na.rm=T))
+
+  # ResCount<-ddply(Data,c('SpeciesCatName','Res'),summarize,Count=sum(Value,na.rm=T))
+
+  cats<-unique(ResCount$SpeciesCatName)
+
+  DefaultRes<-data.frame(matrix(NA,nrow=length(cats),ncol=2))
+
+  colnames(DefaultRes)<-c('SpeciesCatName','Res')
+
+  # Determine default resilience category for each ISSCAAP group
+  for(a in 1:length(cats))
+  {
+    DefaultRes$SpeciesCatName[a]<-cats[a]
+
+    temp<-ResCount[ResCount$SpeciesCatName==cats[a],]
+
+    DefaultRes$Res[a]<-temp$Res[temp$Count==max(temp$Count,na.rm=T)]
+  }
+
+  # If no default is calculated, assign "Medium" resilience
+  DefaultRes$Res[is.na(DefaultRes$Res)==T]<-'Medium'
+
+#   for(b in 1:nrow(Data))
+#   {
+#     if(is.na(Data$Res[b]))
+#     {
+#       Data$Res[b]<-DefaultRes$Res[DefaultRes$SpeciesCatName==Data$SpeciesCatName[b]]
+#     }
+#   }
+
+  # write.csv(file=paste(ResultFolder,'ISSCAAP Default Resiliency.csv',sep=''),DefaultRes)
+  #
+  # pdf(file=paste(FigureFolder,'Resilience Histograms by ISSCAAP.pdf',sep=''),width=12,height=10)
+  # print(ggplot(Data,aes(x=factor(Res))) +
+  #   geom_bar() +
+  #   facet_wrap(~SpeciesCatName,scales='free'))
+  # dev.off()
+
+  return(FullData=Data)
+
+}
+
+```
+
