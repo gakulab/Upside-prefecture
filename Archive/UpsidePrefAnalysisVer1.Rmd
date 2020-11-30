@@ -1,0 +1,174 @@
+---
+title: "UpsidePrefAnalysisVer1"
+author: "keikawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output: html_document
+---
+
+## パッケージの読み込み  {.tabset .tabset-fade} 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+#緩衝の初期化
+rm(list = ls(all=TRUE))
+
+
+library(tidyverse)
+library(data.table)
+library(gghighlight)
+library(gridExtra)
+```
+
+## データの読み込み
+
+```{r}
+#Upside関連の結果を読み込む
+## パッケージの読み込み  {.tabset .tabset-fade} 
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
+load("UpsideDataForResearch.rda")
+
+#産業連関表関連の結果を読み込む
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/産業連関表/For_Analysis")
+IOTs <- read.csv("DataSummaryIOTable.csv",fileEncoding = "CP932")
+
+```
+
+## 時系列グラフ
+
+```{r}
+#lapplyでloopをまわす。forやmapよりも高速。
+lapply(1:length(unique(UpsideResult$prefecture)), function(x){
+  
+  #計算速度を比較すると古典的なフィルタリングの方が結構早い。低レベルの作業の場合は古典的なコードの方が向いていることがある。
+  standard <- as.numeric(na.omit(UpsideResult[UpsideResult$prefecture==unique(UpsideResult$prefecture)[x] & UpsideResult$management == "SQ" & UpsideResult$year == 2016,])[,5]) 
+  
+  #時系列グラフのためのデータ構築
+  ggdata <- UpsideResult %>%
+    filter(prefecture == unique(UpsideResult$prefecture)[x],
+           management %in% c("SQ","FMSY")) %>%
+    mutate(compare = (total_pref_catch/standard)-1,
+           year = year-2015)
+  
+  
+  #時系列グラフ
+  g1 <- ggplot(ggdata, aes(x = year,y = total_pref_catch, color = management)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="漁獲量(t)") +
+  labs(title = paste(unique(UpsideResult$prefecture)[x],"におけるシミュレーション１年目を基準とした漁獲量の変化",sep = "")) +
+  scale_x_continuous(breaks = c(1,10,20,30,40,50)) + 
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  geom_line()+
+  gghighlight(calculate_per_facet = T) +
+  #geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+   #                fill = "gray", alpha = 0.01) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=13,face="bold"),
+        legend.position = "none")
+  
+  
+  #棒グラフのためのデータ構築
+  ggdata2 <- ggdata %>%
+    #不要なデータを乗り除く
+    select(!c(total_pref_price,compare)) %>%
+    #計算しやすい様に変形(spreadは旧式、pivot_widerが新型)
+    pivot_wider(names_from = management,values_from = total_pref_catch) %>%
+    #SQに対するFMSYの比率の計算
+    summarise(alphabet,
+              year,
+              compare = (FMSY/SQ)-1,
+              judge = ifelse(compare>0,"Above","Below"))
+    
+  
+  #棒グラフ
+  g2 <- ggplot(ggdata2,aes(x = year,y = compare,fill=judge)) +
+  theme_light(base_family = "Osaka")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    legend.position = c(.8, .3),
+    legend.justification = c(0, 1),
+    legend.box.background = element_rect()
+  ) +
+  labs(x="年",
+       y="割合",
+       title = paste(unique(UpsideResult$prefecture)[x],"における現状維持政策に対する最大持続生産量漁獲政策の漁獲量比"),sep="") +
+  scale_fill_manual(values=c("Above"="#00552e","Below"="#68be8d")) +
+  scale_x_continuous(breaks = c(1,10,20,30,40,50))+
+  geom_bar(stat = "identity",position = "dodge")+
+  #geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+  #                 fill = "gray", alpha = 0.01)+
+  theme(legend.position = 'none')
+  
+  #グラフの合成
+  g3 <- grid.arrange(g1,g2,ncol=1)
+  
+  g3
+})
+
+```
+
+## シミュレーション結果における、水産加工(食料品)産業維持に必要な漁獲量の過不足量算出
+
+```{r}
+#有効数字を999桁に設定
+options(scipen=999,digits = 6)
+
+#必要なデータのみを抜き出す
+dt.iots <- IOTs %>%
+  select(prefecture = 県名,share = 海面漁業生産額における水産食料品の占める割合)
+
+#維持する基準のなる2015年の各県の漁獲量にシェアを掛け、水産加工に流れる・必要とする漁獲量を算出する
+dt.standard <- UpsideResult %>%
+  filter(year == 2015) %>%
+  left_join(dt.iots,by="prefecture") %>%
+  summarise(prefecture,share,base_catch = total_pref_catch * share)
+
+#基準値の入ったデータフレームをシミュレーション結果に結合していく
+dt.comp <- UpsideResult %>%
+  filter(year > 2015) %>%
+  left_join(dt.standard,by = "prefecture") %>%
+  summarise(year,
+            prefecture,
+            alphabet,
+            management,
+            require_catch = total_pref_catch * share,
+            compare = require_catch - base_catch
+            ) %>%
+  na.omit()
+
+#算出できた県の数を確認
+unique(dt.comp$alphabet)
+
+```
+
+## 過不足量の図示
+
+```{r}
+#lapplyでloopをまわす
+lapply(1:length(unique(dt.comp$alphabet)), function(x){
+  
+  ggdata <- dt.comp %>%
+    filter(alphabet == unique(dt.comp$alphabet)[x],
+           management %in% c("SQ","FMSY")) %>%
+    rename(管理シナリオ = management)
+  
+  ggplot(ggdata,aes(x = year,y = compare,fill = 管理シナリオ)) +
+  theme_light(base_family = "HiraKakuPro-W3")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold")
+  ) +
+  labs(x="年",
+       y="過不足量(t)",
+       title = paste(unique(dt.comp$prefecture)[x],"における2015年の水産食料品産業の海面漁業への需要量\nに対する各年の漁獲量の過不足量(t)"),sep="") +
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065))+
+  geom_bar(stat = "identity",position = "dodge")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+                   fill = "gray", alpha = 0.01)
+})
+
+
+```
+

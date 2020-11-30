@@ -1,0 +1,243 @@
+---
+title: "Untitled"
+author: "keikawamura"
+date: "9/28/2020"
+output: html_document
+---
+
+# データの読み込み
+
+```{r setup, include=FALSE}
+rm(list = ls(all=TRUE))
+
+#小数点以下の数字の有効数字を調節するfunctionを作成(cutcut)
+cutcut <- function(x,digits){
+  return (round(x * 10^digits) /10^digits)
+}
+
+#パッケージの読み込み
+library(tidyverse)
+
+
+
+#Upside関連のデータを読み込む
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
+load("UpsideDataForResearch.rda")
+
+
+#三重県の産業連関表を読み込む
+#パスを変更
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/産業連関表/For_Analysis")
+
+#生産者価格表の読み込み
+SeisansyaKakaku <- read_csv("SeisansyaKakaku_Mie2015.csv")
+
+#投入係数表の読み込み
+TounyuKeisu <- read_csv("TounyuKeisu_Mie2015.csv")
+
+#逆行列係数表の読み込み
+GyakuGyouretsu <- read_csv("GyakuGyouretsu_Mie2015.csv")
+
+```
+
+# シミュレーション結果における加工業を維持する漁獲量との過不足量算出
+
+```{r}
+#小数点以下を指数表記させない
+options(scipen=100)
+
+#単位：金額は100万円とする。人(ヒト)は人(ニン)とする。
+
+#枠組み作り
+#雇用表は部門のみで構成されているので、枠組みに適している。
+table <- GyakuGyouretsu[1:185,1] %>%
+  mutate(需要増加額 = 0)
+
+#枠組みに合わせて生産者価格表・投入係数表・逆行列係数表も整形する
+SeisansyaKakaku2 <- filter(SeisansyaKakaku, SeisansyaKakaku$部門名 %in% table$`平成27年(2015年)
+三重県産業連関表`)
+TounyuKeisu2 <- filter(TounyuKeisu, TounyuKeisu$部門名 %in% table$`平成27年(2015年)
+三重県産業連関表`)
+TounyuKeisu3 <- select(TounyuKeisu,c(部門名,table$`平成27年(2015年)
+三重県産業連関表`))
+GyakuGyouretsu2 <- filter(GyakuGyouretsu, GyakuGyouretsu$`平成27年(2015年)
+三重県産業連関表` %in% table$`平成27年(2015年)
+三重県産業連関表`)
+GyakuGyouretsu2 <- select(GyakuGyouretsu2, table$`平成27年(2015年)
+三重県産業連関表`)
+
+#対象産業と需要増加額の設定
+TaisyoSangyo <- "水産食料品"
+ZoukaGaku <- 11909900#万円
+SyouhiTenkan <- 0.664659
+
+#対象産業に需要増加額を追加する
+table$需要増加額 <- ifelse(table$`平成27年(2015年)
+三重県産業連関表` == TaisyoSangyo, ZoukaGaku, table$需要増加額)
+
+#県内自給率を追加する (1-(移輸入/県内需要合計)) #需要に対して県内産業がそれぞれ応じる割合
+table$県内自給率 <- SeisansyaKakaku2$自給率
+table$県内自給率 <- cutcut(table$県内自給率,6)
+  
+#研究用のオプション(必須項目)：県内需要に対して、全て県内産業が応じる = 対象産業の自給率100%
+#こうすると、県内生産に対する後方連関効果の推定に置き換えられる
+#現実的には岩手県の場合は、多く移出し、多くを移入しており、数量としてはほぼ釣り合っている
+table$県内自給率 <- ifelse(table$`平成27年(2015年)
+三重県産業連関表` == TaisyoSangyo, 1, table$県内自給率)
+
+```
+
+## 直接効果
+
+```{r}
+#####    直接効果    #####
+
+#県内需要増加額を追加
+table$県内需要増加額 <- table$需要増加額 * table$県内自給率
+
+#誘発される雇用者所得や営業余剰といった粗付加価値を算出する (県内需要増加額 * 粗付加価値率)
+#粗付加価値率を投入係数表から抜き出す。県ごとに名称が異なることに応じるべく"粗付加価値"でマッチするように設定。また、行なので列に入れ替え、先頭が文字列のため全体も文字列になっているため数値化した。
+ArafukakatiRitsu <- as.numeric(t(filter(TounyuKeisu3,grepl("粗付加価値",部門名))))[-1]
+
+table$粗付加価値誘発額 <- table$県内需要増加額 * ArafukakatiRitsu
+
+#誘発される粗付加価値の中でも雇用者所得を算出する
+#投入係数表から雇用者所得率を抜き出す。
+KoyousyaSyotokuRitsu <- as.numeric(t(filter(TounyuKeisu3,grepl("賃金",部門名))))[-1]
+
+#県内需要増加額に雇用者所得率をかけて雇用者所得誘発額を算出する
+table$雇用者所得誘発額 <- table$県内需要増加額 * KoyousyaSyotokuRitsu
+
+```
+
+## 第一次波及効果
+
+```{r}
+#原材料費を算出する (県内需要増加額 * 対象産業の投入係数)
+table$原材料費 <- as.numeric(filter(table,table$`平成27年(2015年)
+三重県産業連関表` == TaisyoSangyo)[,4]) * TounyuKeisu2[,TaisyoSangyo]
+
+#原材料にも自給率をかける
+
+#原材料に関しては、100%オプションは不要。自給率100%オプションは需要を生産に置き換えるために必要なだけだからである。
+#自給率100%オプションの解除
+table$県内自給率 <- SeisansyaKakaku2$自給率
+table$県内自給率 <- cutcut(table$県内自給率,6)
+
+
+table$原材料費の県内需要額 <- table$県内自給率 * table$原材料費
+
+#原材料費による波及効果(生産誘発額)を推定
+table$第一次生産誘発額 <- as.matrix(GyakuGyouretsu2) %*% as.matrix(table$原材料費の県内需要額)
+
+#第一次生産誘発額による粗付加価値誘発額
+table$第一次生産誘発額_粗付加価値誘発額 <- table$第一次生産誘発額 * ArafukakatiRitsu
+
+#第一次生産誘発額による雇用者所得誘発額
+table$第一次生産誘発額_雇用者所得誘発額 <- table$第一次生産誘発額 * KoyousyaSyotokuRitsu
+
+#雇用表から就業係数(人/100万円)を抜き出す(末行の合計を除く)
+#Syugyousya <- Koyou[,"就業係数"][1:nrow(Koyou)-1,]
+#table$就業者誘発量 <- ((table$県内需要増加額 + table$第一次生産誘発額) * Syugyousya) / 100
+ 
+#雇用表から雇用係数(人/100万円)を抜き出す(末行の合計を除く)
+#KoyouKeisu <- Koyou[,"雇用係数"][1:nrow(Koyou)-1,]
+#table$雇用者誘発量 <- ((table$県内需要増加額 + table$第一次生産誘発額) * KoyouKeisu) / 100
+
+#直接＋間接(第一次)合わせた雇用者所得誘発額を算出
+table$直接_第一次雇用者所得誘発額 <- table$雇用者所得誘発額 + table$第一次生産誘発額_雇用者所得誘発額
+
+#家計消費支出額の算出(雇用所得のうち家計消費に回る額)
+table$家計消費支出額 <- sum(table$直接_第一次雇用者所得誘発額) * SyouhiTenkan
+
+#家計消費支出額に民間消費支出構成比をかけ、さらに波及効果を求める。(末行の合計を除く)
+MinkanSyouhi <- na.omit(SeisansyaKakaku$民間消費支出構成比)[1:nrow(SeisansyaKakaku2)]
+table$消費需要増加額 <- table$家計消費支出額 * MinkanSyouhi
+
+#県内消費需要増加額を算出
+table$県内消費需要増加額 <- table$消費需要増加額 * table$県内自給率 
+ 
+```
+
+## 第二次波及効果
+
+```{r}
+#第二次波及効果
+table$第二次生産誘発額 <- as.matrix(GyakuGyouretsu2) %*% as.matrix(table$県内消費需要増加額)
+
+#第二次生産誘発額による粗付加価値誘発額
+table$第二次生産誘発額_粗付加価値誘発額 <- table$第二次生産誘発額 * ArafukakatiRitsu
+
+#第一次生産誘発額による雇用者所得誘発額
+table$第二次生産誘発額_雇用者所得誘発額 <- table$第二次生産誘発額 * KoyousyaSyotokuRitsu
+
+#雇用表から就業係数(人/100万円)を抜き出す(末行の合計を除く)
+#table$第二次就業者誘発量 <- ((table$県内需要増加額 + table$第二次生産誘発額) * Syugyousya) / 100
+ 
+#雇用表から雇用係数(人/100万円)を抜き出す(末行の合計を除く)
+#table$第二次雇用者誘発量 <- ((table$県内需要増加額 + table$第二次生産誘発額) * KoyouKeisu) / 100
+
+```
+
+## 総効果
+
+```{r}
+table$総効果生産誘発額 <- table$需要増加額 + table$第一次生産誘発額 + table$第二次生産誘発額
+
+table$総効果_粗付加価値誘発額 <- table$粗付加価値誘発額 + table$第一次生産誘発額_粗付加価値誘発額 + table$第二次生産誘発額_粗付加価値誘発額
+
+table$総効果_雇用者所得誘発額 <- table$雇用者所得誘発額 + table$第一次生産誘発額_雇用者所得誘発額 + table$第二次生産誘発額_雇用者所得誘発額
+
+#table$総効果_就業者誘発量 <- table$就業者誘発量 + table$第二次就業者誘発量
+
+#table$総効果_雇用者誘発量 <- table$雇用者誘発量 + table$第二次雇用者誘発量
+```
+
+## アナリシス
+
+```{r}
+require_rate <- 1.0499 #移入分も含んだ需要に県内生産だけで応える場合
+#require_rate <- 0.489734 #2011
+jikyu_kouryo <- 0.400353 #移入分は自給率を掛けて除いた場合の県内生産に占める割合
+#jikyu_kouryo <- 0.248707 #2011
+
+
+data <- dt.comp4 %>%
+  filter(alphabet == "mie",year == "2015")
+base_catch <- as.numeric(data[1,5])
+
+#自給率100%
+require_catch <- require_rate * base_catch
+#自給率は現実通り
+require_catch_real <- jikyu_kouryo * base_catch
+
+dt.mie <- dt.comp4 %>%
+  filter(alphabet == "mie")
+dt.mie2 <- dt.mie[,1:5]
+
+dt.mie3 <- dt.mie2 %>%
+  mutate(self_sufficiency_rate_100 = require_catch,
+    self_sufficiency_rate_real = require_catch_real,
+    heavy_light =  (total_pref_catch * require_rate) - require_catch,
+    heavy_light_real = (total_pref_catch * jikyu_kouryo) - require_catch_real) %>%
+  filter(year>2015,management %in% c("SQ","FMSY"))
+
+
+ggplot(dt.mie3,aes(x=year,y=heavy_light_real,fill=management))+
+  theme_light(base_family = "HiraKakuPro-W3")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    legend.position = c(.8, .3),
+    legend.justification = c(0, 1),
+    legend.box.background = element_rect()
+  ) +
+  ylim(-10000,10000)+
+  labs(x="年",y="過不足量(t)",title = "三重県における2015年の水産食料品産業の海面漁業への需要量\nに対する各年の漁獲量の過不足量(t)")+
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065))+
+  geom_bar(stat = "identity",position = "dodge")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+                   fill = "gray", alpha = 0.01)
+```
+

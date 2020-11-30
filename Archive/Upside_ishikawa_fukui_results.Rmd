@@ -1,0 +1,534 @@
+---
+title: "Upside Next Prefecture 分析"
+author: "Kei Kawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output:  
+  rmdformats::readthedown:
+    code_folding: hide
+    self_contained: true
+    thumbnails: false
+    lightbox: false
+    md_extensions: -ascii_identifiers
+---
+
+## 県別 Upside Analysis  {.tabset .tabset-fade} 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+rm(list = ls(all=TRUE))
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(ggplot2)
+library(ggsci)
+library(gridExtra)
+#library(choroplethr)
+#library(choroplethrAdmin1)
+library(RColorBrewer)
+library(ggrepel)
+library(gtable)
+library(grid)
+```
+
+
+Catch-MSY formula
+$${\Large B_{t+1} = B_t + \frac{\phi+1}{\phi}gB_t \Biggl(1-\Biggl(\frac{B_t}{K}\Biggr)^φ\Biggr)-H_t}$$
+
+前段階情報
+単位：
+dt.weight -> t     dr.price -> 100万円      dt.comp : harvest1 -> t   profit -> $
+
+~~~~  大型Update (2019/12/23)  ~~~~
+
+主な変更点
+・TempUserの廃止
+・各チャンクでのsetwd()の削減(rmarkdownの特徴として各チャンクが独立しており、毎回各設定を新たに行う必要があったが、ディレクトリの固定によってsetwd()が不必要となった)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+## Section 1 データの読み込み・Function作成
+
+・データフレームの説明
+dt.weight : 漁獲量データ(1962~2015)
+dt.price : 産出額データ(2003~2015)
+translation_pref : 都道府県の翻訳データ
+tlanslation_fish : 魚種の翻訳データ
+multi_stock : 系群データ
+```{r}
+#有効数字を999桁に設定
+options(scipen=999)
+#ディレクトリの変更
+setwd("~/Upside-prefecture/Data_Working")
+#漁獲量データを読み込み、dt.weightに格納 
+dt.weight<-read.csv("dataKaimenKenbetsu_modified_1962_2015.csv",stringsAsFactors = F)
+#産出額データを読み込み、dt.priceに格納
+dt.price<-read.csv("dataKaimenSanshutsugaku_modified.csv",stringsAsFactors = F)
+#都道府県の翻訳データを読み込み、translation_prefに格納 
+translation_pref<-read.csv("translation_prefecture.csv",stringsAsFactors = F)
+#魚種の翻訳データを読み込み、translation_fishに格納  
+translation_fish<-read.csv("translation_fish.csv",stringsAsFactors = F)
+#系群データを読み込み、multi_stockに格納
+multi_stock<-read.csv("multi_Stock_complete_All.csv", stringsAsFactors = F)
+#佳奈恵さんのRunしたUpsideの結果データの読み込み
+Temp_Data_Catch=read.csv("japan_20190118_mo_opt.csv", header=T,stringsAsFactors = F)
+#徳永佳奈恵さんのデータで用いられている魚種名と行政データの魚種名統一用ファイルの読み込み
+translation_kanae_kei<-read.csv("kanae_kei_fishlist.csv",stringsAsFactors = F)
+#大海区は１つの県につき１つでは無いため、別ファイルで用意し、適宜使用
+add_kaiku<-read.csv("translation_prefecture_region.csv",stringsAsFactors = F)#iranai
+
+#小数点以下の数字の有効数字を調節するfunctionを作成(cutcut)
+cutcut <- function(x,digits){
+  return (floor(x * 10^digits) /10^digits)
+}
+```
+     
+## Section 2 データの成形・結合 {.tabset .tabset-fade}
+
+```{r}
+dt.weight1 <- dt.weight %>% filter(weight_t>0) %>% na.omit()
+dt.price1 <- dt.price %>% filter(value_million_JPY>0) %>% na.omit()
+
+#データ全てを統合し、必要な情報列を作成
+dt.merge <- dt.weight1 %>%
+  left_join(dt.price1,by=c("year","fish","prefecture")) %>%
+  left_join(translation_pref,by="prefecture") %>%
+  left_join(translation_fish,by="fish") %>%
+  left_join(multi_stock,by=c("fish","prefecture")) %>% 
+  mutate(stock = ifelse(stock_num == "0","single_stock", as.character(stock)))%>%
+  mutate(fish_stock = paste(fish,stock,sep = "_")) %>%
+  unique()
+
+#佳奈恵さんの作成した予測データは後に統合する
+Temp_Data_Catch1 <- dplyr::left_join(Temp_Data_Catch,translation_kanae_kei,by="fishery") %>%
+  mutate(year = time + 2015) %>%
+  select(year,fish_stock,management,biomass,harvest1,profit1) %>%
+  filter(management %in% c("SQ","FMSY","econOpt")) %>% #政策シナリオも限定
+  filter(!fish_stock %in% c("octopus_single_stock","sea_urchin_single_stock","sea_cucumber_single_stock","southern_bluefin_tuna_single_stock"))
+#岩田さん(東京海洋大)に除いた方が良いと言われた種を除く
+
+ 
+#魚種の翻訳。translation_fishには92魚種しか含まれていないが、元データが異なり、系群がついていないので実際にはtranslation_fishの方が多く魚種が含まれている。
+```
+
+## Section 3  各系群の各県漁獲割合の算出
+
+```{r}
+#期間は開始：2001年　終了　2010年　震災を含まないデータをつくるため。
+Start_Year=2001
+End_Year=2010
+
+dt.comp <- dt.merge %>%
+  subset(year>(Start_Year-1) & year<(End_Year+1)) %>%  ## 開始年と終了年の設定
+  select(year,prefecture,alphabet_pref=alphabet,fish_stock,weight_t,value_million_JPY,Japanese,region_name) %>%
+  group_by(fish_stock) %>%
+  mutate(total_h = sum(weight_t)) %>%  ## 指定期間内の魚種別の総漁獲量
+  mutate(total_p = sum(value_million_JPY,na.rm = T)) %>%  ## 指定期間内の魚種別の総産出額
+  ungroup() %>%
+  group_by(prefecture,fish_stock) %>%
+  mutate(total_h_pref=sum(weight_t)) %>%  ## 指定期間内の県別かつ魚種別の総漁獲量
+  mutate(total_p_pref=sum(value_million_JPY,na.rm = T)) %>%  ## 指定期間内の県別かつ魚種別の総産出額
+  ungroup() %>%
+  mutate(percentage_h = total_h_pref/total_h) %>%  ## 指定期間内の都道府県漁獲割合
+  mutate(percentage_p = total_p_pref/total_p) %>%  ## 指定期間内の都道府県産出額割合
+  unique()
+
+
+DT::datatable(dt.comp,rownames = FALSE,filter = 'top')
+
+```
+
+## Section 4  Upsideデータと過去のデータの統合
+
+```{r}
+# 漁獲・生産額割合のみを抽出
+dt.past <- dt.comp %>% 
+  select(prefecture,alphabet_pref,fish_stock,Japanese,percentage_h,percentage_p,region_name) %>%
+  unique()
+
+# 統合
+dt.comp1 <- Temp_Data_Catch1 %>%
+  left_join(dt.past,by="fish_stock") %>%
+  mutate(pref_harvest = harvest1*percentage_h) %>% #pref_harvest = その年のその県の特定の魚種の漁獲量：単位はt
+  mutate(pref_profit = profit1*percentage_h) #pref_profit = その年のその県の特定の魚種の生産額 ：単位は$
+
+```
+
+## Section 5  Upside県別データ 
+
+今回からはHarvestとProfitを分けない。Profitを求める場合は以下の手順を踏むこと
+１dt.graphにtotal_pref_hが含まれている部分をtotal_pref_pに置き換える
+２dt.graph2作成時のspread()でvalueをtotal_pref_pに置き換える
+３時系列グラフ(下側)を作成する際にylim()を変更する
+
+```{r}
+translation_pref_rm_na <- translation_pref %>% filter(pref_code>0)
+pref_ls <- c("ishikawa","fukui")
+
+dt.comp2 <- dt.comp1 %>%
+  group_by(alphabet_pref,management,year) %>%
+  #mutate(total_pref_h = (sum(pref_harvest))/1000) %>% #その年、その県の総漁獲量(単位は1000t)
+  mutate(total_pref_h = sum(pref_harvest)) %>% #その年、その県の総漁獲量(単位はt)
+  #mutate(total_pref_p = ((sum(pref_profit)/1000000))*110) %>% #その年の総産出額(単位は100万円：$1=¥110で計算)
+  mutate(total_pref_p = (sum(pref_profit))) %>% #その年の総産出額(単位は100万円：$1=¥110で計算)
+  ungroup()
+
+
+for (n in 1:length(pref_ls)) {
+  comp_name=pref_ls[n]
+  
+  dt.graph <- dt.comp2 %>%
+    filter(alphabet_pref==comp_name) %>%
+    select(alphabet_pref,management,year,total_pref_h) %>% #産出額の場合はtotal_pref_p
+    unique()
+  
+#comp_name1:2にグラフタイトルを格納
+comp_name1 <- paste(comp_name,"Comparison of SQ and FMSY",sep="_")
+comp_name2 <- paste(comp_name,"Timeseries",sep = "_")
+
+#漁獲量においてFMSYがSQに追いつく年数の計算
+dt.graph2 <- dt.graph %>%
+  spread(key=management,value=total_pref_h) %>% #valueをtotal_pref_pにすると産出額になる
+  mutate(Rate = ifelse(FMSY>SQ,"above","below")) ## 産出額の場合は下のylimの変更も必要
+
+#head()を用いて並べる
+dt.graph3 <- head(dt.graph2[dt.graph2$FMSY>dt.graph2$SQ,],1)
+#dt.graph4 <- if(nrow(dt.graph3)>0){if(dt.graph2$alphabet_pref=="hokkaido"){dt.graph3}else{rbind(dt.graph3,dt.graph4)}}else{if(dt.graph2$alphabet_pref=="hokkaido"){dt.graph2[1,]}else{rbind(dt.graph2[1,],dt.graph4)}}
+
+# Write a bar graph econOpt / SQ
+#dt.comp2_r$rateにeconOpt/SQ-1を格納。-1によってSQを基準(=1)として大小を正負で表すことができる
+dt.graph2$rate <- (dt.graph2$FMSY/dt.graph2$SQ)-1
+
+#グラフのy軸を最大値・最小値に合わせるために計算し、それぞれmax_r,min_rに格納
+max_r <- max(dt.graph2$rate)
+min_r <- min(dt.graph2$rate)
+
+#値がマイナスの時には四捨五入すると軸が値よりも小さくなる場合があるため、マイナスの場合は切り上げを行う
+if(min_r>0){min_r <- 0}else{min_r <- cutcut(min_r,digits=2)}
+
+#fmsy/sqの棒グラフ
+g1 <- ggplot(dt.graph2, aes(x = year,y = rate, fill = Rate)) +
+  theme_light(base_family = "HiraKakuPro-W3")+ 
+  labs(x="年", y="割合") +
+  labs(title = comp_name1) +
+  #scale_x_continuous(breaks = seq(2016,2065,7)) + #データが49個なので最大の素数7で分割する
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + #基本的に10刻みで最後だけ9個
+  ylim(min_r,max_r) +
+  theme(axis.text=element_text(size=15),
+        axis.title=element_text(size=15,face="bold")) +
+  scale_fill_manual(values=c("above"="#00552e","below"="#68be8d")) +
+  geom_bar(stat = "identity",position = "dodge") +
+  theme(legend.position = 'none')
+
+print(g1)
+
+#時系列データ(2016~2050)
+# Extraction of maximum and minimum values (グラフ縦軸調整のための最大値と最小値の抽出)
+max_h <- max(dt.graph$total_pref_h)
+min_h <- min(dt.graph$total_pref_h)
+min_h <- as.integer(floor(min_h)) #切り上げ
+reach_year <- as.integer(dt.graph3[,2]) #FmsyがSQに追いつく年
+
+data1<-ggplot(data = dt.graph,mapping=aes(x=year,y=total_pref_h,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("漁獲量(1000t)") +
+  labs(colour = "Management") +
+  labs(title = comp_name2) +
+  scale_x_continuous(breaks = seq(2016,2065,10)) +
+  geom_vline(xintercept=reach_year,colour="red") +
+  ylim(0,max_h) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data1)
+}
+```
+
+
+# 特定の県での結果
+
+```{r}
+pref_ls <- c("ishikawa","fukui")
+for (i in 1:length(pref_ls)) {
+  
+  pref <- pref_ls[i]
+  
+ dt.pref <- dt.comp2 %>%
+   filter(alphabet_pref==pref)
+ fish_list <- unique(dt.pref$fish_stock)
+ 
+for (n in 1:length(fish_list)) {
+  comp_name=as.character(fish_list[n])
+
+ dt.ishikawa2 <- dt.pref %>%
+   filter(fish_stock==comp_name)
+ 
+ japa <- unique(dt.ishikawa2$Japanese)
+#時系列データ(2016~2050)
+# Extraction of maximum and minimum values (グラフ縦軸調整のための最大値と最小値の抽出)
+max_h <- max(dt.ishikawa2$pref_harvest)
+max_p <- max(dt.ishikawa2$pref_profit)
+min_h <- min(dt.ishikawa2$pref_harvest)
+min_p <- min(dt.ishikawa2$pref_profit)
+min_h <- as.integer(floor(min_h)) #切り上げ
+min_p <- as.integer(floor(min_p))
+comp_name1 <- paste("時系列_",japa,"_漁獲量_",pref,sep="")
+comp_name2 <- paste("時系列_",japa,"_利益_",pref,sep="")
+
+data1<-ggplot(data = dt.ishikawa2,mapping=aes(x=year,y=pref_harvest,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("漁獲量(t)") +
+  labs(colour = "Management") +
+  labs(title = comp_name1) +
+  scale_x_continuous(breaks = seq(2016,2065,10)) +
+  ylim(0,max_h) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data1)
+
+
+data2<-ggplot(data = dt.ishikawa2,mapping=aes(x=year,y=pref_profit,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("利益(100万円)") +
+  labs(colour = "Management") +
+  labs(title = comp_name1) +
+  scale_x_continuous(breaks = seq(2016,2065,10)) +
+  ylim(0,max_p) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data2)
+}
+}
+
+
+########################
+
+
+harvest_f_i <- dt.weight %>%
+  filter(prefecture %in% c("福井","石川")) %>%
+  group_by(prefecture,year) %>%
+  mutate(harvest_year = sum(weight_t,na.rm = T)) %>%
+  mutate(harvest_year_share = weight_t/harvest_year)
+
+profit_f_i <- dt.price %>%
+  filter(prefecture %in% c("福井","石川")) %>%
+  group_by(prefecture,year) %>%
+  mutate(profit_year = sum(value_million_JPY,na.rm = T)) %>%
+  mutate(profit_year_share = value_million_JPY/profit_year)
+
+dt.share <- merge(harvest_f_i,profit_f_i,all = T)
+dt.share <- merge(dt.share,translation_fish,by=c("fish")) %>%
+  mutate(management="Historical")
+dt.share1 <- select(dt.share,c("year","prefecture","fish","Japanese","management","harvest_year_share","profit_year_share","harvest"="weight_t","profit"="value_million_JPY"))
+
+dt.f_i <- dt.comp2 %>%
+  filter(alphabet_pref %in% c("fukui","ishikawa")) %>%
+  mutate(harvest_year_share = pref_harvest/total_pref_h,
+         profit_year_share = pref_profit/total_pref_p,
+         pref_profit = (pref_profit*110)/1000000) %>% #単位を揃えるため
+  group_by(alphabet_pref,management,year) %>%
+  ungroup() %>%
+  left_join(translation_fish)
+dt.f_i1 <- select(dt.f_i,c("year","prefecture","fish","Japanese","management","harvest_year_share","profit_year_share","harvest"="pref_harvest","profit"="pref_profit"))
+  
+dt.all <- rbind(dt.share1,dt.f_i1)
+
+#saveRDS(dt.all,file="Share_Upside_Ishikawa_Fukui.rds")
+#shareの確認
+dt.all <- dt.all %>%
+  group_by(year,management,prefecture) %>%
+  mutate(sum(harvest_year_share,na.rm = T))
+
+
+pref_ls <- c("石川","福井")
+for (i in 1:length(pref_ls)) {
+  
+  pref <- pref_ls[i]
+  
+ dt.pref <- dt.all %>%
+   filter(prefecture==pref)
+ fish_list <- unique(dt.pref$fish)
+ 
+for (n in 1:length(fish_list)) {
+  comp_name=as.character(fish_list[n])
+
+ dt.ishikawa2 <- dt.pref %>%
+   filter(fish==comp_name) 
+ 
+ japa <- unique(dt.ishikawa2$Japanese)
+#時系列データ(2016~2050)
+# Extraction of maximum and minimum values (グラフ縦軸調整のための最大値と最小値の抽出)
+max_h <- max(dt.ishikawa2$harvest,na.rm = T)
+max_p <- max(dt.ishikawa2$profit,na.rm = T)
+min_h <- min(dt.ishikawa2$harvest,na.rm = T)
+min_p <- min(dt.ishikawa2$profit,na.rm = T)
+min_h <- as.integer(floor(min_h)) #切り上げ
+min_p <- as.integer(floor(min_p))
+comp_name1 <- paste("時系列_",japa,"_漁獲量_",pref,sep="")
+comp_name2 <- paste("時系列_",japa,"_利益_",pref,sep="")
+
+data1<-ggplot(data = dt.ishikawa2,mapping=aes(x=year,y=harvest,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("漁獲量(t)") +
+  labs(colour = "Management") +
+  labs(title = comp_name1) +
+  scale_x_continuous(breaks = seq(1965,2065,20)) +
+  ylim(0,max_h) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","Historical"="Black")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data1)
+setwd("/Users/keikawamura/Upside-prefecture/Outputs/2020:5:11")
+ggsave(filename = paste(comp_name1,".png"))
+
+
+dt.ishikawa3 <- na.omit(dt.ishikawa2)
+data2<-ggplot(data = dt.ishikawa3,mapping=aes(x=year,y=profit,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("利益(100万円)") +
+  labs(colour = "Management") +
+  labs(title = comp_name2) +
+  scale_x_continuous(breaks = seq(2003,2065,10)) +
+  ylim(0,max_p) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","Historical"="Black")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data2)
+setwd("/Users/keikawamura/Upside-prefecture/Outputs/2020:5:11")
+ggsave(filename = paste(comp_name2,".png"))
+}
+}
+
+
+dt.all_h <- dt.weight %>%
+  filter(prefecture %in% c("福井","石川")) %>%
+  group_by(prefecture,year) %>%
+  mutate(total_pref_h = sum(weight_t,na.rm = T)) %>%
+  ungroup() %>%
+  select(year,prefecture,total_pref_h) %>%
+  unique()
+
+dt.all_p <- dt.price %>%
+  filter(prefecture %in% c("福井","石川")) %>%
+  group_by(prefecture,year) %>%
+  mutate(total_pref_p = sum(value_million_JPY,na.rm = T)) %>%
+  ungroup() %>%
+  select(year,prefecture,total_pref_p) %>%
+  unique()
+
+
+dt.comp3 <- dt.comp2 %>%
+  filter(prefecture %in% c("福井","石川")) %>%
+  select(year,prefecture,management,total_pref_h,total_pref_p) %>%
+  mutate(total_pref_p = (total_pref_p*110)/1000000) %>%
+  unique()
+
+all <- merge(dt.all_p,dt.all_h,all = T)
+all$management <- "Historical"
+all1 <- merge(all,dt.comp3,all = T)
+
+pref_ls <- c("石川","福井")
+for (i in 1:length(pref_ls)) {
+  
+  pref <- pref_ls[i]
+  
+ dt.pref <- all1 %>%
+   filter(prefecture==pref)
+
+#時系列データ(2016~2050)
+# Extraction of maximum and minimum values (グラフ縦軸調整のための最大値と最小値の抽出)
+max_h <- max(dt.pref$total_pref_h)
+max_p <- max(dt.pref$total_pref_p)
+min_h <- min(dt.pref$total_pref_h)
+min_p <- min(dt.pref$total_pref_p)
+min_h <- as.integer(floor(min_h)) #切り上げ
+min_p <- as.integer(floor(min_p))
+comp_name1 <- paste("時系列_","_漁獲量_",pref,sep="")
+comp_name2 <- paste("時系列_","_利益_",pref,sep="")
+
+data1<-ggplot(data = dt.pref,mapping=aes(x=year,y=total_pref_h,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("漁獲量(t)") +
+  labs(colour = "Management") +
+  labs(title = comp_name1) +
+  scale_x_continuous(breaks = seq(1965,2065,20)) +
+  #geom_vline(xintercept=reach_year,colour="red") +
+  ylim(0,max_h) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","Historical"="black")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data1)
+setwd("/Users/keikawamura/Upside-prefecture/Outputs/2020:5:11")
+ggsave(filename = paste(comp_name1,".png"))
+
+dt.pref1 <- na.omit(dt.pref)
+data2<-ggplot(data = dt.pref1,mapping=aes(x=year,y=total_pref_p,group=factor(management),colour=factor(management),shape = management)) +
+  theme_light(base_family = "HiraKakuPro-W3") + 
+  xlab("年") +
+  ylab("利益(100万円)") +
+  labs(colour = "Management") +
+  labs(title = comp_name2) +
+  #scale_x_continuous(breaks = seq(2016,2065,10)) +
+  #geom_vline(xintercept=reach_year,colour="red") +
+  ylim(0,max_p) +
+  #ylim(min_h,max_h) + #産出額の場合マイナスの値があるのでこちらを用いる
+  geom_line() +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","Historical"="black")) +
+  theme(axis.text=element_text(size=18),
+        axis.title=element_text(size=18,face="bold")) +
+  geom_point() +
+  theme(legend.position = 'none')
+
+print(data2)
+setwd("/Users/keikawamura/Upside-prefecture/Outputs/2020:5:11")
+ggsave(filename = paste(comp_name2,".png"))
+}
+
+
+aaa <- dt.share%>%
+  filter(prefecture=="石川") %>%
+  select(fish) %>%
+  unique()
+```

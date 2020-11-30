@@ -1,0 +1,544 @@
+---
+title: "Upside Next Prefecture 分析"
+author: "Kei Kawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output:  
+  rmdformats::readthedown:
+    code_folding: hide
+    self_contained: true
+    thumbnails: false
+    lightbox: false
+    md_extensions: -ascii_identifiers
+---
+
+## パッケージインストール  {.tabset .tabset-fade} 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+rm(list = ls(all=TRUE))
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(ggplot2)
+library(gridExtra)
+library(ggsci)
+library(gghighlight)
+library(choroplethr)
+library(choroplethrAdmin1)
+library(RColorBrewer)
+library(ggrepel)
+library(gtable)
+library(grid)
+```
+
+
+Surplus Production Model Formula with an expanded Schaefer's model
+$${\Large B_{t+1} = B_t + \frac{\phi+1}{\phi}gB_t \Biggl(1-\Biggl(\frac{B_t}{K}\Biggr)^φ\Biggr)-H_t}$$
+
+前段階情報
+単位：
+dt.weight -> t     dr.price -> 100万円      dt.comp : harvest1 -> t   profit -> $
+
+~~~~  大型Update (2019/12/23~)  ~~~~
+
+主な変更点
+・TempUserの廃止 -> R.projを新たにし、ホームディレクトリを固定
+・各チャンクでのsetwd()の削減(rmarkdownの特徴として各チャンクが独立しており、毎回各設定を新たに行う必要があったが、ディレクトリの固定によってsetwd()が不必要となった)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+## データの読み込み・Function作成
+
+・データフレームの説明
+dt.catch : 漁獲量データ(1956~2019)
+dt.price : 産出額データ(2003~2018)
+translation_pref : 都道府県の翻訳データ
+tlanslation_fish : 魚種の翻訳データ
+multi_stock : 系群データ
+Temp_Data_Catch : 佳奈恵さんの結果(50年間のシミュレーション)データ
+translation_kanae_kei : 佳奈恵さんのデータと自分のデータの魚種名対照表
+past_biomass : 過去の資源量データ(資源評価由来？)
+cutcut : 小数点以下の有効数字調整関数
+
+```{r}
+#有効数字を999桁に設定
+options(scipen=999)
+#ディレクトリの変更
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
+#漁獲量データを読み込み、dt.weightに格納 
+dt.catch<-read.csv("CatchJPN1956_2019_enc.csv",stringsAsFactors = F,fileEncoding = "Shift_JIS")
+#産出額データを読み込み、dt.priceに格納
+dt.price<-read.csv("ProductionValueJPN2003_2018_enc.csv",stringsAsFactors = F,fileEncoding = "Shift_JIS")
+#都道府県の翻訳データを読み込み、translation_prefに格納 
+translation_pref<-read.csv("translation_prefecture.csv",stringsAsFactors = F)
+#魚種の翻訳データを読み込み、translation_fishに格納  
+translation_fish<-read.csv("translation_fish.csv",stringsAsFactors = F)
+#系群データを読み込み、multi_stockに格納
+multi_stock<-read.csv("multi_Stock_complete_All.csv", stringsAsFactors = F)
+#佳奈恵さんのRunしたUpsideの結果データの読み込み
+Temp_Data_Catch <- read.csv("Japan_20190118_mo_opt.csv", header=T,stringsAsFactors = F)
+#Temp_Data_Catch_another <- read.csv("Japan_master_output_2019_opt.csv",header=T,stringsAsFactors=F)
+Temp_Data_Catch_Kei <- read.csv("ResultUpsideJPN20200917.csv",header = T,stringsAsFactors = F)
+
+#論文内のグラフに用いられていたのは、こちらのデータ(こっちの方がちょっと値が大きい)
+Paper_Result <- read.csv("Results_FishDisc2019_TotalsBAU.csv", header=T,stringsAsFactors = F)
+#徳永佳奈恵さんのデータで用いられている魚種名と行政データの魚種名統一用ファイルの読み込み
+translation_kanae_kei<-read.csv("kanae_kei_fishlist.csv",stringsAsFactors = F)
+#過去の資源量データ
+past_biomass<-read.csv("2japan_GUM_results_K100_190116.csv") 
+#小数点以下の数字の有効数字を調節するfunctionを作成(cutcut)
+cutcut <- function(x,digits){
+  return (floor(x * 10^digits) /10^digits)
+}
+
+```
+     
+## データの成形・結合 {.tabset .tabset-fade}
+
+```{r}
+#漁獲量データと産出額データを結合
+dt.c_and_p <- dt.catch %>%
+  left_join(dt.price,by=c("year","fish","prefecture","alphabet","pref_code","pref_code_rm_inland","region","region_name")) %>%
+  left_join(translation_fish,by="fish") %>%
+  left_join(multi_stock,by=c("fish","prefecture")) %>% 
+  mutate(stock = ifelse(stock_num == "0","single_stock", as.character(stock)))%>%
+  mutate(fish_stock = paste(fish,stock,sep = "_")) %>%
+  unique()
+
+#列の並び替え
+dt.c_and_p <- dt.c_and_p[,c(1,2,3,17,4,5,10,6,7,8,9,11)]
+
+#県別の時系列データを作成
+timeseries <- dt.c_and_p %>%
+  filter(year<2016) %>%
+  mutate(management = "Historical") %>%
+  group_by(year,prefecture,alphabet,management) %>%
+  summarise(total_pref_catch = sum(catch_t,na.rm = T),
+            total_pref_price = sum(value_million_JPY,na.rm = T))
+
+#期間を指定
+dt.c_and_p1 <- dt.c_and_p %>%
+  filter(year<2011,year>2001)
+
+#全国データを付与する
+#dt.c_and_p2 <- dt.c_and_p %>%
+#  group_by(year,fish) %>% #その年のその魚種の全国漁獲量
+#  mutate(total_year_catch = sum(catch_t,na.rm = T),
+#         total_year_price = sum(value_million_JPY,na.rm = T)) %>%
+#  ungroup() %>% #その年のその県の漁獲割合
+#  mutate(rate_catch = catch_t/total_year_catch,
+#         rate_price = value_million_JPY/total_year_price) %>%
+#  group_by(year,fish) %>%　#合計1になるかのチェック
+#  mutate(check_rate_catch = sum(rate_catch),
+#         check_rate_price = sum(rate_price)) %>%
+#  ungroup() %>% #その県の平均漁獲割合
+#  group_by(alphabet,fish) %>%
+#  mutate(avg_rate_catch = mean(rate_catch,na.rm = T),
+#         avg_rate_price = mean(rate_price,na.rm = T)) %>%
+#  ungroup() %>%
+#  group_by(fish) %>% #全期間の魚種別の合計漁獲量
+#  mutate(alltime_fish_catch = sum(catch_t,na.rm = T),
+#         alltime_fish_price = sum(value_million_JPY,na.rm = T)) %>%
+#  ungroup() %>%
+#  group_by(fish,alphabet) %>% #全期間の魚種別の県別合計漁獲量
+#  mutate(alltime_fish_catch_pref = sum(catch_t,na.rm = T),
+#         alltime_fish_price_pref = sum(value_million_JPY,na.rm = T)) %>%
+#  ungroup() %>% #県別漁獲割合
+#  mutate(avg_rate_catch_alltime = alltime_fish_catch_pref/alltime_fish_catch,
+#         avg_rate_price_alltime = alltime_fish_price_pref/alltime_fish_price)
+ 
+dt.c_and_p2 <- dt.c_and_p1 %>%
+  filter(catch_t>0,value_million_JPY>0) %>%
+  filter(!fish %in% c("octopus","sea_urchin","sea_cucumber","southern_bluefin_tuna")) %>% #岩田さんに取り除いた方が良いと指摘された魚種を取り除く
+  group_by(fish_stock) %>%
+  mutate(total_fish_catch = sum(catch_t,na.rm = T),
+         total_fish_price = sum(value_million_JPY,na.rm = T)) %>%
+  ungroup() %>%
+  group_by(fish_stock,alphabet) %>%
+  mutate(total_fish_catch_pref = sum(catch_t,na.rm = T),
+         total_fish_price_pref = sum(value_million_JPY,na.rm = T)) %>%
+  ungroup() %>%
+  select(alphabet,prefecture,fish_stock,total_fish_catch,total_fish_catch_pref,total_fish_price,total_fish_price_pref) %>%
+  unique() %>% 
+  mutate(rate_catch = total_fish_catch_pref/total_fish_catch,
+         rate_price = total_fish_price_pref/total_fish_price) %>%
+  group_by(fish_stock) %>%
+  mutate(check = sum(rate_catch,na.rm = T),
+         check2 = sum(rate_price,na.rm = T))
+
+#漁獲割合のみのデータ
+dt.c_and_p3 <- dt.c_and_p2[,c(1,2,3,8,9)]
+
+#かなえさんのデータを用いるか自分のデータを用いるかのスイッチ
+Temp_Data_Catch_Kei$management <- ifelse(Temp_Data_Catch_Kei$management=="BAU","SQ",Temp_Data_Catch_Kei$management)
+Temp_Data_Catch <- Temp_Data_Catch_Kei #このスイッチをオフにする際は、以下のコードのharvestを消すべし
+
+
+#かなえさんのUpsideの結果
+Temp_Data_Catch1 <- dplyr::left_join(Temp_Data_Catch,translation_kanae_kei,by="fishery") %>%
+  mutate(year = time + 2015,
+         profit1 = (profit1*110)/1000000) %>% #$->¥に変換(1ドル110円)し、単位を100万円にする
+  select(year,fish_stock,management,biomass,harvest1,profit1,BvBMSY,FvFMSY1,harvest) %>%
+  filter(management %in% c("SQ","FMSY","econOpt")) %>% #政策シナリオも限定
+  filter(!fish_stock %in% c("octopus_single_stock","sea_urchin_single_stock","sea_cucumber_single_stock","southern_bluefin_tuna_single_stock"))
+
+#過去データの魚種もKanaeに合わせる
+fish_list <- unique(Temp_Data_Catch1$fish_stock)
+
+#県別の時系列漁獲量
+timeseries2 <- dt.c_and_p %>%
+  filter(year<2016) %>%
+  filter(fish_stock %in% fish_list) %>%
+  mutate(management = "Historical") %>%
+  group_by(year,prefecture,alphabet,management) %>%
+  summarise(total_pref_catch = sum(catch_t,na.rm = T),
+            total_pref_price = sum(value_million_JPY,na.rm = T))
+
+#全国の時系列漁獲量
+timeseries3 <- timeseries2 %>%
+  group_by(year) %>%
+  summarise(total_year_catch = sum(total_pref_catch)) %>%
+  ungroup()
+
+#シミュレーション結果に漁獲割合データを結合
+dt.comp <- merge(Temp_Data_Catch1,dt.c_and_p3,by="fish_stock")
+
+#シミュレーション値に漁獲割合を掛け合わせ、各年各県の漁獲量を算出する
+dt.comp2 <- dt.comp %>%
+  mutate(pref_catch = harvest*rate_catch,
+         pref_price = profit1*rate_price)
+
+#県の合計漁獲量の算出
+dt.comp3 <- dt.comp2 %>%
+  group_by(year,prefecture,alphabet,management) %>%
+  summarise(total_pref_catch = sum(pref_catch,na.rm = T),
+            total_pref_price = sum(pref_price,na.rm = T)) %>%
+  ungroup()
+
+dt.comp4 <- rbind(dt.comp3,timeseries2)
+
+#save(list = c("dt.comp4","dt.comp2","dt.c_and_p","dt.c_and_p3"),file = "Upside_pref.rda")
+#load("Upside_pref.rda")
+```
+
+## 県別・時系列・漁獲量 グラフの作成
+
+```{r}
+
+pref_list <- unique(dt.comp3$prefecture)
+
+for (i in 1:39) {
+  
+  dt.graph <- dt.comp4 %>%
+    filter(prefecture == pref_list[i]) 
+  
+  g1 <- ggplot(dt.graph, aes(x = year,y = total_pref_catch, color = management)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="割合") +
+  labs(title = paste(pref_list[i],"の時系列漁獲量",sep = "")) +
+  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","Historical"="#808080")) +
+  #ylim(min_r,max_r) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=15,face="bold")) +
+  scale_fill_manual(values=c("above"="#00552e","below"="#68be8d")) +
+  geom_line() 
+
+plot(g1)
+}
+
+```
+
+## 県別・棒グラフ・漁獲量 グラフの作成
+
+```{r}
+
+pref_list <- unique(dt.comp3$prefecture)
+
+for (i in 1:39) {
+  
+  dt.graph <- dt.comp3 %>%
+    filter(prefecture == pref_list[i]) 
+  
+  dt.graph2 <- dt.graph %>%
+    select(!total_pref_price) %>%
+    spread(key = management,value = total_pref_catch) %>%
+    mutate(FMSY_over_SQ = ifelse(FMSY>SQ,"above","below"),
+           rate = (FMSY/SQ)-1)
+  
+  g1 <- ggplot(dt.graph2, aes(x = year,y = rate, fill = FMSY_over_SQ)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="割合") +
+  labs(title = paste(pref_list[i],"FMSY-SQ",sep = " ")) +
+  #labs(title = paste(pref_list[i],"における現状維持政策に対する最大持続生産量漁獲政策の漁獲量比",sep = "")) +
+  #scale_x_continuous(breaks = seq(2016,2065,7)) + #データが49個なので最大の素数7で分割する
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + #基本的に10刻みで最後だけ9個
+  #ylim(min_r,max_r) +
+  theme(axis.text=element_text(size=15),
+        axis.title=element_text(size=15,face="bold")) +
+  scale_fill_manual(values=c("above"="#00552e","below"="#68be8d")) +
+  geom_bar(stat = "identity",position = "dodge") +
+  theme(legend.position = 'none')
+
+plot(g1)
+}
+
+```
+
+## 県別・棒グラフ・利益 グラフの作成
+
+```{r}
+
+pref_list <- unique(dt.comp3$prefecture)
+
+for (i in 1:39) {
+  
+  dt.graph <- dt.comp3 %>%
+    filter(prefecture == pref_list[i]) 
+  
+  dt.graph2 <- dt.graph %>%
+    select(!total_pref_catch) %>%
+    spread(key = management,value = total_pref_price) %>%
+    mutate(rate = (FMSY/SQ)-1,
+           FMSY_over_SQ = ifelse(rate>0,"above","below"))
+  
+  g1 <- ggplot(dt.graph2, aes(x = year,y = rate, fill = FMSY_over_SQ)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="割合") +
+  labs(title = paste(pref_list[i],"における現状維持政策に対する最大持続生産量漁獲政策の産出額比",sep = "")) +
+  #scale_x_continuous(breaks = seq(2016,2065,7)) + #データが49個なので最大の素数7で分割する
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + #基本的に10刻みで最後だけ9個
+  #ylim(min_r,max_r) +
+  theme(axis.text=element_text(size=15),
+        axis.title=element_text(size=15,face="bold")) +
+  scale_fill_manual(values=c("above"="#00552e","below"="#68be8d")) +
+  geom_bar(stat = "identity",position = "dodge") +
+  theme(legend.position = 'none')
+
+plot(g1)
+
+}
+```
+
+## Plot 
+
+```{r}
+pref_list <- unique(dt.comp3$prefecture)
+
+for (i in 1:39) {
+  
+  dt.graph <- dt.comp3 %>%
+    filter(prefecture == pref_list[i],management %in% c("SQ","FMSY")) %>%
+    rename(管理シナリオ = management)
+  
+  #基準となる2015年の値を抽出
+  #dt.2015 <- dt.comp4 %>%
+  #  filter(prefecture == pref_list[i],year==2015)
+  #dt.2015 <- as.numeric(dt.2015[1,5])
+  
+  #基準となるSQの値を抽出
+  sTaRt <- dt.comp4 %>%
+    filter(prefecture == pref_list[i], year==2016, management == "SQ")
+  sTaRt <- as.numeric(sTaRt[1,5])
+  
+  #brank <- data.frame(
+  #  year = 2016:2065,
+  #  管理シナリオ = 2015,
+  #  ratio = 1
+  #)
+  
+  #dt.graph2 <- dt.graph %>%
+  #  mutate(ratio = total_pref_catch/sTaRt) %>%
+  #  merge(brank,all = T)
+  
+  dt.graph2 <- dt.graph %>%
+    mutate(ratio = total_pref_catch/sTaRt) 
+  max_r <- ifelse(max(dt.graph2$ratio)<1,1,max(dt.graph2$ratio))
+  
+  g1 <- ggplot(dt.graph2, aes(x = year,y = ratio, color = 管理シナリオ)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="割合") +
+  labs(title = paste(pref_list[i],"における2015年を基準とした漁獲量の変化",sep = "")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + 
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff","2015"="Black")) +
+  #ylim(0,max_r) +
+  #scale_fill_manual(values=c("above"="#00552e","below"="#68be8d")) +
+  geom_line()+
+  gghighlight(calculate_per_facet = T) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=13,face="bold"),
+        legend.position = "none")
+  
+  ##棒グラフ
+  dt.graph2 <- dt.graph %>%
+    select(!total_pref_price) %>%
+    spread(key = 管理シナリオ,value = total_pref_catch) %>%
+    mutate(FMSY_over_SQ = ifelse(FMSY>SQ,"Above","Below"),
+           rate = (FMSY/SQ)-1)
+  
+  g2 <- ggplot(dt.graph2, aes(x = year,y = rate, fill = FMSY_over_SQ)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="割合") +
+  labs(title = paste(pref_list[i],"FMSY-SQ",sep = " ")) +
+  #labs(title = paste(pref_list[i],"における現状維持政策に対する最大持続生産量漁獲政策の漁獲量比",sep = "")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + 
+  #geom_text_repel(
+   # data = subset(dt.graph2, year == max(year)),
+   # aes(label = FMSY_over_SQ),
+   # nudge_y = 0.25) +
+  #ylim(min_r,max_r) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=13,face="bold")) +
+  scale_fill_manual(values=c("Above"="#00552e","Below"="#68be8d")) +
+  geom_bar(stat = "identity",position = "dodge") +
+  theme(legend.position = 'none')
+
+  #グラフの合成
+  g3 <- grid.arrange(g1,g2,ncol=1)
+  
+  plot(g3)
+  setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/Processing_Industry/知事表彰2020/Plot3")
+  ggsave(file = paste(pref_list[i],".png"), plot=g3 ,width = 10,height = 14.8)
+
+}
+
+```
+
+## Catchの不足分推定
+前提
+・漁獲量と生産額は比率において等関係にある(加工において既知なのが生産額のみのため、生産額で漁獲量を対応させる)
+・投入構造は不変である(あくまで2015年規模の水産食料品産業を維持するためのCatchの不足分推定のため)
+・県内水産食料品産業の需要は県内海面漁業の生産でのみ賄う
+
+```{r}
+#H25を基準として、県内需要を県内生産で賄うと仮定する。H25年において、水産食料品産業は県内生産額の54.4%を占めている。
+#実際には移輸入分の金額も含んでいる。生産額ベースだが、数量ベースの水産食料品産業への流通量が不明なため、割合をそのまま適用する
+
+#水産食料品産業の海面漁業への需要額が県内生産に占める割合
+#2000 = 0.340 
+#2005 = 0.519
+#2009 = 0.541
+#2011 = 0.460
+#2013 = 0.544
+#2005~2013の４時点の平均は0.52なので(2000は恣意的であるが値が近年とはかけ離れているため取り除いた)
+rate <- 0.52
+#要するに、水産食料品産業は平均して県内海面漁業生産の0.52相当の需要を持つ。
+#この需要を県内生産だけで満たすと仮定し、産業を維持するには、維持したい規模の年の漁獲量の0.52相当の漁獲を行う必要がある。この基準量に対する各年の漁獲量を見ていく
+
+#基準設定と対象県の設定
+basis_year = 2015
+target_pref = c("iwate","miyagi")
+
+target <- dt.comp4 %>%
+  filter(year==basis_year,alphabet %in% target_pref) %>%
+  summarise(prefecture,basis_catch = total_pref_catch*rate)
+
+#シミュレーション結果との比較
+trial <- dt.comp4 %>%
+  filter(alphabet %in% target_pref,year>2015,management %in% c("SQ","FMSY")) %>%
+  left_join(target,by="prefecture") %>%
+  mutate(過不足量_t = (total_pref_catch*rate) - basis_catch)
+
+#図示
+ggplot(trial,aes(x=year,y=過不足量_t,col=management)) +
+  theme_light(base_family = "HiraKakuPro-W3") +  
+  theme(
+    axis.text=element_text(size=8),
+    axis.title=element_text(size=13,face="bold")
+  ) +
+  labs(x="年") +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + 
+  labs(title = "2015年の水産食料品産業を維持する漁獲量を0とする",caption = "※県内生産に対する水産食料比産業の需要割合は0.52とする")+
+  facet_wrap(~prefecture)+
+  geom_line()
+
+#県別(岩手)
+trial_iwate <- trial %>%
+  filter(prefecture=="岩手")
+
+ggplot(trial_iwate,aes(x=year,y=過不足量_t,fill=management))+
+  theme_light(base_family = "HiraKakuPro-W3")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    legend.position = c(.1, .9),
+    legend.justification = c(0, 1),
+    legend.box.background = element_rect()
+  ) +
+  labs(x="年") +
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + 
+  labs(title = "岩手県",subtitle = "2015年の水産食料品産業を維持する漁獲量に対する各年の漁獲量の過不足量(t)",caption = "※県内生産に対する水産食料比産業の需要割合は0.52とする")+
+  geom_hline(aes(yintercept=0),color = "Black") +
+  geom_bar(stat = "identity",position = "dodge")
+
+
+#県別(宮城)
+trial_miyagi <- trial %>%
+  filter(prefecture=="宮城")
+
+ggplot(trial_miyagi,aes(x=year,y=過不足量_t,fill=management))+
+  theme_light(base_family = "HiraKakuPro-W3")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    legend.position = c(.1, .9),
+    legend.justification = c(0, 1),
+    legend.box.background = element_rect()
+  ) +
+  labs(x="年") +
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) + 
+ labs(title = "宮城県",subtitle = "2015年の水産食料品産業を維持する漁獲量に対する各年の漁獲量の過不足量(t)",caption = "※県内生産に対する水産食料比産業の需要割合は0.52とする")+
+  geom_bar(stat = "identity",position = "dodge") 
+
+```
+
+## 経済波及効果の推定
+前提
+・水産食料品産業において海面漁業からの原材料額の変動は水産食料品産業の生産額の変動と同調する(海面からの原材料が10%減少したら生産額も10%減少する)
+・外生化は行わない。理由は、加工を繰り返す(高次加工を行う)可能性があるからである。
+->水産食料品産業と海面漁業産業の結びつき方・具合が不明なので、このような前提のもとに計算する。
+-->考え方としてはもう一つあり、原材料の投入係数が約0.3なので、影響も0.3にするといったものである。しかし、加工業において、水産原料に応じて他の原料も投入するため、この考え方をする必要は無いかと思われる。加工業においては、海面漁業からの原材料に応じた(を中心とする)生産を行うため、同調と考えても良いとする。
+
+```{r}
+#前セクションで水産食料品産業への過不足分を導出したので、その過不足分による経済波及効果での推定を行う
+trial2 <- trial %>%
+  mutate(過不足量比率 = 過不足量_t/basis_catch) #足りない原材料の割合
+
+#H25の経済波及効果分析ツールを用いて推定
+#H27(2015)の規模を保ちたいので、H27の県内水産加工生産額は597億2300万円であり、その経済波及効果は918億472万円になる
+#H27(2015)の規模を保ちたいので、H27の県内水産加工生産額は1850億6000万円であり、その経済波及効果は億472万円になる
+Hakyu <- data.frame(
+  prefecture = c("岩手","宮城"),
+  Hakyu_yen = c(91804729000,342639000000))
+
+trial3 <- trial2 %>%
+  left_join(Hakyu,by="prefecture") %>%
+  mutate(Effect_billion_yen = 過不足量比率*Hakyu_yen/1000000000) 
+
+trial3_iwate <- filter(trial3,prefecture=="岩手")
+trial3_miyagi <- filter(trial3,prefecture=="宮城")
+
+ggplot(trial3_iwate,aes(x=year,y=Effect_billion_yen,col=management))+
+  labs(title = "Iwate") +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) +
+  geom_line()+
+  geom_hline(aes(yintercept=0),color = "Black")+
+  gghighlight()
+
+ggplot(trial3_miyagi,aes(x=year,y=Effect_billion_yen,col=management))+
+  labs(title = "Miyagi") +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  scale_x_continuous(breaks = c(2016,2026,2036,2046,2056,2065)) +
+  geom_line()+
+  geom_hline(aes(yintercept=0),color = "Black")+
+  gghighlight()
+```
