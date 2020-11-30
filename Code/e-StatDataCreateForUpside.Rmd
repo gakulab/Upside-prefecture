@@ -1,0 +1,234 @@
+---
+title: "e-StatDataCreateForUpside"
+author: "keikawamura"
+date: "11/17/2020"
+output: html_document
+---
+
+【概要】
+　政府統計の総合窓口（e-Stat）からデータを取得し、クリーニング・再構築を行う
+　estatapiというパッケージを用いる
+
+
+# 環境構築
+```{r setup, include=FALSE}
+#rm(list = ls(all=TRUE)) #環境を初期状態にする
+
+library(estatapi) #データ取得
+library(tidyverse) #データ加工
+library(stringr) #データ修正
+
+```
+
+# e-Stat APIの設定
+```{r}
+#2020/11/17 e-Statにユーザー登録し、マイページからアプリケーションIDを取得。名称：テスト用アプリケーション、URL：http://test.localhost/で発行
+appId <- "4277826a54e6b61baf8fc11689a30b138dfed580"
+
+```
+
+# estatapiパッケージの関数の説明
+```{r}
+#estatapiパッケージの関数を説明
+
+#estat_getStatsList(appId=appId,searchWord,.use_label=FALSE) : あるキーワードを含む統計表を検索する事ができる。.use_labelはラベルを数値ではなく言語で表記してくれるオプション。
+
+#estat_getMetaInfo(appId=appId, statsDataId) : 統計データのメタ情報（付帯情報）を取得する事ができる。
+
+#estat_getStatsData(appId=appId, statsDataId, cdCat01) : 統計データの取得。cdCat01は分類事項の指定。
+
+```
+
+# データの取得
+
+## 漁獲量
+```{r}
+#海面漁業生産統計調査
+
+#長期累年　漁業・養殖業生産統計年報　５　海面漁業魚種別漁獲量累年統計（都道府県別）　全国〜沖縄（1956〜2015年）
+CatchData_Species <- estat_getStatsData(appId, statsDataId = "0003238633")
+
+#長期累年　漁業・養殖業生産統計年報　５　海面漁業種類別漁獲量累年統計（都道府県別）　全国〜沖縄（1956〜2015年）
+CatchData_Fishery <- estat_getStatsData(appId, statsDataId = "0003238632")
+
+#####  長期累年に含まれない2016年以降のデータを個別に取得  #####
+
+#平成28年漁業・養殖業生産統計　海面漁業の部　2-2 大海区都道府県振興局別統計　魚種別漁獲量
+CatchData_Species_2016 <- estat_getStatsData(appId, statsDataId = "0003216642")
+
+#平成28年漁業・養殖業生産統計　海面漁業の部　2-1 大海区都道府県振興局別統計　漁業種類別漁獲量
+CatchData_Fishery_2016 <- estat_getStatsData(appId, statsDataId = "0003216641")
+
+#平成29年漁業・養殖業生産統計　海面漁業の部　2-2 大海区都道府県振興局別統計　魚種別漁獲量
+CatchData_Species_2017 <- estat_getStatsData(appId, statsDataId = "0003322129")
+
+#平成29年漁業・養殖業生産統計　海面漁業の部　2-1 大海区都道府県振興局別統計　漁業種類別漁獲量
+CatchData_Fishery_2017 <- estat_getStatsData(appId, statsDataId = "0003322128")
+
+#平成30年漁業・養殖業生産統計　海面漁業の部　2-2 大海区都道府県振興局別統計　魚種別漁獲量
+CatchData_Species_2018 <- estat_getStatsData(appId, statsDataId = "0001803958")
+
+#平成30年漁業・養殖業生産統計　海面漁業の部　2-1 大海区都道府県振興局別統計　漁業種類別漁獲量
+CatchData_Fishery_2018 <- estat_getStatsData(appId, statsDataId = "0001803957")
+
+
+#市町村別データ　魚種別漁獲量　全国
+CatchData_Species_City <- estat_getStatsData(appId, statsDataId = "0003229541")
+
+#市町村別データ　漁業種類別漁獲量　全国
+CatchData_Fishery_City <- estat_getStatsData(appId, statsDataId = "0003229541")
+```
+
+## 産出額
+```{r}
+#都道府県別の産出額はxlsx形式でしか取得できない。また、データベース化されていない。
+
+```
+
+
+# データ加工
+```{r}
+#長期累年データを加工
+#2017年以降は都道府県名から"都","県","府"が取り除かれているため、area_codeで結合する
+
+## 魚種別
+CatchData_Species_all <- CatchData_Species %>%
+  mutate(year = as.numeric(str_sub(.$年次,end = -2)),
+         area_code = ifelse(都道府県=="全国","00001",area_code),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="計","合計",`漁業魚種（長期累年）`),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_さけ･ます類_小計","魚類_さけ・ます類_小計",`漁業魚種（長期累年）`),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_さけ･ます類","魚類_さけ・ます類",`漁業魚種（長期累年）`),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_ひらめ･かれい類_小計","魚類_ひらめ・かれい類_小計",`漁業魚種（長期累年）`),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_ひらめ･かれい類","魚類_ひらめ・かれい類",`漁業魚種（長期累年）`)) %>%
+  select(year, area_code, prefecture_plus = 都道府県, category = `漁業魚種（長期累年）`, Catch_t = value)
+
+#長期累年データの都道府県（沿岸県+全国）に合わせるためのリスト作成
+PrefList <- unique(CatchData_Species_all[,c("area_code","prefecture_plus")])
+PrefList2 <- unique(CatchData_Species_2017[,c("area_code","(C001-2017-1)都道府県・大海区・支庁")])
+PrefList3 <- left_join(PrefList,PrefList2,by="area_code") 
+names(PrefList3) <- c("area_code","prefecture_plus","prefecture")
+
+CatchData_Species_2016_Working <- CatchData_Species_2016 %>%
+  mutate(year = 2016,area_code = ifelse(`(C001-28-1)都道府県・大海区・支庁`=="全国","00001",area_code)) %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category = `(C001-28-6)魚種`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+CatchData_Species_2017_Working <- CatchData_Species_2017 %>%
+  mutate(year = 2017) %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category = `(C001-2017-039)魚種`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+CatchData_Species_2018_Working <- CatchData_Species_2018 %>%
+  mutate(year = 2018, prefecture = `(C001-30-2-003)地域`) %>%
+  merge(PrefList3, by="prefecture") %>%
+  select(year, prefecture, category = `(C001-30-1-003)魚種`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+ 
+CatchData_Species_all2 <- CatchData_Species_all %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category, Catch_t) %>%
+  rbind(CatchData_Species_2016_Working,CatchData_Species_2017_Working,CatchData_Species_2018_Working)
+  
+
+ti <- filter(CatchData_Fishery,CatchData_Fishery$都道府県 == "全国" & CatchData_Fishery$`漁業種類（長期累年）`=="合計")
+ti2 <- select(ti,c(value,年次))
+  
+
+
+##　漁業種類別
+CatchData_Fishery_all <- CatchData_Fishery %>%
+  mutate(year = as.numeric(str_sub(.$年次,end = -2)),
+         area_code = ifelse(都道府県=="全国","00001",area_code)) %>%
+  select(year, area_code, prefecture_plus = 都道府県, category = `漁業種類（長期累年）`, Catch_t = value)
+
+CatchData_Fishery_2016_Working <- CatchData_Fishery_2016 %>%
+  mutate(year = 2016,area_code = ifelse(`(C001-28-1)都道府県・大海区・支庁`=="全国","00001",area_code)) %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category = `(C001-28-038)漁業種類`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+CatchData_Fishery_2017_Working <- CatchData_Fishery_2017 %>%
+  mutate(year = 2017) %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category = `(C001-2017-038)漁業種類`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+CatchData_Fishery_2018_Working <- CatchData_Fishery_2018 %>%
+  mutate(year = 2018, prefecture = `(C001-30-2-003)地域`) %>%
+  merge(PrefList3, by="prefecture") %>%
+  select(year, prefecture, category = `(C001-30-1-031)漁業種類別漁獲量`, Catch_t = value) %>%
+  filter(!is.na(prefecture))
+
+ 
+CatchData_Fishery_all2 <- CatchData_Fishery_all %>%
+  left_join(PrefList3) %>%
+  select(year, prefecture, category, Catch_t) %>%
+  rbind(CatchData_Fishery_2016_Working,CatchData_Fishery_2017_Working,CatchData_Fishery_2018_Working)
+  
+```
+
+# 岩手県・宮城県データ
+```{r}
+Catch_Species_Sanriku <- CatchData_Species_all2 %>%
+  filter(prefecture %in% c("岩手","宮城"))
+
+Catch_Species_Sanriku2 <- Catch_Species_Sanriku[grep("\\計$",Catch_Species_Sanriku$category),] %>%
+  filter(!category %in% c("魚類_計","合計","えび類_計","かに類_計","貝類_計","魚類_あじ類_小計","魚類_たい類_小計","魚類_にべ･ぐち類_計")) %>%
+  group_by(prefecture,year) %>%
+  mutate(rate = Catch_t/sum(Catch_t,na.rm = T)) %>%
+  ungroup()
+
+g1 <- ggplot(Catch_Species_Sanriku2,aes(x=year,y=rate,fill=category))+
+  theme(text = element_text(family = "Osaka"),
+        plot.title = element_text(size = 30),
+        axis.text=element_text(size=20,face ="bold"),
+        axis.title=element_text(size=25,face="bold"),
+        legend.text=element_text(size=18),
+        legend.title = element_text(size = 23),
+        legend.position = "bottom",
+        strip.text.x = element_text(size = 50),
+        axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_x_continuous(breaks = c(1956,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2018)) +
+  geom_area(size = .1,colour = "black") +
+  facet_wrap(~prefecture)
+
+plot(g1)
+
+
+## 漁業種類
+Catch_Fishery_Sanriku <- CatchData_Fishery_all2 %>%
+  filter(prefecture %in% c("岩手","宮城"))
+
+Catch_Fishery_Sanriku2 <- Catch_Fishery_Sanriku %>%
+  mutate(category = str_sub(.$category,end = 7)) %>%
+  filter(!category %in% c("計","その他_その他","その他_採貝・","その他のはえ縄","その他の漁業_")) %>%
+  group_by(prefecture,year,category) %>%
+  mutate(Catch_t = sum(Catch_t,na.rm = T)) %>%
+  ungroup() %>%
+  unique() %>%
+  group_by(prefecture,year) %>%
+  mutate(rate = Catch_t/sum(Catch_t,na.rm = T)) %>%
+  ungroup()
+
+g1 <- ggplot(Catch_Fishery_Sanriku2,aes(x=year,y=rate,fill=category))+
+  theme(text = element_text(family = "Osaka"),
+        plot.title = element_text(size = 30),
+        axis.text=element_text(size=20,face ="bold"),
+        axis.title=element_text(size=25,face="bold"),
+        legend.text=element_text(size=18),
+        legend.title = element_text(size = 23),
+        legend.position = "bottom",
+        strip.text.x = element_text(size = 50),
+        axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_x_continuous(breaks = c(1956,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2018)) +
+  geom_area(size = .1,colour = "black") +
+  facet_wrap(~prefecture)
+
+plot(g1)
+```
+
+
+

@@ -1,0 +1,613 @@
+---
+title: "UpsidePrefAnalysisVer1"
+author: "keikawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output: html_document
+---
+
+## パッケージの読み込み  {.tabset .tabset-fade} 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+#緩衝の初期化
+rm(list = ls(all=TRUE))
+
+
+library(tidyverse) #pipe関数
+library(data.table) #データの読み込み
+library(gghighlight) #gghilightのため
+library(gridExtra) #grid.arrageのため
+library(magrittr) #複雑なpipe関数
+library(zoo) #移動平均用。zooは時系列分析用パッケージ
+library(ggrepel) #geom_text_repelのため
+
+```
+
+## データの読み込み
+
+```{r}
+#Upside関連の結果を読み込む
+## パッケージの読み込み  {.tabset .tabset-fade} 
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
+load("UpsideDataForResearch.rda")
+
+#産業連関表関連の結果を読み込む。IOTs = Input Output Tables
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/産業連関表/For_Analysis")
+IOTs <- read.csv("DataSummaryIOTable.csv",fileEncoding = "CP932")
+
+```
+
+## 時系列グラフ
+
+```{r}
+#lapplyでloopをまわす。forやmapよりも高速。
+lapply(1:length(unique(UpsideResult$prefecture)), function(x){
+  
+  #計算速度を比較すると古典的なフィルタリングの方が結構早い。低レベルの作業の場合は古典的なコードの方が向いていることがある。
+  standard <- as.numeric(na.omit(UpsideResult[UpsideResult$prefecture==unique(UpsideResult$prefecture)[x] & UpsideResult$management == "SQ" & UpsideResult$year == 2016,])[,5]) 
+  
+  #時系列グラフのためのデータ構築
+  ggdata <- UpsideResult %>%
+    filter(prefecture == unique(UpsideResult$prefecture)[x],
+           management %in% c("SQ","FMSY")) %>%
+    mutate(compare = (total_pref_catch/standard)-1,
+           year = year-2015)
+  
+  
+  #時系列グラフ
+  g1 <- ggplot(ggdata, aes(x = year,y = total_pref_catch, color = management)) +
+  theme_light(base_family = "Osaka")+ 
+  labs(x="年", y="漁獲量(t)") +
+  labs(title = paste(unique(UpsideResult$prefecture)[x],"におけるシミュレーション１年目を基準とした漁獲量の変化",sep = "")) +
+  scale_x_continuous(breaks = c(1,10,20,30,40,50)) + 
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  geom_line()+
+  gghighlight(calculate_per_facet = T) +
+  #geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+   #                fill = "gray", alpha = 0.01) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=13,face="bold"),
+        legend.position = "none")
+  
+  
+  #棒グラフのためのデータ構築
+  ggdata2 <- ggdata %>%
+    #不要なデータを乗り除く
+    select(!c(total_pref_price,compare,catch_yearly_rank)) %>%
+    #計算しやすい様に変形(spreadは旧式、pivot_widerが新型)
+    pivot_wider(names_from = management,values_from = total_pref_catch) %>%
+    #SQに対するFMSYの比率の計算
+    summarise(alphabet,
+              year,
+              compare = (FMSY/SQ)-1,
+              judge = ifelse(compare>0,"Above","Below"))
+    
+  
+  #棒グラフ
+  g2 <- ggplot(ggdata2,aes(x = year,y = compare,fill=judge)) +
+  theme_light(base_family = "Osaka")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    legend.position = c(.8, .3),
+    legend.justification = c(0, 1),
+    legend.box.background = element_rect()
+  ) +
+  labs(x="年",
+       y="割合",
+       title = paste(unique(UpsideResult$prefecture)[x],"における現状維持政策に対する最大持続生産量漁獲政策の漁獲量比"),sep="") +
+  scale_fill_manual(values=c("Above"="#00552e","Below"="#68be8d")) +
+  scale_x_continuous(breaks = c(1,10,20,30,40,50))+
+  geom_bar(stat = "identity",position = "dodge")+
+  #geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+  #                 fill = "gray", alpha = 0.01)+
+  theme(legend.position = 'none')
+  
+  #グラフの合成
+  g3 <- grid.arrange(g1,g2,ncol=1)
+  
+  g3
+  
+  #setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/Upside時系列グラフ&FMSY-SQ棒グラフ")
+  #ggsave(file = paste(unique(UpsideResult$prefecture)[x],"_時系列&FMSY-SQ棒グラフ",".png"), plot=g3 ,width = 10,height = 14.8)
+
+})
+
+```
+
+## シミュレーション結果における、水産加工(食料品)産業維持に必要な漁獲量の過不足量算出
+
+```{r}
+#有効数字を999桁に設定
+options(scipen=999,digits = 6)
+
+#必要なデータのみを抜き出す
+dt.iots <- IOTs %>%
+  select(prefecture = 県名,share = 海面漁業生産額における水産食料品の占める割合)
+
+#維持する基準のなる2015年の各県の漁獲量にシェアを掛け、水産加工に流れる・必要とする漁獲量を算出する
+dt.standard <- UpsideResult %>%
+  filter(year == 2015) %>%
+  left_join(dt.iots,by="prefecture") %>%
+  summarise(prefecture,share,base_catch_t = total_pref_catch * share)
+
+#基準値の入ったデータフレームをシミュレーション結果に結合していく
+dt.comp <- UpsideResult %>%
+  filter(year > 2015) %>%
+  left_join(dt.standard,by = "prefecture") %>%
+  summarise(time = year-2015,
+            prefecture,
+            alphabet,
+            管理シナリオ = management, #図示するときのために名前を変更
+            require_catch_t = total_pref_catch * share, #その年に水産食料品に流れる量を算出
+            compare_t = require_catch_t - base_catch_t, #その年に水産食料品に流れる量と基準年(2015)に水産食料品が必要とした量の比較
+            rate = compare_t/base_catch_t #過不足量が基準年(2015)に水産食料品が必要とした量と比べてどのくらいの比率なのか。
+            ) %>%
+  na.omit()
+
+#算出できた県の数を確認
+unique(dt.comp$alphabet)
+
+```
+
+## 過不足量の図示
+
+```{r}
+#lapplyでloopをまわす
+lapply(1:length(unique(dt.comp$alphabet)), function(x){
+  
+  ggdata <- dt.comp %>%
+    filter(alphabet == unique(dt.comp$alphabet)[x],
+           管理シナリオ %in% c("SQ","FMSY")) 
+  
+  ggplot(ggdata,aes(x = time,y = compare_t, fill = 管理シナリオ)) +
+  theme_light(base_family = "HiraKakuPro-W3")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold")
+  ) +
+  labs(x="年",
+       y="過不足量(t)",
+       title = paste(unique(dt.comp$prefecture)[x],"における2015年の水産食料品産業の海面漁業への需要量\nに対する各年の漁獲量の過不足量(t)"),sep="") +
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  geom_bar(stat = "identity",position = "dodge")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+                   fill = "gray", alpha = 0.01)
+  
+  #グラフの保存
+  #setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/過不足量の時系列")
+  #ggsave(file = paste(unique(ggdata$prefecture),"_過不足漁獲量","_時系列",".png", sep = ""),width = 7.4,height = 5)
+})
+
+#y軸を割合にする
+lapply(1:length(unique(dt.comp$alphabet)), function(x){
+  
+  ggdata <- dt.comp %>%
+    filter(alphabet == unique(dt.comp$alphabet)[x],
+           管理シナリオ %in% c("SQ","FMSY"))
+  
+  ggplot(ggdata,aes(x = time,y = rate, fill = 管理シナリオ)) +
+  theme_light(base_family = "Osaka")+
+  theme(
+    axis.text=element_text(size=10),
+    axis.title=element_text(size=13,face="bold"),
+    plot.title = element_text(hjust = 0.5)
+  ) +
+  labs(x="年",
+       y="過不足量割合",
+       title = paste(unique(dt.comp$prefecture)[x],"における2015年の水産食料品産業の海面漁業への需要量\nに対する各年の漁獲量の過不足量(t)の割合"),sep="") +
+  scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
+  geom_bar(stat = "identity",position = "dodge")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),
+                   fill = "gray", alpha = 0.01)
+  
+  #setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/過不足量の時系列_割合")
+  #ggsave(file = paste(unique(ggdata$prefecture),"_過不足漁獲量","_時系列_割合",".png", sep = ""),width = 7.4,height = 5)
+})
+
+
+#### 移動平均の折れ線グラフを作成 ####
+lapply(1:length(unique(dt.comp$alphabet)), function(x){
+  
+  #特定の県を指定
+  dt.graph <- dt.comp %>%
+    filter(prefecture == unique(dt.comp$prefecture)[x] &
+           #year > 2015 &
+           管理シナリオ %in% c("SQ","FMSY")) %>%
+    group_by(管理シナリオ) %>%
+    summarise(prefecture,
+              年 = time,
+              compare_moving_mean5 = rollmean(rate, k = 5, fill = NA),
+              compare_moving_mean10 = rollmean(rate, k = 10, fill = NA),
+              compare_moving_mean15 = rollmean(rate, k = 15, fill = NA),
+              compare_moving_mean20 = rollmean(rate, k = 20, fill = NA)) %>%
+    ungroup()
+  
+  #図示
+  #5年移動平均
+ g1 <- ggplot(dt.graph,aes(x = 年, y = compare_moving_mean5,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"漁業から水産食料品産業への過不足供給量の割合の5年移動平均"),
+  　     subtitle = "2015のシェアで2015年と比較",
+  　     x = "年数",
+    　   y = "割合") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 48),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+ 
+  #10年移動平均
+ g2 <- ggplot(dt.graph,aes(x = 年, y = compare_moving_mean10,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"漁業から水産食料品産業への過不足供給量の割合の10年移動平均"),
+  　     subtitle = "2015のシェアで2015年と比較",
+  　     x = "年数",
+    　   y = "割合") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 45),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+ 　#15年移動平均
+  g3 <- ggplot(dt.graph,aes(x = 年, y = compare_moving_mean15,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"漁業から水産食料品産業への過不足供給量の割合の15年移動平均"),
+  　     subtitle = "2015のシェアで2015年と比較",
+  　     x = "年数",
+    　   y = "割合") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 43),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  #20年移動平均
+  g4 <- ggplot(dt.graph,aes(x = 年, y = compare_moving_mean20,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"漁業から水産食料品産業への過不足供給量の割合の20年移動平均"),
+  　     subtitle = "2015のシェアで2015年と比較",
+  　     x = "年数",
+    　   y = "割合") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 40),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/移動平均")
+  ggsave(plot = g1,file = paste(unique(dt.graph$prefecture),"_過不足漁獲量","_5年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  ggsave(plot = g2,file = paste(unique(dt.graph$prefecture),"_過不足漁獲量","_10年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  ggsave(plot = g3,file = paste(unique(dt.graph$prefecture),"_過不足漁獲量","_15年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  ggsave(plot = g4,file = paste(unique(dt.graph$prefecture),"_過不足漁獲量","_20年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  
+  #作成・保存するグラフが複数のため、それぞれオブジェトに格納する必要がある。従って、表示するためにはい可能様にする必要がある。
+  return(list(g1,g2,g3,g4))
+  
+})
+
+
+```
+
+## 波及効果の算出
+
+```{r}
+#総効果を入れる枠組み作り(単位は100万円)
+HakyuSoukouka <- data.frame(
+  prefecture = IOTs$県名,
+  TotalEffect = NA
+)
+
+#経済波及効果算出コードを読み込む
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/産業連関表/For_Analysis")
+
+#岩手県
+source("IwateEconomicRippleEffect.R")
+#宮城県
+source("MiyagiEconomicRippleEffect.R")
+
+#岩手の水産食料品産業の波及効果を算出(単位は100万円)
+IwateHakyu <- IwateEconomicRippleEffect(Demand_million_yen = 59723)
+
+#合計値(列和)を抽出
+IwateHakyu_total <- lapply(IwateHakyu[-1],sum,na.rm = T)
+
+
+
+#宮城の水産食料品産業の波及効果を算出(単位は100万円)
+MiyagiHakyu <- MiyagiEconomicRippleEffect(Demand_million_yen = 223800)
+
+#合計値(列和)を抽出
+MiyagiHakyu_total <- lapply(MiyagiHakyu[-1],sum,na.rm = T)
+
+
+#総効果を抽出(単位は100万円)し、枠組みに格納
+HakyuSoukouka[HakyuSoukouka$prefecture=="岩手",2] <- IwateHakyu_total[["総効果生産誘発額"]]
+HakyuSoukouka[HakyuSoukouka$prefecture=="宮城",2] <- MiyagiHakyu_total[["総効果生産誘発額"]]
+
+```
+
+## シミュレーション結果における、水産加工(食料品)産業維持に必要な漁獲量の過不足量が与える経済波及効果の算出
+
+```{r}
+#有効数字を999桁に設定
+options(scipen=999,digits = 5)
+
+#NPVを求める際の割引率を指定
+DiscountRate <- 0.05
+
+#過不足比率に経済波及効果を掛ける。dt.ere = data.economic ripple effect
+dt.ere <- dt.comp %>%
+  left_join(HakyuSoukouka,by="prefecture") %>%
+  group_by(prefecture,管理シナリオ) %>%
+  mutate(Effect = rate * TotalEffect,
+         NPV = Effect/((1+DiscountRate)^(time-1)),
+         TotalPrefNPV = sum(NPV),
+         RollingAverage5 = rollmean(NPV,k=5,fill=NA),
+         RollingAverage10 = rollmean(NPV,k=10,fill=NA),
+         RollingAverage15 = rollmean(NPV,k=15,fill=NA),
+         RollingAverage20 = rollmean(NPV,k=20,fill=NA)
+         ) %>%
+  filter(!is.na(Effect))
+
+```
+
+## 過不足量が与える経済波及効果の図示(NPV棒グラフ・移動平均)
+
+```{r}
+#水産食料品データが存在する県のみでループ作図していく
+lapply(1:length(unique(dt.ere$prefecture)), function(x){
+  
+  
+  dt.ere %<>% #関数内は別環境なので直接的な書き換えを行っても大丈夫
+    filter(prefecture == unique(dt.ere$prefecture)[x],
+           管理シナリオ %in% c("SQ","FMSY")) 
+  
+　#わかりやすく時系列で見て見る
+　#ggplot(dt.ere,aes(x = time,y = Effect,fill = 管理シナリオ)) +
+  #　geom_bar(stat = "identity",position = "dodge") +
+  #　scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+
+　###  NPVの期間内合計値を見てみる  ###
+　dt.npv <- dt.ere %>%
+  　select(prefecture,alphabet,管理シナリオ,TotalPrefNPV) %>%
+  　unique()
+
+　g1 <- ggplot(dt.npv,aes(x = prefecture,y = TotalPrefNPV,fill = 管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_bar(stat = "identity",position = "dodge") +
+  　labs(title = paste(unique(dt.ere$prefecture),"における水産食料品作業への過不足供給量が与える合計経済波及効果"),
+  　     x = "都道府県名",
+    　   y = "合計割引現在価値(100万円)") +
+  　scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+
+  
+  ###  NPVの移動平均を見てみる  ###
+ g2 <- ggplot(dt.ere,aes(x = time, y = RollingAverage5,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.ere$prefecture),"における水産食料品作業への過不足供給量\nが与える経済波及効果_5年移動平均"),
+  　     x = "年数",
+    　   y = "合計割引現在価値(100万円)") +
+    geom_text_repel(
+      data = subset(dt.ere, time == 48),
+      aes(label = 管理シナリオ),
+      vjust = 2,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  g3 <- ggplot(dt.ere,aes(x = time, y = RollingAverage10,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.ere$prefecture),"における水産食料品作業への過不足供給量\nが与える経済波及効果_10年移動平均"),
+  　     x = "年数",
+    　   y = "合計割引現在価値(100万円)") +
+    geom_text_repel(
+      data = subset(dt.ere, time == 45),
+      aes(label = 管理シナリオ),
+      vjust = 2,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  g4 <- ggplot(dt.ere,aes(x = time, y = RollingAverage15,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.ere$prefecture),"における水産食料品作業への過不足供給量\nが与える経済波及効果_15年移動平均"),
+  　     x = "年数",
+    　   y = "合計割引現在価値(100万円)") +
+    geom_text_repel(
+      data = subset(dt.ere, time == 43),
+      aes(label = 管理シナリオ),
+      vjust = 2,
+      #hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  
+  g5 <- ggplot(dt.ere,aes(x = time, y = RollingAverage20,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.ere$prefecture),"における水産食料品作業への過不足供給量\nが与える経済波及効果_20年移動平均"),
+  　     x = "年数",
+    　   y = "合計割引現在価値(100万円)") +
+    geom_text_repel(
+      data = subset(dt.ere, time == 40),
+      aes(label = 管理シナリオ),
+      vjust = 2,
+      hjust = -0.5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+
+  
+  #グラフの保存
+  #setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/経済波及効果(NPV)合計&移動平均")
+  #ggsave(plot = g1,file = paste(unique(dt.ere$prefecture),"_経済波及効果","_合計",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g2,file = paste(unique(dt.ere$prefecture),"_経済波及効果","_5年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g3,file = paste(unique(dt.ere$prefecture),"_経済波及効果","_10年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g4,file = paste(unique(dt.ere$prefecture),"_経済波及効果","_15年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g5,file = paste(unique(dt.ere$prefecture),"_経済波及効果","_20年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  
+  return(list(g1,g2,g3,g4,g5))
+  
+  })
+```
+
+## 漁獲量の移動平均
+
+```{r}
+#Upsideの結果を移動平均にしてみる
+lapply(1:length(unique(UpsideResult$prefecture)),function(x){
+  
+  #特定の県を指定
+  dt.graph <- UpsideResult %>%
+    filter(prefecture == unique(UpsideResult$prefecture)[x] &
+           year > 2015 &
+           management %in% c("SQ","FMSY")) %>%
+    group_by(management) %>%
+    summarise(prefecture,
+              管理シナリオ = management,
+              年 = year-2015,
+              total_pref_catch_moving_mean5 = rollmean(total_pref_catch, k = 5, fill = NA),
+              total_pref_catch_moving_mean10 = rollmean(total_pref_catch, k = 10, fill = NA),
+              total_pref_catch_moving_mean15 = rollmean(total_pref_catch, k = 15, fill = NA),
+              total_pref_catch_moving_mean20 = rollmean(total_pref_catch, k = 20, fill = NA)) %>%
+    ungroup()
+  
+  #図示
+ g1 <- ggplot(dt.graph,aes(x = 年, y = total_pref_catch_moving_mean5,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"の漁獲量の5年移動平均"),
+  　     x = "年数",
+    　   y = "漁獲量(t)") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 48),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none") +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+ 
+ g2 <- ggplot(dt.graph,aes(x = 年, y = total_pref_catch_moving_mean10,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"の漁獲量の10年移動平均"),
+  　     x = "年数",
+    　   y = "漁獲量(t)") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 45),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none") +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  g3 <- ggplot(dt.graph,aes(x = 年, y = total_pref_catch_moving_mean15,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"の漁獲量の15年移動平均"),
+  　     x = "年数",
+    　   y = "漁獲量(t)") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 43),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none") +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+  
+  g4 <- ggplot(dt.graph,aes(x = 年, y = total_pref_catch_moving_mean20,col=管理シナリオ)) +
+  　theme_light(base_family = "Osaka") +
+  　geom_line() +
+  　labs(title = paste(unique(dt.graph$prefecture),"の漁獲量の20年移動平均"),
+  　     x = "年数",
+    　   y = "漁獲量(t)") +
+    geom_text_repel(
+      data = subset(dt.graph, 年 == 40),
+      aes(label = 管理シナリオ),
+      vjust = 1,
+      #hjust = -5,
+      segment.color = NA
+    ) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#a9a9a9",fill = "#a9a9a9", alpha = 0.009) +
+    theme(legend.position = "none") +
+  　scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","econOpt"="#0041ff"))
+
+  
+  #グラフの保存
+  setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Outputs/UpsidePrefAnalysisOutput/漁獲量の移動平均")
+  
+  #ggsave(plot = g1,file = paste(unique(dt.graph$prefecture),"_漁獲量","_5年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g2,file = paste(unique(dt.graph$prefecture),"_漁獲量","_10年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g3,file = paste(unique(dt.graph$prefecture),"_漁獲量","_15年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  #ggsave(plot = g4,file = paste(unique(dt.graph$prefecture),"_漁獲量","_20年移動平均",".png", sep = ""),width = 7.4,height = 5)
+  return(list(g1,g2,g3,g4))
+})
+
+
+```
