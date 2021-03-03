@@ -1,0 +1,93 @@
+﻿fish,SciName,EngName
+bluefin_tuna,Thunnus orientalis,Pacific bluefin tuna
+southern_bluefin_tuna,Thunnus maccoyii,Southern bluefin tuna
+albacore_tuna,Thunnus alalunga,Albacore
+bigeye_tuna,Thunnus obesus,Bigeye tuna
+yellowfin_tuna,Thunnus albacares,Yellowfin tuna
+other_tuna,Thunnini,Tunas nei
+marlin,Tetrapturus audax,Striped marlin
+swordfish,Xiphias gladius,Swordfish
+blue_marlin,Makaira nigricans,Blue marlin
+other_kajiki,Makaira spp,Marlins nei
+skipjack,Katsuwonus pelamis,Skipjack tuna
+auxis,"Auxis thazard, A. rochei",Frigate and bullet tunas
+shark,,
+salmon,Oncorhynchus spp,Pacific salmons nei
+trout,Salmo spp,Trouts nei
+shad,Konosirus punctatus,Dotted gizzard shad
+herring,Clupea pallasii,Pacific herring
+japanese_sardine,Sardinops melanostictus,Japanese pilchard
+round_herring,Etrumeus teres,Red-eye round herring
+japanese_anchovy,Engraulis japonicus,Japanese anchovy
+whitebait,Allosmerus elongatus,Whitebait smelt
+japanese_jack_mackerel,Trachurus japonicus,Japanese jack mackerel
+amberstripe_scad,Decapterus muroadsi,Amberstripe scad
+mackerel,Scombridae,Mackerels nei
+saury,Cololabis saira,Pacific saury
+yellowtail,Seriola quinqueradiata,Japanese amberjack
+bastard_halibut,Paralichthys olivaceus,Bastard halibut
+righteye_flounder,Pleuronectidae,Righteye flounders nei
+cod,Gadus macrocephalus,Pacific cod
+pollock,Theragra chalcogramma,Alaska pollock(=Walleye poll.)
+atka_mackerel,Pleurogrammus azonus,Okhotsk atka mackerel
+red_rock_fish,Sebastes alutus,Pacific ocean perch
+broadbanded_thornyhead,Sebastolobus macrochir,Broadbanded thornyhead
+sandfish,Arctoscopus japonicus,Japanese sandfish
+smelt,"Osmerus spp, Hypomesus spp",Smelts nei
+yellow_croaker,Larimichthys polyactis,Yellow croaker
+other_croaker,Pennahia spp,
+lizardfish,Synodontidae,Lizardfishes nei
+rudderfish,Centrolophus niger,Rudderfish
+conger_eel,Conger spp,Conger eels nei
+daggertooth_pike_conger,Muraenesox cinereus,Daggertooth pike conger
+largehead_hairtail,Trichiurus lepturus,Largehead hairtail
+spiny_red_gurnard,Chelidonichthys spp,Indo-Pacific gurnards
+redwing_searobin,Lepidotrigla microptera,
+rays,Rajidae,Rays and skates nei
+japanese_seabream,Pagrus major,Japanese seabream
+crimson_seabream_and_yellowback_seabream,"Evynnis japonica, Dentex tumifrons","Crison seabream, Yellowback seabream"
+crimson_seabream,Evynnis japonica,Crimson seabream
+yellowback_seabream,Dentex tumifrons,Yellowback seabream
+blackhead_seabream_and_goldlined_seabream,"Acanthopagrus schlegeli, Rhabdosargus sarba","Blackhead seabream, Goldlined seabream"
+threeline_grunt,Parapristipoma trilineatum,
+japanese_spanish_mackerel,Scomberomorus niphonius,Japanese Spanish mackerel
+dolphinfish,Coryphaenidae,Dolphinfishes nei
+flyingfish,Exocoetidae,Flyingfishes nei
+flathead_mullet,Mugil spp,
+japanese_seabass,Lateolabrax japonicus,Japanese seabass
+sand_lance,Ammodytidae,Sandlances nei
+tilefish,Branchiostegidae,Tilefishes nei
+pufferfish,Takifugu spp,Pufferfishes nei
+other_fish,,
+spiny_lobster,Panulirus japonicus,Japanese spiny lobster
+japanese_shrimp,Marsupenaeus japonicus,
+other_shrimp,,
+king_crab,Paralithodes spp,King crabs
+snow_crab,Chionoecetes opilio,Queen crab
+red_snow_crab,Chionoecetes japonicus,Red snow crab
+swimming_crab,Portunidae,"Swimming crabs, etc. nei"
+other_crab,,
+krill,Euphausia spp,Antarctic krill nei
+abalone,Haliotis spp,Abalones nei
+spiny_top_shell,Turbo spp,Turbans nei
+japanese_hard_clam,Meretrix lusoria,Japanese hard clam
+manila_clam,Ruditapes philippinarum,Japanese carpet shell
+scallop,Patinopecten yessoensis,Yesso scallop
+surf_clam,Pseudocardium sybillae,Imperial surf clam
+half-crenate_ark_shell,Scapharca subcrenata,Half-crenated ark
+other_shellfish,,
+golden_cuttlefish,Sepia spp,Cuttlefishes nei
+japanese_common_squid,Todarodes pacificus,Japanese flying squid
+neon_flying_squid,Ommastrephes bartrami,Neon flying squid
+other_squid,,
+octopus,Octopus spp,Octopuses nei
+sea_urchin,Strongylocentrotus spp,Sea urchins nei
+sea_cucumber,Holothuroidea,Sea cucumbers nei
+marine_mammals,,
+other_fish,,
+kelp,Laminariaceae,Kelps nei
+wakame_seaweed,Undaria spp,Wakame nei
+hijiki_seaweed,Sargassum fusiforme,Fusiform sargassum
+tengusa_seaweed,,
+funori_seaweed,,
+other_seaweed,,

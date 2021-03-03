@@ -1,0 +1,1153 @@
+"","fishery","species","management","MC","catchShare","illegalFishing","implementYear","npv1","npv2"
+"1","Abalones nei single_stock","Abalones nei","SQ",1,"no_CS","illegal_fishing",2,1524067475.23804,0
+"2","Abalones nei single_stock","Abalones nei","FMSY",1,"no_CS","illegal_fishing",2,1485347982.73783,0
+"3","Abalones nei single_stock","Abalones nei","minRec",1,"no_CS","illegal_fishing",2,1603081949.3616,0
+"4","Abalones nei single_stock","Abalones nei","econOpt",1,"no_CS","illegal_fishing",2,1575629508.23093,0
+"5","Abalones nei single_stock","Abalones nei","close",1,"no_CS","illegal_fishing",2,28262535.8225153,0
+"6","Abalones nei single_stock","Abalones nei","openA",1,"no_CS","illegal_fishing",2,579290011.358792,0
+"7","Abalones nei single_stock","Abalones nei","SQ",1,"CS","illegal_fishing",2,2634629549.56435,0
+"8","Abalones nei single_stock","Abalones nei","FMSY",1,"CS","illegal_fishing",2,2766769964.6506,0
+"9","Abalones nei single_stock","Abalones nei","minRec",1,"CS","illegal_fishing",2,2723555589.24656,0
+"10","Abalones nei single_stock","Abalones nei","econOpt",1,"CS","illegal_fishing",2,2519790151.921,0
+"11","Abalones nei single_stock","Abalones nei","close",1,"CS","illegal_fishing",2,28262535.8225153,0
+"12","Abalones nei single_stock","Abalones nei","openA",1,"CS","illegal_fishing",2,1695441197.77845,0
+"13","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","SQ",1,"no_CS","illegal_fishing",2,1476984835.82117,0
+"14","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","FMSY",1,"no_CS","illegal_fishing",2,-1213066858.74346,0
+"15","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","minRec",1,"no_CS","illegal_fishing",2,5558979202.53148,0
+"16","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","econOpt",1,"no_CS","illegal_fishing",2,5160831180.26217,0
+"17","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","close",1,"no_CS","illegal_fishing",2,-199843473.582531,0
+"18","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","openA",1,"no_CS","illegal_fishing",2,2861121489.70417,0
+"19","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","SQ",1,"CS","illegal_fishing",2,8500262236.35234,0
+"20","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","FMSY",1,"CS","illegal_fishing",2,7493472059.70426,0
+"21","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","minRec",1,"CS","illegal_fishing",2,9609553317.91623,0
+"22","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","econOpt",1,"CS","illegal_fishing",2,8542487093.36513,0
+"23","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","close",1,"CS","illegal_fishing",2,-199843473.582531,0
+"24","Alaska pollock(=Walleye poll.) pacific_stock","Alaska pollock(=Walleye poll.)","openA",1,"CS","illegal_fishing",2,9592518227.75917,0
+"25","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","SQ",1,"no_CS","illegal_fishing",2,64975338.6456757,0
+"26","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","FMSY",1,"no_CS","illegal_fishing",2,500839867.521279,0
+"27","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","minRec",1,"no_CS","illegal_fishing",2,1079275283.764,0
+"28","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","econOpt",1,"no_CS","illegal_fishing",2,1021998233.189,0
+"29","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","close",1,"no_CS","illegal_fishing",2,537449.673719238,0
+"30","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","openA",1,"no_CS","illegal_fishing",2,1045300526.21158,0
+"31","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","SQ",1,"CS","illegal_fishing",2,91041402.5205813,0
+"32","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","FMSY",1,"CS","illegal_fishing",2,1818076693.71028,0
+"33","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","minRec",1,"CS","illegal_fishing",2,1840284774.99018,0
+"34","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","econOpt",1,"CS","illegal_fishing",2,1669001972.24197,0
+"35","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","close",1,"CS","illegal_fishing",2,537449.673719238,0
+"36","Alaska pollock(=Walleye poll.) sea_of_japan_north_stock","Alaska pollock(=Walleye poll.)","openA",1,"CS","illegal_fishing",2,1366772463.35954,0
+"37","Albacore single_stock","Albacore","SQ",1,"no_CS","illegal_fishing",2,966562328.52194,0
+"38","Albacore single_stock","Albacore","FMSY",1,"no_CS","illegal_fishing",2,945851853.882019,0
+"39","Albacore single_stock","Albacore","minRec",1,"no_CS","illegal_fishing",2,691748317.024053,0
+"40","Albacore single_stock","Albacore","econOpt",1,"no_CS","illegal_fishing",2,1125930131.16287,0
+"41","Albacore single_stock","Albacore","close",1,"no_CS","illegal_fishing",2,43607591.4699741,0
+"42","Albacore single_stock","Albacore","openA",1,"no_CS","illegal_fishing",2,285012823.810623,0
+"43","Albacore single_stock","Albacore","SQ",1,"CS","illegal_fishing",2,2316727699.89228,0
+"44","Albacore single_stock","Albacore","FMSY",1,"CS","illegal_fishing",2,1522935605.65511,0
+"45","Albacore single_stock","Albacore","minRec",1,"CS","illegal_fishing",2,1048231977.37128,0
+"46","Albacore single_stock","Albacore","econOpt",1,"CS","illegal_fishing",2,1990681506.79467,0
+"47","Albacore single_stock","Albacore","close",1,"CS","illegal_fishing",2,43607591.4699741,0
+"48","Albacore single_stock","Albacore","openA",1,"CS","illegal_fishing",2,1334371809.65135,0
+"49","Amberstripe scad single_stock","Amberstripe scad","SQ",1,"no_CS","illegal_fishing",2,633674736.448345,0
+"50","Amberstripe scad single_stock","Amberstripe scad","FMSY",1,"no_CS","illegal_fishing",2,502459451.469484,0
+"51","Amberstripe scad single_stock","Amberstripe scad","minRec",1,"no_CS","illegal_fishing",2,824667484.8179,0
+"52","Amberstripe scad single_stock","Amberstripe scad","econOpt",1,"no_CS","illegal_fishing",2,787886654.732703,0
+"53","Amberstripe scad single_stock","Amberstripe scad","close",1,"no_CS","illegal_fishing",2,-1603501.68259359,0
+"54","Amberstripe scad single_stock","Amberstripe scad","openA",1,"no_CS","illegal_fishing",2,413962681.955719,0
+"55","Amberstripe scad single_stock","Amberstripe scad","SQ",1,"CS","illegal_fishing",2,1315755647.11651,0
+"56","Amberstripe scad single_stock","Amberstripe scad","FMSY",1,"CS","illegal_fishing",2,1341235872.38238,0
+"57","Amberstripe scad single_stock","Amberstripe scad","minRec",1,"CS","illegal_fishing",2,1410444204.43286,0
+"58","Amberstripe scad single_stock","Amberstripe scad","econOpt",1,"CS","illegal_fishing",2,1273870028.84662,0
+"59","Amberstripe scad single_stock","Amberstripe scad","close",1,"CS","illegal_fishing",2,-1603501.68259359,0
+"60","Amberstripe scad single_stock","Amberstripe scad","openA",1,"CS","illegal_fishing",2,1162808159.12185,0
+"61","Antarctic krill nei single_stock","Antarctic krill nei","SQ",1,"no_CS","illegal_fishing",2,108360367.624498,0
+"62","Antarctic krill nei single_stock","Antarctic krill nei","FMSY",1,"no_CS","illegal_fishing",2,219057215.555515,0
+"63","Antarctic krill nei single_stock","Antarctic krill nei","minRec",1,"no_CS","illegal_fishing",2,117729528.633789,0
+"64","Antarctic krill nei single_stock","Antarctic krill nei","econOpt",1,"no_CS","illegal_fishing",2,268373074.50509,0
+"65","Antarctic krill nei single_stock","Antarctic krill nei","close",1,"no_CS","illegal_fishing",2,5830333.40486701,0
+"66","Antarctic krill nei single_stock","Antarctic krill nei","openA",1,"no_CS","illegal_fishing",2,27769945.6947336,0
+"67","Antarctic krill nei single_stock","Antarctic krill nei","SQ",1,"CS","illegal_fishing",2,549874048.322252,0
+"68","Antarctic krill nei single_stock","Antarctic krill nei","FMSY",1,"CS","illegal_fishing",2,366018089.832778,0
+"69","Antarctic krill nei single_stock","Antarctic krill nei","minRec",1,"CS","illegal_fishing",2,176734234.493962,0
+"70","Antarctic krill nei single_stock","Antarctic krill nei","econOpt",1,"CS","illegal_fishing",2,481609042.586762,0
+"71","Antarctic krill nei single_stock","Antarctic krill nei","close",1,"CS","illegal_fishing",2,5830333.40486701,0
+"72","Antarctic krill nei single_stock","Antarctic krill nei","openA",1,"CS","illegal_fishing",2,310871795.327184,0
+"73","Bastard halibut pacific_central_stock","Bastard halibut","SQ",1,"no_CS","illegal_fishing",2,-107403405.965521,0
+"74","Bastard halibut pacific_central_stock","Bastard halibut","FMSY",1,"no_CS","illegal_fishing",2,98192000.0781214,0
+"75","Bastard halibut pacific_central_stock","Bastard halibut","minRec",1,"no_CS","illegal_fishing",2,109976915.72688,0
+"76","Bastard halibut pacific_central_stock","Bastard halibut","econOpt",1,"no_CS","illegal_fishing",2,108818098.984722,0
+"77","Bastard halibut pacific_central_stock","Bastard halibut","close",1,"no_CS","illegal_fishing",2,2522574.49538881,0
+"78","Bastard halibut pacific_central_stock","Bastard halibut","openA",1,"no_CS","illegal_fishing",2,-32308100.0633286,0
+"79","Bastard halibut pacific_central_stock","Bastard halibut","SQ",1,"CS","illegal_fishing",2,47408561.6997206,0
+"80","Bastard halibut pacific_central_stock","Bastard halibut","FMSY",1,"CS","illegal_fishing",2,185762708.955195,0
+"81","Bastard halibut pacific_central_stock","Bastard halibut","minRec",1,"CS","illegal_fishing",2,186550047.855672,0
+"82","Bastard halibut pacific_central_stock","Bastard halibut","econOpt",1,"CS","illegal_fishing",2,172684319.673354,0
+"83","Bastard halibut pacific_central_stock","Bastard halibut","close",1,"CS","illegal_fishing",2,2522574.49538881,0
+"84","Bastard halibut pacific_central_stock","Bastard halibut","openA",1,"CS","illegal_fishing",2,-5458815.69623047,0
+"85","Bastard halibut pacific_north_stock","Bastard halibut","SQ",1,"no_CS","illegal_fishing",2,145146442.721526,0
+"86","Bastard halibut pacific_north_stock","Bastard halibut","FMSY",1,"no_CS","illegal_fishing",2,314448456.885291,0
+"87","Bastard halibut pacific_north_stock","Bastard halibut","minRec",1,"no_CS","illegal_fishing",2,332324767.008349,0
+"88","Bastard halibut pacific_north_stock","Bastard halibut","econOpt",1,"no_CS","illegal_fishing",2,325503379.130096,0
+"89","Bastard halibut pacific_north_stock","Bastard halibut","close",1,"no_CS","illegal_fishing",2,10261448.8382584,0
+"90","Bastard halibut pacific_north_stock","Bastard halibut","openA",1,"no_CS","illegal_fishing",2,10833495.004783,0
+"91","Bastard halibut pacific_north_stock","Bastard halibut","SQ",1,"CS","illegal_fishing",2,525540348.887184,0
+"92","Bastard halibut pacific_north_stock","Bastard halibut","FMSY",1,"CS","illegal_fishing",2,575291961.551349,0
+"93","Bastard halibut pacific_north_stock","Bastard halibut","minRec",1,"CS","illegal_fishing",2,561171798.763834,0
+"94","Bastard halibut pacific_north_stock","Bastard halibut","econOpt",1,"CS","illegal_fishing",2,519720465.331128,0
+"95","Bastard halibut pacific_north_stock","Bastard halibut","close",1,"CS","illegal_fishing",2,10261448.8382584,0
+"96","Bastard halibut pacific_north_stock","Bastard halibut","openA",1,"CS","illegal_fishing",2,176130218.963577,0
+"97","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","SQ",1,"no_CS","illegal_fishing",2,-353131269.506104,0
+"98","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","FMSY",1,"no_CS","illegal_fishing",2,130585156.13055,0
+"99","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","minRec",1,"no_CS","illegal_fishing",2,187734072.818873,0
+"100","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","econOpt",1,"no_CS","illegal_fishing",2,181194256.770081,0
+"101","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","close",1,"no_CS","illegal_fishing",2,-4798021.60693938,0
+"102","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","openA",1,"no_CS","illegal_fishing",2,-85911521.4337033,0
+"103","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","SQ",1,"CS","illegal_fishing",2,-19882111.0025696,0
+"104","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","FMSY",1,"CS","illegal_fishing",2,311734087.979235,0
+"105","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","minRec",1,"CS","illegal_fishing",2,324450635.469382,0
+"106","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","econOpt",1,"CS","illegal_fishing",2,294653120.584518,0
+"107","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","close",1,"CS","illegal_fishing",2,-4798021.60693938,0
+"108","Bastard halibut sea_of_japan_north_central_stock","Bastard halibut","openA",1,"CS","illegal_fishing",2,-32923729.2823223,0
+"109","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","SQ",1,"no_CS","illegal_fishing",2,-204116832.239846,0
+"110","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","FMSY",1,"no_CS","illegal_fishing",2,83055209.4339861,0
+"111","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","minRec",1,"no_CS","illegal_fishing",2,127217569.644831,0
+"112","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","econOpt",1,"no_CS","illegal_fishing",2,122150164.701887,0
+"113","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","close",1,"no_CS","illegal_fishing",2,-3765798.41343463,0
+"114","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","openA",1,"no_CS","illegal_fishing",2,-49416579.3289448,0
+"115","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","SQ",1,"CS","illegal_fishing",2,20366553.2325134,0
+"116","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","FMSY",1,"CS","illegal_fishing",2,210682392.541433,0
+"117","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","minRec",1,"CS","illegal_fishing",2,220194139.971297,0
+"118","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","econOpt",1,"CS","illegal_fishing",2,199304774.891724,0
+"119","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","close",1,"CS","illegal_fishing",2,-3765798.41343463,0
+"120","Bastard halibut sea_of_japan_west_east_china_sea_stock","Bastard halibut","openA",1,"CS","illegal_fishing",2,-3824640.92712614,0
+"121","Bastard halibut seto_inland_sea_stock","Bastard halibut","SQ",1,"no_CS","illegal_fishing",2,10382198.4404147,0
+"122","Bastard halibut seto_inland_sea_stock","Bastard halibut","FMSY",1,"no_CS","illegal_fishing",2,100637963.510668,0
+"123","Bastard halibut seto_inland_sea_stock","Bastard halibut","minRec",1,"no_CS","illegal_fishing",2,118221662.520865,0
+"124","Bastard halibut seto_inland_sea_stock","Bastard halibut","econOpt",1,"no_CS","illegal_fishing",2,115231158.457756,0
+"125","Bastard halibut seto_inland_sea_stock","Bastard halibut","close",1,"no_CS","illegal_fishing",2,1457310.20104476,0
+"126","Bastard halibut seto_inland_sea_stock","Bastard halibut","openA",1,"no_CS","illegal_fishing",2,-1954618.40902319,0
+"127","Bastard halibut seto_inland_sea_stock","Bastard halibut","SQ",1,"CS","illegal_fishing",2,161498416.153496,0
+"128","Bastard halibut seto_inland_sea_stock","Bastard halibut","FMSY",1,"CS","illegal_fishing",2,203331359.667381,0
+"129","Bastard halibut seto_inland_sea_stock","Bastard halibut","minRec",1,"CS","illegal_fishing",2,201173327.261318,0
+"130","Bastard halibut seto_inland_sea_stock","Bastard halibut","econOpt",1,"CS","illegal_fishing",2,185043990.3424,0
+"131","Bastard halibut seto_inland_sea_stock","Bastard halibut","close",1,"CS","illegal_fishing",2,1457310.20104476,0
+"132","Bastard halibut seto_inland_sea_stock","Bastard halibut","openA",1,"CS","illegal_fishing",2,57841519.0005399,0
+"133","Bigeye tuna single_stock","Bigeye tuna","SQ",1,"no_CS","illegal_fishing",2,5616657806.271,0
+"134","Bigeye tuna single_stock","Bigeye tuna","FMSY",1,"no_CS","illegal_fishing",2,5774379548.83768,0
+"135","Bigeye tuna single_stock","Bigeye tuna","minRec",1,"no_CS","illegal_fishing",2,5458683030.35045,0
+"136","Bigeye tuna single_stock","Bigeye tuna","econOpt",1,"no_CS","illegal_fishing",2,5893278407.28904,0
+"137","Bigeye tuna single_stock","Bigeye tuna","close",1,"no_CS","illegal_fishing",2,142661452.442253,0
+"138","Bigeye tuna single_stock","Bigeye tuna","openA",1,"no_CS","illegal_fishing",2,2802659584.13667,0
+"139","Bigeye tuna single_stock","Bigeye tuna","SQ",1,"CS","illegal_fishing",2,9209578302.62151,0
+"140","Bigeye tuna single_stock","Bigeye tuna","FMSY",1,"CS","illegal_fishing",2,9649925777.35608,0
+"141","Bigeye tuna single_stock","Bigeye tuna","minRec",1,"CS","illegal_fishing",2,8774923737.48256,0
+"142","Bigeye tuna single_stock","Bigeye tuna","econOpt",1,"CS","illegal_fishing",2,9880556990.33491,0
+"143","Bigeye tuna single_stock","Bigeye tuna","close",1,"CS","illegal_fishing",2,142661452.442253,0
+"144","Bigeye tuna single_stock","Bigeye tuna","openA",1,"CS","illegal_fishing",2,7928597277.88482,0
+"145","Blackhead seabream single_stock","Blackhead seabream","SQ",1,"no_CS","illegal_fishing",2,121597725.217446,0
+"146","Blackhead seabream single_stock","Blackhead seabream","FMSY",1,"no_CS","illegal_fishing",2,205680814.425754,0
+"147","Blackhead seabream single_stock","Blackhead seabream","minRec",1,"no_CS","illegal_fishing",2,214909583.45868,0
+"148","Blackhead seabream single_stock","Blackhead seabream","econOpt",1,"no_CS","illegal_fishing",2,213339672.269757,0
+"149","Blackhead seabream single_stock","Blackhead seabream","close",1,"no_CS","illegal_fishing",2,7181469.96163192,0
+"150","Blackhead seabream single_stock","Blackhead seabream","openA",1,"no_CS","illegal_fishing",2,13916399.3771864,0
+"151","Blackhead seabream single_stock","Blackhead seabream","SQ",1,"CS","illegal_fishing",2,337894364.124632,0
+"152","Blackhead seabream single_stock","Blackhead seabream","FMSY",1,"CS","illegal_fishing",2,365125364.516722,0
+"153","Blackhead seabream single_stock","Blackhead seabream","minRec",1,"CS","illegal_fishing",2,362936896.030597,0
+"154","Blackhead seabream single_stock","Blackhead seabream","econOpt",1,"CS","illegal_fishing",2,337206807.846035,0
+"155","Blackhead seabream single_stock","Blackhead seabream","close",1,"CS","illegal_fishing",2,7181469.96163192,0
+"156","Blackhead seabream single_stock","Blackhead seabream","openA",1,"CS","illegal_fishing",2,107861386.324019,0
+"157","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","SQ",1,"no_CS","illegal_fishing",2,174565834.173771,0
+"158","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","FMSY",1,"no_CS","illegal_fishing",2,209939074.60595,0
+"159","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","minRec",1,"no_CS","illegal_fishing",2,216150238.747656,0
+"160","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","econOpt",1,"no_CS","illegal_fishing",2,213184245.515603,0
+"161","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","close",1,"no_CS","illegal_fishing",2,7140997.28023133,0
+"162","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","openA",1,"no_CS","illegal_fishing",2,32080015.877227,0
+"163","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","SQ",1,"CS","illegal_fishing",2,372870098.23194,0
+"164","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","FMSY",1,"CS","illegal_fishing",2,368899857.74354,0
+"165","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","minRec",1,"CS","illegal_fishing",2,364940260.468283,0
+"166","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","econOpt",1,"CS","illegal_fishing",2,338350827.633462,0
+"167","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","close",1,"CS","illegal_fishing",2,7140997.28023133,0
+"168","Blackhead seabream, Goldlined seabream single_stock","Blackhead seabream, Goldlined seabream","openA",1,"CS","illegal_fishing",2,142544772.500599,0
+"169","Blue marlin single_stock","Blue marlin","SQ",1,"no_CS","illegal_fishing",2,192191391.285334,0
+"170","Blue marlin single_stock","Blue marlin","FMSY",1,"no_CS","illegal_fishing",2,179988832.770081,0
+"171","Blue marlin single_stock","Blue marlin","minRec",1,"no_CS","illegal_fishing",2,200440183.805241,0
+"172","Blue marlin single_stock","Blue marlin","econOpt",1,"no_CS","illegal_fishing",2,229741019.832606,0
+"173","Blue marlin single_stock","Blue marlin","close",1,"no_CS","illegal_fishing",2,58105.441913825,0
+"174","Blue marlin single_stock","Blue marlin","openA",1,"no_CS","illegal_fishing",2,172835331.052576,0
+"175","Blue marlin single_stock","Blue marlin","SQ",1,"CS","illegal_fishing",2,369910259.470464,0
+"176","Blue marlin single_stock","Blue marlin","FMSY",1,"CS","illegal_fishing",2,416883886.926934,0
+"177","Blue marlin single_stock","Blue marlin","minRec",1,"CS","illegal_fishing",2,327325857.677096,0
+"178","Blue marlin single_stock","Blue marlin","econOpt",1,"CS","illegal_fishing",2,389151792.256638,0
+"179","Blue marlin single_stock","Blue marlin","close",1,"CS","illegal_fishing",2,58105.441913825,0
+"180","Blue marlin single_stock","Blue marlin","openA",1,"CS","illegal_fishing",2,456445259.612341,0
+"181","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","SQ",1,"no_CS","illegal_fishing",2,474435095.398642,0
+"182","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","FMSY",1,"no_CS","illegal_fishing",2,551750483.617853,0
+"183","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","minRec",1,"no_CS","illegal_fishing",2,569350866.069055,0
+"184","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","econOpt",1,"no_CS","illegal_fishing",2,559032854.015325,0
+"185","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","close",1,"no_CS","illegal_fishing",2,8847480.93013812,0
+"186","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","openA",1,"no_CS","illegal_fishing",2,253809644.333306,0
+"187","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","SQ",1,"CS","illegal_fishing",2,731764164.939693,0
+"188","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","FMSY",1,"CS","illegal_fishing",2,983848363.550291,0
+"189","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","minRec",1,"CS","illegal_fishing",2,967971520.659981,0
+"190","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","econOpt",1,"CS","illegal_fishing",2,895966980.477638,0
+"191","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","close",1,"CS","illegal_fishing",2,8847480.93013812,0
+"192","Broadbanded thornyhead hokkaido_east_hokkaido_south","Broadbanded thornyhead","openA",1,"CS","illegal_fishing",2,675329474.729292,0
+"193","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","SQ",1,"no_CS","illegal_fishing",2,238004609.947741,0
+"194","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","FMSY",1,"no_CS","illegal_fishing",2,321152800.585675,0
+"195","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","minRec",1,"no_CS","illegal_fishing",2,338295225.583061,0
+"196","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","econOpt",1,"no_CS","illegal_fishing",2,330890839.218013,0
+"197","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","close",1,"no_CS","illegal_fishing",2,3799680.99301022,0
+"198","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","openA",1,"no_CS","illegal_fishing",2,182587071.537861,0
+"199","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","SQ",1,"CS","illegal_fishing",2,360353373.281511,0
+"200","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","FMSY",1,"CS","illegal_fishing",2,592240582.659178,0
+"201","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","minRec",1,"CS","illegal_fishing",2,575941931.672655,0
+"202","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","econOpt",1,"CS","illegal_fishing",2,533025105.713778,0
+"203","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","close",1,"CS","illegal_fishing",2,3799680.99301022,0
+"204","Broadbanded thornyhead pacific_north","Broadbanded thornyhead","openA",1,"CS","illegal_fishing",2,468738315.680136,0
+"205","Conger eels nei single_stock","Conger eels nei","SQ",1,"no_CS","illegal_fishing",2,539249910.930539,0
+"206","Conger eels nei single_stock","Conger eels nei","FMSY",1,"no_CS","illegal_fishing",2,538245677.230837,0
+"207","Conger eels nei single_stock","Conger eels nei","minRec",1,"no_CS","illegal_fishing",2,538245677.230837,0
+"208","Conger eels nei single_stock","Conger eels nei","econOpt",1,"no_CS","illegal_fishing",2,534388552.537815,0
+"209","Conger eels nei single_stock","Conger eels nei","close",1,"no_CS","illegal_fishing",2,16257883.153044,0
+"210","Conger eels nei single_stock","Conger eels nei","openA",1,"no_CS","illegal_fishing",2,141929870.38985,0
+"211","Conger eels nei single_stock","Conger eels nei","SQ",1,"CS","illegal_fishing",2,894639231.856079,0
+"212","Conger eels nei single_stock","Conger eels nei","FMSY",1,"CS","illegal_fishing",2,909209639.31932,0
+"213","Conger eels nei single_stock","Conger eels nei","minRec",1,"CS","illegal_fishing",2,909209639.31932,0
+"214","Conger eels nei single_stock","Conger eels nei","econOpt",1,"CS","illegal_fishing",2,846050065.139557,0
+"215","Conger eels nei single_stock","Conger eels nei","close",1,"CS","illegal_fishing",2,16257883.153044,0
+"216","Conger eels nei single_stock","Conger eels nei","openA",1,"CS","illegal_fishing",2,432964187.08213,0
+"217","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","SQ",1,"no_CS","illegal_fishing",2,206694245.196538,0
+"218","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","FMSY",1,"no_CS","illegal_fishing",2,322836557.700372,0
+"219","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","minRec",1,"no_CS","illegal_fishing",2,322836557.700372,0
+"220","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","econOpt",1,"no_CS","illegal_fishing",2,322743770.718891,0
+"221","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","close",1,"no_CS","illegal_fishing",2,16001381.2299637,0
+"222","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","openA",1,"no_CS","illegal_fishing",2,16248809.7175626,0
+"223","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","SQ",1,"CS","illegal_fishing",2,504381724.667084,0
+"224","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","FMSY",1,"CS","illegal_fishing",2,539928027.981065,0
+"225","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","minRec",1,"CS","illegal_fishing",2,539928027.981065,0
+"226","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","econOpt",1,"CS","illegal_fishing",2,504855627.615583,0
+"227","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","close",1,"CS","illegal_fishing",2,16001381.2299637,0
+"228","Crison seabream, Yellowback seabream single_stock","Crison seabream, Yellowback seabream","openA",1,"CS","illegal_fishing",2,134564846.956854,0
+"229","Cuttlefishes nei single_stock","Cuttlefishes nei","SQ",1,"no_CS","illegal_fishing",2,857808964.034401,0
+"230","Cuttlefishes nei single_stock","Cuttlefishes nei","FMSY",1,"no_CS","illegal_fishing",2,1006528640.61402,0
+"231","Cuttlefishes nei single_stock","Cuttlefishes nei","minRec",1,"no_CS","illegal_fishing",2,1006528640.61402,0
+"232","Cuttlefishes nei single_stock","Cuttlefishes nei","econOpt",1,"no_CS","illegal_fishing",2,986924385.114056,0
+"233","Cuttlefishes nei single_stock","Cuttlefishes nei","close",1,"no_CS","illegal_fishing",2,25126253.4429013,0
+"234","Cuttlefishes nei single_stock","Cuttlefishes nei","openA",1,"no_CS","illegal_fishing",2,304796961.065442,0
+"235","Cuttlefishes nei single_stock","Cuttlefishes nei","SQ",1,"CS","illegal_fishing",2,1273447863.30717,0
+"236","Cuttlefishes nei single_stock","Cuttlefishes nei","FMSY",1,"CS","illegal_fishing",2,1620237320.93206,0
+"237","Cuttlefishes nei single_stock","Cuttlefishes nei","minRec",1,"CS","illegal_fishing",2,1620237320.93206,0
+"238","Cuttlefishes nei single_stock","Cuttlefishes nei","econOpt",1,"CS","illegal_fishing",2,1560911239.63892,0
+"239","Cuttlefishes nei single_stock","Cuttlefishes nei","close",1,"CS","illegal_fishing",2,25126253.4429013,0
+"240","Cuttlefishes nei single_stock","Cuttlefishes nei","openA",1,"CS","illegal_fishing",2,821600299.651466,0
+"241","Daggertooth pike conger single_stock","Daggertooth pike conger","SQ",1,"no_CS","illegal_fishing",2,562653594.710756,0
+"242","Daggertooth pike conger single_stock","Daggertooth pike conger","FMSY",1,"no_CS","illegal_fishing",2,563715875.953367,0
+"243","Daggertooth pike conger single_stock","Daggertooth pike conger","minRec",1,"no_CS","illegal_fishing",2,587421110.321679,0
+"244","Daggertooth pike conger single_stock","Daggertooth pike conger","econOpt",1,"no_CS","illegal_fishing",2,576987089.343446,0
+"245","Daggertooth pike conger single_stock","Daggertooth pike conger","close",1,"no_CS","illegal_fishing",2,11747983.4364017,0
+"246","Daggertooth pike conger single_stock","Daggertooth pike conger","openA",1,"no_CS","illegal_fishing",2,216060417.800787,0
+"247","Daggertooth pike conger single_stock","Daggertooth pike conger","SQ",1,"CS","illegal_fishing",2,933491353.504131,0
+"248","Daggertooth pike conger single_stock","Daggertooth pike conger","FMSY",1,"CS","illegal_fishing",2,1014917903.64741,0
+"249","Daggertooth pike conger single_stock","Daggertooth pike conger","minRec",1,"CS","illegal_fishing",2,996801661.732846,0
+"250","Daggertooth pike conger single_stock","Daggertooth pike conger","econOpt",1,"CS","illegal_fishing",2,923039828.072154,0
+"251","Daggertooth pike conger single_stock","Daggertooth pike conger","close",1,"CS","illegal_fishing",2,11747983.4364017,0
+"252","Daggertooth pike conger single_stock","Daggertooth pike conger","openA",1,"CS","illegal_fishing",2,621105626.025534,0
+"253","Dolphinfishes nei single_stock","Dolphinfishes nei","SQ",1,"no_CS","illegal_fishing",2,-139056180.426951,0
+"254","Dolphinfishes nei single_stock","Dolphinfishes nei","FMSY",1,"no_CS","illegal_fishing",2,80461539.2205418,0
+"255","Dolphinfishes nei single_stock","Dolphinfishes nei","minRec",1,"no_CS","illegal_fishing",2,113515631.113457,0
+"256","Dolphinfishes nei single_stock","Dolphinfishes nei","econOpt",1,"no_CS","illegal_fishing",2,108913484.798393,0
+"257","Dolphinfishes nei single_stock","Dolphinfishes nei","close",1,"no_CS","illegal_fishing",2,-2120471.20171552,0
+"258","Dolphinfishes nei single_stock","Dolphinfishes nei","openA",1,"no_CS","illegal_fishing",2,-36651036.5153137,0
+"259","Dolphinfishes nei single_stock","Dolphinfishes nei","SQ",1,"CS","illegal_fishing",2,60240053.1584597,0
+"260","Dolphinfishes nei single_stock","Dolphinfishes nei","FMSY",1,"CS","illegal_fishing",2,195201012.392817,0
+"261","Dolphinfishes nei single_stock","Dolphinfishes nei","minRec",1,"CS","illegal_fishing",2,195472716.292363,0
+"262","Dolphinfishes nei single_stock","Dolphinfishes nei","econOpt",1,"CS","illegal_fishing",2,177813479.843476,0
+"263","Dolphinfishes nei single_stock","Dolphinfishes nei","close",1,"CS","illegal_fishing",2,-2120471.20171552,0
+"264","Dolphinfishes nei single_stock","Dolphinfishes nei","openA",1,"CS","illegal_fishing",2,13081772.1904652,0
+"265","Dotted gizzard shad single_stock","Dotted gizzard shad","SQ",1,"no_CS","illegal_fishing",2,161884621.767256,0
+"266","Dotted gizzard shad single_stock","Dotted gizzard shad","FMSY",1,"no_CS","illegal_fishing",2,200768719.120494,0
+"267","Dotted gizzard shad single_stock","Dotted gizzard shad","minRec",1,"no_CS","illegal_fishing",2,200768719.120494,0
+"268","Dotted gizzard shad single_stock","Dotted gizzard shad","econOpt",1,"no_CS","illegal_fishing",2,197509407.361797,0
+"269","Dotted gizzard shad single_stock","Dotted gizzard shad","close",1,"no_CS","illegal_fishing",2,4873492.44564363,0
+"270","Dotted gizzard shad single_stock","Dotted gizzard shad","openA",1,"no_CS","illegal_fishing",2,59848433.019188,0
+"271","Dotted gizzard shad single_stock","Dotted gizzard shad","SQ",1,"CS","illegal_fishing",2,236744786.725479,0
+"272","Dotted gizzard shad single_stock","Dotted gizzard shad","FMSY",1,"CS","illegal_fishing",2,319567166.851361,0
+"273","Dotted gizzard shad single_stock","Dotted gizzard shad","minRec",1,"CS","illegal_fishing",2,319567166.851361,0
+"274","Dotted gizzard shad single_stock","Dotted gizzard shad","econOpt",1,"CS","illegal_fishing",2,311564361.222249,0
+"275","Dotted gizzard shad single_stock","Dotted gizzard shad","close",1,"CS","illegal_fishing",2,4873492.44564363,0
+"276","Dotted gizzard shad single_stock","Dotted gizzard shad","openA",1,"CS","illegal_fishing",2,158648992.840761,0
+"277","Flyingfishes nei single_stock","Flyingfishes nei","SQ",1,"no_CS","illegal_fishing",2,-231592135.136991,0
+"278","Flyingfishes nei single_stock","Flyingfishes nei","FMSY",1,"no_CS","illegal_fishing",2,147631070.984911,0
+"279","Flyingfishes nei single_stock","Flyingfishes nei","minRec",1,"no_CS","illegal_fishing",2,193751535.236623,0
+"280","Flyingfishes nei single_stock","Flyingfishes nei","econOpt",1,"no_CS","illegal_fishing",2,189427857.595394,0
+"281","Flyingfishes nei single_stock","Flyingfishes nei","close",1,"no_CS","illegal_fishing",2,-1619814.30464423,0
+"282","Flyingfishes nei single_stock","Flyingfishes nei","openA",1,"no_CS","illegal_fishing",2,-58663190.5680333,0
+"283","Flyingfishes nei single_stock","Flyingfishes nei","SQ",1,"CS","illegal_fishing",2,62138394.5961002,0
+"284","Flyingfishes nei single_stock","Flyingfishes nei","FMSY",1,"CS","illegal_fishing",2,319575537.219834,0
+"285","Flyingfishes nei single_stock","Flyingfishes nei","minRec",1,"CS","illegal_fishing",2,332737096.607873,0
+"286","Flyingfishes nei single_stock","Flyingfishes nei","econOpt",1,"CS","illegal_fishing",2,304510299.326964,0
+"287","Flyingfishes nei single_stock","Flyingfishes nei","close",1,"CS","illegal_fishing",2,-1619814.30464423,0
+"288","Flyingfishes nei single_stock","Flyingfishes nei","openA",1,"CS","illegal_fishing",2,-1804946.89921246,0
+"289","Frigate and bullet tunas single_stock","Frigate and bullet tunas","SQ",1,"no_CS","illegal_fishing",2,378223346.683079,0
+"290","Frigate and bullet tunas single_stock","Frigate and bullet tunas","FMSY",1,"no_CS","illegal_fishing",2,377110509.423514,0
+"291","Frigate and bullet tunas single_stock","Frigate and bullet tunas","minRec",1,"no_CS","illegal_fishing",2,384127738.399702,0
+"292","Frigate and bullet tunas single_stock","Frigate and bullet tunas","econOpt",1,"no_CS","illegal_fishing",2,380198252.249137,0
+"293","Frigate and bullet tunas single_stock","Frigate and bullet tunas","close",1,"no_CS","illegal_fishing",2,10599809.1561685,0
+"294","Frigate and bullet tunas single_stock","Frigate and bullet tunas","openA",1,"no_CS","illegal_fishing",2,101852794.033479,0
+"295","Frigate and bullet tunas single_stock","Frigate and bullet tunas","SQ",1,"CS","illegal_fishing",2,649475257.51845,0
+"296","Frigate and bullet tunas single_stock","Frigate and bullet tunas","FMSY",1,"CS","illegal_fishing",2,652891658.873315,0
+"297","Frigate and bullet tunas single_stock","Frigate and bullet tunas","minRec",1,"CS","illegal_fishing",2,650145806.576046,0
+"298","Frigate and bullet tunas single_stock","Frigate and bullet tunas","econOpt",1,"CS","illegal_fishing",2,602974947.703518,0
+"299","Frigate and bullet tunas single_stock","Frigate and bullet tunas","close",1,"CS","illegal_fishing",2,10599809.1561685,0
+"300","Frigate and bullet tunas single_stock","Frigate and bullet tunas","openA",1,"CS","illegal_fishing",2,317595795.905703,0
+"301","Japanese amberjack single_stock","Japanese amberjack","SQ",1,"no_CS","illegal_fishing",2,-864081134.020066,0
+"302","Japanese amberjack single_stock","Japanese amberjack","FMSY",1,"no_CS","illegal_fishing",2,3254825395.06635,0
+"303","Japanese amberjack single_stock","Japanese amberjack","minRec",1,"no_CS","illegal_fishing",2,3298304220.08129,0
+"304","Japanese amberjack single_stock","Japanese amberjack","econOpt",1,"no_CS","illegal_fishing",2,3260720178.62158,0
+"305","Japanese amberjack single_stock","Japanese amberjack","close",1,"no_CS","illegal_fishing",2,196072826.865541,0
+"306","Japanese amberjack single_stock","Japanese amberjack","openA",1,"no_CS","illegal_fishing",2,-607026909.586885,0
+"307","Japanese amberjack single_stock","Japanese amberjack","SQ",1,"CS","illegal_fishing",2,3144489479.7258,0
+"308","Japanese amberjack single_stock","Japanese amberjack","FMSY",1,"CS","illegal_fishing",2,5527058185.49498,0
+"309","Japanese amberjack single_stock","Japanese amberjack","minRec",1,"CS","illegal_fishing",2,5509042262.27347,0
+"310","Japanese amberjack single_stock","Japanese amberjack","econOpt",1,"CS","illegal_fishing",2,5112795517.47114,0
+"311","Japanese amberjack single_stock","Japanese amberjack","close",1,"CS","illegal_fishing",2,196072826.865541,0
+"312","Japanese amberjack single_stock","Japanese amberjack","openA",1,"CS","illegal_fishing",2,291609982.975252,0
+"313","Japanese anchovy pacific_stock","Japanese anchovy","SQ",1,"no_CS","illegal_fishing",2,746649002.755424,0
+"314","Japanese anchovy pacific_stock","Japanese anchovy","FMSY",1,"no_CS","illegal_fishing",2,724685070.537529,0
+"315","Japanese anchovy pacific_stock","Japanese anchovy","minRec",1,"no_CS","illegal_fishing",2,820067001.187732,0
+"316","Japanese anchovy pacific_stock","Japanese anchovy","econOpt",1,"no_CS","illegal_fishing",2,809676096.755601,0
+"317","Japanese anchovy pacific_stock","Japanese anchovy","close",1,"no_CS","illegal_fishing",2,12013941.9952345,0
+"318","Japanese anchovy pacific_stock","Japanese anchovy","openA",1,"no_CS","illegal_fishing",2,258540591.395799,0
+"319","Japanese anchovy pacific_stock","Japanese anchovy","SQ",1,"CS","illegal_fishing",2,1373814118.59818,0
+"320","Japanese anchovy pacific_stock","Japanese anchovy","FMSY",1,"CS","illegal_fishing",2,1387927310.67095,0
+"321","Japanese anchovy pacific_stock","Japanese anchovy","minRec",1,"CS","illegal_fishing",2,1395277838.93712,0
+"322","Japanese anchovy pacific_stock","Japanese anchovy","econOpt",1,"CS","illegal_fishing",2,1289581327.05377,0
+"323","Japanese anchovy pacific_stock","Japanese anchovy","close",1,"CS","illegal_fishing",2,12013941.9952345,0
+"324","Japanese anchovy pacific_stock","Japanese anchovy","openA",1,"CS","illegal_fishing",2,786327798.531739,0
+"325","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","SQ",1,"no_CS","illegal_fishing",2,-1379394133.50678,0
+"326","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","FMSY",1,"no_CS","illegal_fishing",2,210279543.487402,0
+"327","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","minRec",1,"no_CS","illegal_fishing",2,391745585.847625,0
+"328","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","econOpt",1,"no_CS","illegal_fishing",2,371486768.89866,0
+"329","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","close",1,"no_CS","illegal_fishing",2,-27016897.344428,0
+"330","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","openA",1,"no_CS","illegal_fishing",2,-320288245.140054,0
+"331","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","SQ",1,"CS","illegal_fishing",2,-479469941.291025,0
+"332","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","FMSY",1,"CS","illegal_fishing",2,648845632.237034,0
+"333","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","minRec",1,"CS","illegal_fishing",2,688410955.568196,0
+"334","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","econOpt",1,"CS","illegal_fishing",2,617556793.286057,0
+"335","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","close",1,"CS","illegal_fishing",2,-27016897.344428,0
+"336","Japanese anchovy seto_inland_sea_stock","Japanese anchovy","openA",1,"CS","illegal_fishing",2,-238666675.545913,0
+"337","Japanese anchovy tsushima_current_stock","Japanese anchovy","SQ",1,"no_CS","illegal_fishing",2,-2888673300.39552,0
+"338","Japanese anchovy tsushima_current_stock","Japanese anchovy","FMSY",1,"no_CS","illegal_fishing",2,135304566.177237,0
+"339","Japanese anchovy tsushima_current_stock","Japanese anchovy","minRec",1,"no_CS","illegal_fishing",2,369777398.453696,0
+"340","Japanese anchovy tsushima_current_stock","Japanese anchovy","econOpt",1,"no_CS","illegal_fishing",2,349519692.645601,0
+"341","Japanese anchovy tsushima_current_stock","Japanese anchovy","close",1,"no_CS","illegal_fishing",2,-57271935.1009919,0
+"342","Japanese anchovy tsushima_current_stock","Japanese anchovy","openA",1,"no_CS","illegal_fishing",2,-603805556.462289,0
+"343","Japanese anchovy tsushima_current_stock","Japanese anchovy","SQ",1,"CS","illegal_fishing",2,-1772764446.21291,0
+"344","Japanese anchovy tsushima_current_stock","Japanese anchovy","FMSY",1,"CS","illegal_fishing",2,571456180.839017,0
+"345","Japanese anchovy tsushima_current_stock","Japanese anchovy","minRec",1,"CS","illegal_fishing",2,673067435.57907,0
+"346","Japanese anchovy tsushima_current_stock","Japanese anchovy","econOpt",1,"CS","illegal_fishing",2,596376703.650016,0
+"347","Japanese anchovy tsushima_current_stock","Japanese anchovy","close",1,"CS","illegal_fishing",2,-57271935.1009919,0
+"348","Japanese anchovy tsushima_current_stock","Japanese anchovy","openA",1,"CS","illegal_fishing",2,-706839898.78492,0
+"349","Japanese carpet shell single_stock","Japanese carpet shell","SQ",1,"no_CS","illegal_fishing",2,2643634257.51473,0
+"350","Japanese carpet shell single_stock","Japanese carpet shell","FMSY",1,"no_CS","illegal_fishing",2,5532489942.13957,0
+"351","Japanese carpet shell single_stock","Japanese carpet shell","minRec",1,"no_CS","illegal_fishing",2,5532489942.13957,0
+"352","Japanese carpet shell single_stock","Japanese carpet shell","econOpt",1,"no_CS","illegal_fishing",2,5432098871.99883,0
+"353","Japanese carpet shell single_stock","Japanese carpet shell","close",1,"no_CS","illegal_fishing",2,55224326.1663491,0
+"354","Japanese carpet shell single_stock","Japanese carpet shell","openA",1,"no_CS","illegal_fishing",2,2279833044.96448,0
+"355","Japanese carpet shell single_stock","Japanese carpet shell","SQ",1,"CS","illegal_fishing",2,3745470274.02365,0
+"356","Japanese carpet shell single_stock","Japanese carpet shell","FMSY",1,"CS","illegal_fishing",2,9178211491.4931,0
+"357","Japanese carpet shell single_stock","Japanese carpet shell","minRec",1,"CS","illegal_fishing",2,9178211491.4931,0
+"358","Japanese carpet shell single_stock","Japanese carpet shell","econOpt",1,"CS","illegal_fishing",2,8659486576.3998,0
+"359","Japanese carpet shell single_stock","Japanese carpet shell","close",1,"CS","illegal_fishing",2,55224326.1663491,0
+"360","Japanese carpet shell single_stock","Japanese carpet shell","openA",1,"CS","illegal_fishing",2,5749658903.15989,0
+"361","Japanese flying squid winter_stock","Japanese flying squid","SQ",1,"no_CS","illegal_fishing",2,8757439764.4278,0
+"362","Japanese flying squid winter_stock","Japanese flying squid","FMSY",1,"no_CS","illegal_fishing",2,10152375201.2201,0
+"363","Japanese flying squid winter_stock","Japanese flying squid","minRec",1,"no_CS","illegal_fishing",2,10152375201.2201,0
+"364","Japanese flying squid winter_stock","Japanese flying squid","econOpt",1,"no_CS","illegal_fishing",2,9970233818.40282,0
+"365","Japanese flying squid winter_stock","Japanese flying squid","close",1,"no_CS","illegal_fishing",2,231867575.127321,0
+"366","Japanese flying squid winter_stock","Japanese flying squid","openA",1,"no_CS","illegal_fishing",2,3269552887.88101,0
+"367","Japanese flying squid winter_stock","Japanese flying squid","SQ",1,"CS","illegal_fishing",2,13097558190.6247,0
+"368","Japanese flying squid winter_stock","Japanese flying squid","FMSY",1,"CS","illegal_fishing",2,16663732485.7701,0
+"369","Japanese flying squid winter_stock","Japanese flying squid","minRec",1,"CS","illegal_fishing",2,16663732485.7701,0
+"370","Japanese flying squid winter_stock","Japanese flying squid","econOpt",1,"CS","illegal_fishing",2,15787614273.2124,0
+"371","Japanese flying squid winter_stock","Japanese flying squid","close",1,"CS","illegal_fishing",2,231867575.127321,0
+"372","Japanese flying squid winter_stock","Japanese flying squid","openA",1,"CS","illegal_fishing",2,8754038927.13359,0
+"373","Japanese hard clam single_stock","Japanese hard clam","SQ",1,"no_CS","illegal_fishing",2,313988773.393825,0
+"374","Japanese hard clam single_stock","Japanese hard clam","FMSY",1,"no_CS","illegal_fishing",2,419305812.493773,0
+"375","Japanese hard clam single_stock","Japanese hard clam","minRec",1,"no_CS","illegal_fishing",2,423027237.202267,0
+"376","Japanese hard clam single_stock","Japanese hard clam","econOpt",1,"no_CS","illegal_fishing",2,418708148.501547,0
+"377","Japanese hard clam single_stock","Japanese hard clam","close",1,"no_CS","illegal_fishing",2,6152376.71018531,0
+"378","Japanese hard clam single_stock","Japanese hard clam","openA",1,"no_CS","illegal_fishing",2,179744908.965959,0
+"379","Japanese hard clam single_stock","Japanese hard clam","SQ",1,"CS","illegal_fishing",2,465914593.637226,0
+"380","Japanese hard clam single_stock","Japanese hard clam","FMSY",1,"CS","illegal_fishing",2,722153446.248451,0
+"381","Japanese hard clam single_stock","Japanese hard clam","minRec",1,"CS","illegal_fishing",2,720763740.024066,0
+"382","Japanese hard clam single_stock","Japanese hard clam","econOpt",1,"CS","illegal_fishing",2,667815201.564245,0
+"383","Japanese hard clam single_stock","Japanese hard clam","close",1,"CS","illegal_fishing",2,6152376.71018531,0
+"384","Japanese hard clam single_stock","Japanese hard clam","openA",1,"CS","illegal_fishing",2,466375379.083962,0
+"385","Japanese jack mackerel pacific_stock","Japanese jack mackerel","SQ",1,"no_CS","illegal_fishing",2,116356831.656238,0
+"386","Japanese jack mackerel pacific_stock","Japanese jack mackerel","FMSY",1,"no_CS","illegal_fishing",2,785611614.716537,0
+"387","Japanese jack mackerel pacific_stock","Japanese jack mackerel","minRec",1,"no_CS","illegal_fishing",2,1035892747.1681,0
+"388","Japanese jack mackerel pacific_stock","Japanese jack mackerel","econOpt",1,"no_CS","illegal_fishing",2,1006030582.92767,0
+"389","Japanese jack mackerel pacific_stock","Japanese jack mackerel","close",1,"no_CS","illegal_fishing",2,-308249.723551203,0
+"390","Japanese jack mackerel pacific_stock","Japanese jack mackerel","openA",1,"no_CS","illegal_fishing",2,41690663.4566322,0
+"391","Japanese jack mackerel pacific_stock","Japanese jack mackerel","SQ",1,"CS","illegal_fishing",2,1404938001.13916,0
+"392","Japanese jack mackerel pacific_stock","Japanese jack mackerel","FMSY",1,"CS","illegal_fishing",2,1728709442.03256,0
+"393","Japanese jack mackerel pacific_stock","Japanese jack mackerel","minRec",1,"CS","illegal_fishing",2,1772223667.68658,0
+"394","Japanese jack mackerel pacific_stock","Japanese jack mackerel","econOpt",1,"CS","illegal_fishing",2,1618770860.82174,0
+"395","Japanese jack mackerel pacific_stock","Japanese jack mackerel","close",1,"CS","illegal_fishing",2,-308249.723551203,0
+"396","Japanese jack mackerel pacific_stock","Japanese jack mackerel","openA",1,"CS","illegal_fishing",2,606531074.995536,0
+"397","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","SQ",1,"no_CS","illegal_fishing",2,-3250720246.39013,0
+"398","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","FMSY",1,"no_CS","illegal_fishing",2,1463560432.83317,0
+"399","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","minRec",1,"no_CS","illegal_fishing",2,2371749128.80038,0
+"400","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","econOpt",1,"no_CS","illegal_fishing",2,2268298341.303,0
+"401","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","close",1,"no_CS","illegal_fishing",2,-75496416.4870967,0
+"402","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","openA",1,"no_CS","illegal_fishing",2,-772761883.688459,0
+"403","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","SQ",1,"CS","illegal_fishing",2,904806950.135388,0
+"404","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","FMSY",1,"CS","illegal_fishing",2,3924314005.87529,0
+"405","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","minRec",1,"CS","illegal_fishing",2,4108777141.0544,0
+"406","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","econOpt",1,"CS","illegal_fishing",2,3710286232.27961,0
+"407","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","close",1,"CS","illegal_fishing",2,-75496416.4870967,0
+"408","Japanese jack mackerel tsushima_current_stock","Japanese jack mackerel","openA",1,"CS","illegal_fishing",2,240435413.286667,0
+"409","Japanese pilchard pacific_stock","Japanese pilchard","SQ",1,"no_CS","illegal_fishing",2,9480127910.51216,0
+"410","Japanese pilchard pacific_stock","Japanese pilchard","FMSY",1,"no_CS","illegal_fishing",2,8677743738.00479,0
+"411","Japanese pilchard pacific_stock","Japanese pilchard","minRec",1,"no_CS","illegal_fishing",2,11313603108.1641,0
+"412","Japanese pilchard pacific_stock","Japanese pilchard","econOpt",1,"no_CS","illegal_fishing",2,10943323882.6769,0
+"413","Japanese pilchard pacific_stock","Japanese pilchard","close",1,"no_CS","illegal_fishing",2,67458219.0696486,0
+"414","Japanese pilchard pacific_stock","Japanese pilchard","openA",1,"no_CS","illegal_fishing",2,4666926594.91512,0
+"415","Japanese pilchard pacific_stock","Japanese pilchard","SQ",1,"CS","illegal_fishing",2,18834440874.1317,0
+"416","Japanese pilchard pacific_stock","Japanese pilchard","FMSY",1,"CS","illegal_fishing",2,19178573381.1884,0
+"417","Japanese pilchard pacific_stock","Japanese pilchard","minRec",1,"CS","illegal_fishing",2,19295730682.7719,0
+"418","Japanese pilchard pacific_stock","Japanese pilchard","econOpt",1,"CS","illegal_fishing",2,17629253967.8854,0
+"419","Japanese pilchard pacific_stock","Japanese pilchard","close",1,"CS","illegal_fishing",2,67458219.0696486,0
+"420","Japanese pilchard pacific_stock","Japanese pilchard","openA",1,"CS","illegal_fishing",2,13847400844.2283,0
+"421","Japanese pilchard tsushima_current_stock","Japanese pilchard","SQ",1,"no_CS","illegal_fishing",2,5177137246.69902,0
+"422","Japanese pilchard tsushima_current_stock","Japanese pilchard","FMSY",1,"no_CS","illegal_fishing",2,5151122872.8603,0
+"423","Japanese pilchard tsushima_current_stock","Japanese pilchard","minRec",1,"no_CS","illegal_fishing",2,6433739815.96341,0
+"424","Japanese pilchard tsushima_current_stock","Japanese pilchard","econOpt",1,"no_CS","illegal_fishing",2,6250267800.85513,0
+"425","Japanese pilchard tsushima_current_stock","Japanese pilchard","close",1,"no_CS","illegal_fishing",2,46301412.0270013,0
+"426","Japanese pilchard tsushima_current_stock","Japanese pilchard","openA",1,"no_CS","illegal_fishing",2,3749069228.46886,0
+"427","Japanese pilchard tsushima_current_stock","Japanese pilchard","SQ",1,"CS","illegal_fishing",2,8443007250.61647,0
+"428","Japanese pilchard tsushima_current_stock","Japanese pilchard","FMSY",1,"CS","illegal_fishing",2,10950718645.2502,0
+"429","Japanese pilchard tsushima_current_stock","Japanese pilchard","minRec",1,"CS","illegal_fishing",2,10972440563.2919,0
+"430","Japanese pilchard tsushima_current_stock","Japanese pilchard","econOpt",1,"CS","illegal_fishing",2,10053857898.9281,0
+"431","Japanese pilchard tsushima_current_stock","Japanese pilchard","close",1,"CS","illegal_fishing",2,46301412.0270013,0
+"432","Japanese pilchard tsushima_current_stock","Japanese pilchard","openA",1,"CS","illegal_fishing",2,9583733128.07734,0
+"433","Japanese sandfish hokkaido","Japanese sandfish","SQ",1,"no_CS","illegal_fishing",2,69077642.8171164,0
+"434","Japanese sandfish hokkaido","Japanese sandfish","FMSY",1,"no_CS","illegal_fishing",2,73881836.5628442,0
+"435","Japanese sandfish hokkaido","Japanese sandfish","minRec",1,"no_CS","illegal_fishing",2,77344204.0099373,0
+"436","Japanese sandfish hokkaido","Japanese sandfish","econOpt",1,"no_CS","illegal_fishing",2,76145713.3125006,0
+"437","Japanese sandfish hokkaido","Japanese sandfish","close",1,"no_CS","illegal_fishing",2,1254410.37014863,0
+"438","Japanese sandfish hokkaido","Japanese sandfish","openA",1,"no_CS","illegal_fishing",2,32815329.1471977,0
+"439","Japanese sandfish hokkaido","Japanese sandfish","SQ",1,"CS","illegal_fishing",2,109258090.945196,0
+"440","Japanese sandfish hokkaido","Japanese sandfish","FMSY",1,"CS","illegal_fishing",2,133582196.958405,0
+"441","Japanese sandfish hokkaido","Japanese sandfish","minRec",1,"CS","illegal_fishing",2,131504756.525665,0
+"442","Japanese sandfish hokkaido","Japanese sandfish","econOpt",1,"CS","illegal_fishing",2,121810213.15384,0
+"443","Japanese sandfish hokkaido","Japanese sandfish","close",1,"CS","illegal_fishing",2,1254410.37014863,0
+"444","Japanese sandfish hokkaido","Japanese sandfish","openA",1,"CS","illegal_fishing",2,88815796.970377,0
+"445","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","SQ",1,"no_CS","illegal_fishing",2,78483922.6378596,0
+"446","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","FMSY",1,"no_CS","illegal_fishing",2,92633242.6047876,0
+"447","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","minRec",1,"no_CS","illegal_fishing",2,97265377.4188471,0
+"448","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","econOpt",1,"no_CS","illegal_fishing",2,95296294.876001,0
+"449","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","close",1,"no_CS","illegal_fishing",2,2669759.90321345,0
+"450","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","openA",1,"no_CS","illegal_fishing",2,17654382.0350868,0
+"451","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","SQ",1,"CS","illegal_fishing",2,171862584.589999,0
+"452","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","FMSY",1,"CS","illegal_fishing",2,168809379.276944,0
+"453","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","minRec",1,"CS","illegal_fishing",2,164529277.424191,0
+"454","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","econOpt",1,"CS","illegal_fishing",2,152418184.019796,0
+"455","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","close",1,"CS","illegal_fishing",2,2669759.90321345,0
+"456","Japanese sandfish sea_of_japan_north_stock","Japanese sandfish","openA",1,"CS","illegal_fishing",2,75118968.487089,0
+"457","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","SQ",1,"no_CS","illegal_fishing",2,356572400.565246,0
+"458","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","FMSY",1,"no_CS","illegal_fishing",2,373652161.204318,0
+"459","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","minRec",1,"no_CS","illegal_fishing",2,373652161.204318,0
+"460","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","econOpt",1,"no_CS","illegal_fishing",2,367672828.143761,0
+"461","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","close",1,"no_CS","illegal_fishing",2,12878429.9964048,0
+"462","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","openA",1,"no_CS","illegal_fishing",2,92755641.1670685,0
+"463","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","SQ",1,"CS","illegal_fishing",2,543005504.310459,0
+"464","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","FMSY",1,"CS","illegal_fishing",2,592264884.80242,0
+"465","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","minRec",1,"CS","illegal_fishing",2,592264884.80242,0
+"466","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","econOpt",1,"CS","illegal_fishing",2,578112905.879872,0
+"467","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","close",1,"CS","illegal_fishing",2,12878429.9964048,0
+"468","Japanese sandfish sea_of_japan_west_stock","Japanese sandfish","openA",1,"CS","illegal_fishing",2,264263004.133297,0
+"469","Japanese seabass single_stock","Japanese seabass","SQ",1,"no_CS","illegal_fishing",2,207455171.715592,0
+"470","Japanese seabass single_stock","Japanese seabass","FMSY",1,"no_CS","illegal_fishing",2,461518979.994335,0
+"471","Japanese seabass single_stock","Japanese seabass","minRec",1,"no_CS","illegal_fishing",2,503439583.551201,0
+"472","Japanese seabass single_stock","Japanese seabass","econOpt",1,"no_CS","illegal_fishing",2,498990597.224626,0
+"473","Japanese seabass single_stock","Japanese seabass","close",1,"no_CS","illegal_fishing",2,12504585.2410133,0
+"474","Japanese seabass single_stock","Japanese seabass","openA",1,"no_CS","illegal_fishing",2,22119619.0519999,0
+"475","Japanese seabass single_stock","Japanese seabass","SQ",1,"CS","illegal_fishing",2,744401493.305398,0
+"476","Japanese seabass single_stock","Japanese seabass","FMSY",1,"CS","illegal_fishing",2,852969001.635134,0
+"477","Japanese seabass single_stock","Japanese seabass","minRec",1,"CS","illegal_fishing",2,853066319.111244,0
+"478","Japanese seabass single_stock","Japanese seabass","econOpt",1,"CS","illegal_fishing",2,790956962.406239,0
+"479","Japanese seabass single_stock","Japanese seabass","close",1,"CS","illegal_fishing",2,12504585.2410133,0
+"480","Japanese seabass single_stock","Japanese seabass","openA",1,"CS","illegal_fishing",2,243840542.838694,0
+"481","Japanese seabream pacific_central_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,-376907154.980665,0
+"482","Japanese seabream pacific_central_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,66092490.812652,0
+"483","Japanese seabream pacific_central_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,92724647.6465713,0
+"484","Japanese seabream pacific_central_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,89535103.0704199,0
+"485","Japanese seabream pacific_central_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,-3819319.63301392,0
+"486","Japanese seabream pacific_central_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,-85950160.3378618,0
+"487","Japanese seabream pacific_central_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,-170348806.971712,0
+"488","Japanese seabream pacific_central_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,156718497.120628,0
+"489","Japanese seabream pacific_central_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,161315447.896535,0
+"490","Japanese seabream pacific_central_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,146614117.553112,0
+"491","Japanese seabream pacific_central_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,-3819319.63301392,0
+"492","Japanese seabream pacific_central_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,-83299347.2951437,0
+"493","Japanese seabream pacific_south_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,16399420.6133739,0
+"494","Japanese seabream pacific_south_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,50627795.9225229,0
+"495","Japanese seabream pacific_south_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,53838814.49472,0
+"496","Japanese seabream pacific_south_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,53591791.5756754,0
+"497","Japanese seabream pacific_south_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,1702869.45097808,0
+"498","Japanese seabream pacific_south_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,-142436.018229167,0
+"499","Japanese seabream pacific_south_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,74487475.6306369,0
+"500","Japanese seabream pacific_south_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,91132039.5191891,0
+"501","Japanese seabream pacific_south_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,91004969.7499608,0
+"502","Japanese seabream pacific_south_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,84602938.6189836,0
+"503","Japanese seabream pacific_south_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,1702869.45097808,0
+"504","Japanese seabream pacific_south_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,20736130.5708122,0
+"505","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,21071299.9056481,0
+"506","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,127946363.944457,0
+"507","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,140193558.390476,0
+"508","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,137956925.178885,0
+"509","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,3517426.90763928,0
+"510","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,-4679932.25335082,0
+"511","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,188552880.71872,0
+"512","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,239639386.744861,0
+"513","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,237413982.94828,0
+"514","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,219603235.311527,0
+"515","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,3517426.90763928,0
+"516","Japanese seabream sea_of_japan_north_central_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,55607909.9846023,0
+"517","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,-58990270.8681967,0
+"518","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,450380724.947428,0
+"519","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,546988622.679897,0
+"520","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,533595110.107192,0
+"521","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,4076204.49051716,0
+"522","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,-32755119.3786186,0
+"523","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,659763828.950876,0
+"524","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,929005119.932977,0
+"525","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,932937185.926056,0
+"526","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,856522609.774229,0
+"527","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,4076204.49051716,0
+"528","Japanese seabream sea_of_japan_west_east_china_sea_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,223109573.645163,0
+"529","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,186289300.958441,0
+"530","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,238779463.642573,0
+"531","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,258206587.747776,0
+"532","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,256417488.076689,0
+"533","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,6088230.5992949,0
+"534","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,38632117.2002463,0
+"535","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,427924503.100024,0
+"536","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,437984996.380835,0
+"537","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,437872921.76744,0
+"538","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,406378235.79124,0
+"539","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,6088230.5992949,0
+"540","Japanese seabream seto_inland_sea_central_west_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,168223059.549764,0
+"541","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","SQ",1,"no_CS","illegal_fishing",2,41936961.1868982,0
+"542","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","FMSY",1,"no_CS","illegal_fishing",2,124871506.831286,0
+"543","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","minRec",1,"no_CS","illegal_fishing",2,126279103.371394,0
+"544","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","econOpt",1,"no_CS","illegal_fishing",2,125397819.652769,0
+"545","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","close",1,"no_CS","illegal_fishing",2,6375382.55442954,0
+"546","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","openA",1,"no_CS","illegal_fishing",2,-4259788.56188766,0
+"547","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","SQ",1,"CS","illegal_fishing",2,175219993.8079,0
+"548","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","FMSY",1,"CS","illegal_fishing",2,212202005.649461,0
+"549","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","minRec",1,"CS","illegal_fishing",2,211845028.677312,0
+"550","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","econOpt",1,"CS","illegal_fishing",2,196871683.782647,0
+"551","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","close",1,"CS","illegal_fishing",2,6375382.55442954,0
+"552","Japanese seabream seto_inland_sea_east_stock","Japanese seabream","openA",1,"CS","illegal_fishing",2,39796399.1854004,0
+"553","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","SQ",1,"no_CS","illegal_fishing",2,1175478589.8198,0
+"554","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","FMSY",1,"no_CS","illegal_fishing",2,1170783111.98485,0
+"555","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","minRec",1,"no_CS","illegal_fishing",2,1170783111.98485,0
+"556","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","econOpt",1,"no_CS","illegal_fishing",2,1160265191.25466,0
+"557","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","close",1,"no_CS","illegal_fishing",2,54904214.5010823,0
+"558","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","openA",1,"no_CS","illegal_fishing",2,224114099.025587,0
+"559","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","SQ",1,"CS","illegal_fishing",2,1846946070.35269,0
+"560","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","FMSY",1,"CS","illegal_fishing",2,1824585423.96574,0
+"561","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","minRec",1,"CS","illegal_fishing",2,1824585423.96574,0
+"562","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","econOpt",1,"CS","illegal_fishing",2,1810373822.56822,0
+"563","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","close",1,"CS","illegal_fishing",2,54904214.5010823,0
+"564","Japanese Spanish mackerel east_china_sea_stock","Japanese Spanish mackerel","openA",1,"CS","illegal_fishing",2,695592772.914149,0
+"565","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","SQ",1,"no_CS","illegal_fishing",2,-315434036.531338,0
+"566","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","FMSY",1,"no_CS","illegal_fishing",2,221215244.049707,0
+"567","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","minRec",1,"no_CS","illegal_fishing",2,236353383.650879,0
+"568","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","econOpt",1,"no_CS","illegal_fishing",2,234149517.432703,0
+"569","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","close",1,"no_CS","illegal_fishing",2,9557675.24092767,0
+"570","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","openA",1,"no_CS","illegal_fishing",2,-91421581.637777,0
+"571","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","SQ",1,"CS","illegal_fishing",2,28054325.6300228,0
+"572","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","FMSY",1,"CS","illegal_fishing",2,399873458.803677,0
+"573","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","minRec",1,"CS","illegal_fishing",2,397864878.812517,0
+"574","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","econOpt",1,"CS","illegal_fishing",2,369322379.483186,0
+"575","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","close",1,"CS","illegal_fishing",2,9557675.24092767,0
+"576","Japanese Spanish mackerel seto_inland_sea_stock","Japanese Spanish mackerel","openA",1,"CS","illegal_fishing",2,-50370420.8265307,0
+"577","Japanese spiny lobster single_stock","Japanese spiny lobster","SQ",1,"no_CS","illegal_fishing",2,-271973734.284869,0
+"578","Japanese spiny lobster single_stock","Japanese spiny lobster","FMSY",1,"no_CS","illegal_fishing",2,298733465.174268,0
+"579","Japanese spiny lobster single_stock","Japanese spiny lobster","minRec",1,"no_CS","illegal_fishing",2,356481701.332341,0
+"580","Japanese spiny lobster single_stock","Japanese spiny lobster","econOpt",1,"no_CS","illegal_fishing",2,345173719.465914,0
+"581","Japanese spiny lobster single_stock","Japanese spiny lobster","close",1,"no_CS","illegal_fishing",2,2039815.33467573,0
+"582","Japanese spiny lobster single_stock","Japanese spiny lobster","openA",1,"no_CS","illegal_fishing",2,-89502483.0772216,0
+"583","Japanese spiny lobster single_stock","Japanese spiny lobster","SQ",1,"CS","illegal_fishing",2,305801654.839869,0
+"584","Japanese spiny lobster single_stock","Japanese spiny lobster","FMSY",1,"CS","illegal_fishing",2,628505248.07672,0
+"585","Japanese spiny lobster single_stock","Japanese spiny lobster","minRec",1,"CS","illegal_fishing",2,607850519.438038,0
+"586","Japanese spiny lobster single_stock","Japanese spiny lobster","econOpt",1,"CS","illegal_fishing",2,559116665.361562,0
+"587","Japanese spiny lobster single_stock","Japanese spiny lobster","close",1,"CS","illegal_fishing",2,2039815.33467573,0
+"588","Japanese spiny lobster single_stock","Japanese spiny lobster","openA",1,"CS","illegal_fishing",2,67625638.7632243,0
+"589","Largehead hairtail single_stock","Largehead hairtail","SQ",1,"no_CS","illegal_fishing",2,1014780052.86236,0
+"590","Largehead hairtail single_stock","Largehead hairtail","FMSY",1,"no_CS","illegal_fishing",2,1013709612.05846,0
+"591","Largehead hairtail single_stock","Largehead hairtail","minRec",1,"no_CS","illegal_fishing",2,1109584661.19622,0
+"592","Largehead hairtail single_stock","Largehead hairtail","econOpt",1,"no_CS","illegal_fishing",2,1083527869.96052,0
+"593","Largehead hairtail single_stock","Largehead hairtail","close",1,"no_CS","illegal_fishing",2,16049165.5083888,0
+"594","Largehead hairtail single_stock","Largehead hairtail","openA",1,"no_CS","illegal_fishing",2,505612178.383515,0
+"595","Largehead hairtail single_stock","Largehead hairtail","SQ",1,"CS","illegal_fishing",2,1693554233.88353,0
+"596","Largehead hairtail single_stock","Largehead hairtail","FMSY",1,"CS","illegal_fishing",2,1942120615.64631,0
+"597","Largehead hairtail single_stock","Largehead hairtail","minRec",1,"CS","illegal_fishing",2,1886441215.74729,0
+"598","Largehead hairtail single_stock","Largehead hairtail","econOpt",1,"CS","illegal_fishing",2,1743368058.93408,0
+"599","Largehead hairtail single_stock","Largehead hairtail","close",1,"CS","illegal_fishing",2,16049165.5083888,0
+"600","Largehead hairtail single_stock","Largehead hairtail","openA",1,"CS","illegal_fishing",2,1398264487.6658,0
+"601","Lizardfishes nei single_stock","Lizardfishes nei","SQ",1,"no_CS","illegal_fishing",2,161810134.053127,0
+"602","Lizardfishes nei single_stock","Lizardfishes nei","FMSY",1,"no_CS","illegal_fishing",2,165085298.466025,0
+"603","Lizardfishes nei single_stock","Lizardfishes nei","minRec",1,"no_CS","illegal_fishing",2,216487597.741892,0
+"604","Lizardfishes nei single_stock","Lizardfishes nei","econOpt",1,"no_CS","illegal_fishing",2,210325871.258276,0
+"605","Lizardfishes nei single_stock","Lizardfishes nei","close",1,"no_CS","illegal_fishing",2,1020150.11976097,0
+"606","Lizardfishes nei single_stock","Lizardfishes nei","openA",1,"no_CS","illegal_fishing",2,67855478.0963844,0
+"607","Lizardfishes nei single_stock","Lizardfishes nei","SQ",1,"CS","illegal_fishing",2,360565856.060839,0
+"608","Lizardfishes nei single_stock","Lizardfishes nei","FMSY",1,"CS","illegal_fishing",2,360670876.513475,0
+"609","Lizardfishes nei single_stock","Lizardfishes nei","minRec",1,"CS","illegal_fishing",2,369578154.16111,0
+"610","Lizardfishes nei single_stock","Lizardfishes nei","econOpt",1,"CS","illegal_fishing",2,337730033.169951,0
+"611","Lizardfishes nei single_stock","Lizardfishes nei","close",1,"CS","illegal_fishing",2,1020150.11976097,0
+"612","Lizardfishes nei single_stock","Lizardfishes nei","openA",1,"CS","illegal_fishing",2,222577249.530239,0
+"613","Mackerels nei pacific_stock","Mackerels nei","SQ",1,"no_CS","illegal_fishing",2,-13849800966.9308,0
+"614","Mackerels nei pacific_stock","Mackerels nei","FMSY",1,"no_CS","illegal_fishing",2,3061838676.39474,0
+"615","Mackerels nei pacific_stock","Mackerels nei","minRec",1,"no_CS","illegal_fishing",2,4631846523.16468,0
+"616","Mackerels nei pacific_stock","Mackerels nei","econOpt",1,"no_CS","illegal_fishing",2,4438197007.3784,0
+"617","Mackerels nei pacific_stock","Mackerels nei","close",1,"no_CS","illegal_fishing",2,-199146332.849304,0
+"618","Mackerels nei pacific_stock","Mackerels nei","openA",1,"no_CS","illegal_fishing",2,-3308726995.37732,0
+"619","Mackerels nei pacific_stock","Mackerels nei","SQ",1,"CS","illegal_fishing",2,-4034307280.33236,0
+"620","Mackerels nei pacific_stock","Mackerels nei","FMSY",1,"CS","illegal_fishing",2,7845413355.66794,0
+"621","Mackerels nei pacific_stock","Mackerels nei","minRec",1,"CS","illegal_fishing",2,8059678685.51084,0
+"622","Mackerels nei pacific_stock","Mackerels nei","econOpt",1,"CS","illegal_fishing",2,7297032921.17115,0
+"623","Mackerels nei pacific_stock","Mackerels nei","close",1,"CS","illegal_fishing",2,-199146332.849304,0
+"624","Mackerels nei pacific_stock","Mackerels nei","openA",1,"CS","illegal_fishing",2,-2343105743.13396,0
+"625","Mackerels nei tsushima_current_stock","Mackerels nei","SQ",1,"no_CS","illegal_fishing",2,-1225527338.30289,0
+"626","Mackerels nei tsushima_current_stock","Mackerels nei","FMSY",1,"no_CS","illegal_fishing",2,1884490500.98011,0
+"627","Mackerels nei tsushima_current_stock","Mackerels nei","minRec",1,"no_CS","illegal_fishing",2,3509567752.05556,0
+"628","Mackerels nei tsushima_current_stock","Mackerels nei","econOpt",1,"no_CS","illegal_fishing",2,3324355982.73699,0
+"629","Mackerels nei tsushima_current_stock","Mackerels nei","close",1,"no_CS","illegal_fishing",2,-92413961.7112945,0
+"630","Mackerels nei tsushima_current_stock","Mackerels nei","openA",1,"no_CS","illegal_fishing",2,-45728718.5163816,0
+"631","Mackerels nei tsushima_current_stock","Mackerels nei","SQ",1,"CS","illegal_fishing",2,4408549014.05411,0
+"632","Mackerels nei tsushima_current_stock","Mackerels nei","FMSY",1,"CS","illegal_fishing",2,5956879616.52706,0
+"633","Mackerels nei tsushima_current_stock","Mackerels nei","minRec",1,"CS","illegal_fishing",2,6055576393.66253,0
+"634","Mackerels nei tsushima_current_stock","Mackerels nei","econOpt",1,"CS","illegal_fishing",2,5469433733.38747,0
+"635","Mackerels nei tsushima_current_stock","Mackerels nei","close",1,"CS","illegal_fishing",2,-92413961.7112945,0
+"636","Mackerels nei tsushima_current_stock","Mackerels nei","openA",1,"CS","illegal_fishing",2,2537125417.05931,0
+"637","Neon flying squid single_stock","Neon flying squid","SQ",1,"no_CS","illegal_fishing",2,445188654.366667,0
+"638","Neon flying squid single_stock","Neon flying squid","FMSY",1,"no_CS","illegal_fishing",2,1618539898.66927,0
+"639","Neon flying squid single_stock","Neon flying squid","minRec",1,"no_CS","illegal_fishing",2,1618539898.66927,0
+"640","Neon flying squid single_stock","Neon flying squid","econOpt",1,"no_CS","illegal_fishing",2,1589629989.59101,0
+"641","Neon flying squid single_stock","Neon flying squid","close",1,"no_CS","illegal_fishing",2,8690935.74201663,0
+"642","Neon flying squid single_stock","Neon flying squid","openA",1,"no_CS","illegal_fishing",2,723941068.794804,0
+"643","Neon flying squid single_stock","Neon flying squid","SQ",1,"CS","illegal_fishing",2,618436943.488821,0
+"644","Neon flying squid single_stock","Neon flying squid","FMSY",1,"CS","illegal_fishing",2,2701772284.70353,0
+"645","Neon flying squid single_stock","Neon flying squid","minRec",1,"CS","illegal_fishing",2,2701772284.70353,0
+"646","Neon flying squid single_stock","Neon flying squid","econOpt",1,"CS","illegal_fishing",2,2541068401.44382,0
+"647","Neon flying squid single_stock","Neon flying squid","close",1,"CS","illegal_fishing",2,8690935.74201663,0
+"648","Neon flying squid single_stock","Neon flying squid","openA",1,"CS","illegal_fishing",2,1810158705.00301,0
+"649","Octopuses nei single_stock","Octopuses nei","SQ",1,"no_CS","illegal_fishing",2,5046291643.74519,0
+"650","Octopuses nei single_stock","Octopuses nei","FMSY",1,"no_CS","illegal_fishing",2,6337880461.22276,0
+"651","Octopuses nei single_stock","Octopuses nei","minRec",1,"no_CS","illegal_fishing",2,6337880461.22276,0
+"652","Octopuses nei single_stock","Octopuses nei","econOpt",1,"no_CS","illegal_fishing",2,6224653747.52687,0
+"653","Octopuses nei single_stock","Octopuses nei","close",1,"no_CS","illegal_fishing",2,146909187.213006,0
+"654","Octopuses nei single_stock","Octopuses nei","openA",1,"no_CS","illegal_fishing",2,1959703922.35212,0
+"655","Octopuses nei single_stock","Octopuses nei","SQ",1,"CS","illegal_fishing",2,7391864627.52523,0
+"656","Octopuses nei single_stock","Octopuses nei","FMSY",1,"CS","illegal_fishing",2,10133736710.4733,0
+"657","Octopuses nei single_stock","Octopuses nei","minRec",1,"CS","illegal_fishing",2,10133736710.4733,0
+"658","Octopuses nei single_stock","Octopuses nei","econOpt",1,"CS","illegal_fishing",2,9848858646.22461,0
+"659","Octopuses nei single_stock","Octopuses nei","close",1,"CS","illegal_fishing",2,146909187.213006,0
+"660","Octopuses nei single_stock","Octopuses nei","openA",1,"CS","illegal_fishing",2,5213209263.94878,0
+"661","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","SQ",1,"no_CS","illegal_fishing",2,2707344737.93259,0
+"662","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","FMSY",1,"no_CS","illegal_fishing",2,3001198512.3737,0
+"663","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","minRec",1,"no_CS","illegal_fishing",2,4197776306.56006,0
+"664","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","econOpt",1,"no_CS","illegal_fishing",2,4046344813.2245,0
+"665","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","close",1,"no_CS","illegal_fishing",2,17517525.1574389,0
+"666","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","openA",1,"no_CS","illegal_fishing",2,3067970931.25508,0
+"667","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","SQ",1,"CS","illegal_fishing",2,4256690602.94642,0
+"668","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","FMSY",1,"CS","illegal_fishing",2,7008158174.76914,0
+"669","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","minRec",1,"CS","illegal_fishing",2,7164678645.548,0
+"670","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","econOpt",1,"CS","illegal_fishing",2,6521500874.46254,0
+"671","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","close",1,"CS","illegal_fishing",2,17517525.1574389,0
+"672","Okhotsk atka mackerel hokkaido_north","Okhotsk atka mackerel","openA",1,"CS","illegal_fishing",2,7348300084.90592,0
+"673","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","SQ",1,"no_CS","illegal_fishing",2,742389270.21931,0
+"674","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","FMSY",1,"no_CS","illegal_fishing",2,634592976.469525,0
+"675","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","minRec",1,"no_CS","illegal_fishing",2,593726153.606456,0
+"676","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","econOpt",1,"no_CS","illegal_fishing",2,767331567.366216,0
+"677","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","close",1,"no_CS","illegal_fishing",2,37691355.94584,0
+"678","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","openA",1,"no_CS","illegal_fishing",2,196434823.360764,0
+"679","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","SQ",1,"CS","illegal_fishing",2,1479033662.63681,0
+"680","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","FMSY",1,"CS","illegal_fishing",2,983445585.05774,0
+"681","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","minRec",1,"CS","illegal_fishing",2,904896217.079509,0
+"682","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","econOpt",1,"CS","illegal_fishing",2,1328947747.02559,0
+"683","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","close",1,"CS","illegal_fishing",2,37691355.94584,0
+"684","Pacific bluefin tuna single_stock_exc_sbf_inc_sml","Pacific bluefin tuna","openA",1,"CS","illegal_fishing",2,783694588.242688,0
+"685","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","SQ",1,"no_CS","illegal_fishing",2,2253437012.6486,0
+"686","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","FMSY",1,"no_CS","illegal_fishing",2,2190583674.71596,0
+"687","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","minRec",1,"no_CS","illegal_fishing",2,1765443797.30505,0
+"688","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","econOpt",1,"no_CS","illegal_fishing",2,2370263562.37846,0
+"689","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","close",1,"no_CS","illegal_fishing",2,68078025.0679991,0
+"690","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","openA",1,"no_CS","illegal_fishing",2,854874450.783079,0
+"691","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","SQ",1,"CS","illegal_fishing",2,4692677414.84282,0
+"692","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","FMSY",1,"CS","illegal_fishing",2,3668894081.20443,0
+"693","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","minRec",1,"CS","illegal_fishing",2,2747693831.85107,0
+"694","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","econOpt",1,"CS","illegal_fishing",2,4085143896.41241,0
+"695","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","close",1,"CS","illegal_fishing",2,68078025.0679991,0
+"696","Pacific bluefin tuna single_stock_inc_sbf_exc_sml","Pacific bluefin tuna","openA",1,"CS","illegal_fishing",2,3093010769.33591,0
+"697","Pacific cod hokkaido","Pacific cod","SQ",1,"no_CS","illegal_fishing",2,-50888546.2038754,0
+"698","Pacific cod hokkaido","Pacific cod","FMSY",1,"no_CS","illegal_fishing",2,478408007.208492,0
+"699","Pacific cod hokkaido","Pacific cod","minRec",1,"no_CS","illegal_fishing",2,658633215.151253,0
+"700","Pacific cod hokkaido","Pacific cod","econOpt",1,"no_CS","illegal_fishing",2,632498549.060215,0
+"701","Pacific cod hokkaido","Pacific cod","close",1,"no_CS","illegal_fishing",2,-3906370.83904079,0
+"702","Pacific cod hokkaido","Pacific cod","openA",1,"no_CS","illegal_fishing",2,-1681135.20590334,0
+"703","Pacific cod hokkaido","Pacific cod","SQ",1,"CS","illegal_fishing",2,888205735.677069,0
+"704","Pacific cod hokkaido","Pacific cod","FMSY",1,"CS","illegal_fishing",2,1135726368.55612,0
+"705","Pacific cod hokkaido","Pacific cod","minRec",1,"CS","illegal_fishing",2,1128083772.11766,0
+"706","Pacific cod hokkaido","Pacific cod","econOpt",1,"CS","illegal_fishing",2,1028315937.99104,0
+"707","Pacific cod hokkaido","Pacific cod","close",1,"CS","illegal_fishing",2,-3906370.83904079,0
+"708","Pacific cod hokkaido","Pacific cod","openA",1,"CS","illegal_fishing",2,408280353.371109,0
+"709","Pacific cod sea_of_japan_stock","Pacific cod","SQ",1,"no_CS","illegal_fishing",2,-563904606.94919,0
+"710","Pacific cod sea_of_japan_stock","Pacific cod","FMSY",1,"no_CS","illegal_fishing",2,46156983.2518253,0
+"711","Pacific cod sea_of_japan_stock","Pacific cod","minRec",1,"no_CS","illegal_fishing",2,86212283.7615056,0
+"712","Pacific cod sea_of_japan_stock","Pacific cod","econOpt",1,"no_CS","illegal_fishing",2,81574225.053628,0
+"713","Pacific cod sea_of_japan_stock","Pacific cod","close",1,"no_CS","illegal_fishing",2,-9560414.32419039,0
+"714","Pacific cod sea_of_japan_stock","Pacific cod","openA",1,"no_CS","illegal_fishing",2,-130558585.268377,0
+"715","Pacific cod sea_of_japan_stock","Pacific cod","SQ",1,"CS","illegal_fishing",2,-283326952.954861,0
+"716","Pacific cod sea_of_japan_stock","Pacific cod","FMSY",1,"CS","illegal_fishing",2,156418482.652132,0
+"717","Pacific cod sea_of_japan_stock","Pacific cod","minRec",1,"CS","illegal_fishing",2,153842923.196008,0
+"718","Pacific cod sea_of_japan_stock","Pacific cod","econOpt",1,"CS","illegal_fishing",2,139272746.963516,0
+"719","Pacific cod sea_of_japan_stock","Pacific cod","close",1,"CS","illegal_fishing",2,-9560414.32419039,0
+"720","Pacific cod sea_of_japan_stock","Pacific cod","openA",1,"CS","illegal_fishing",2,-129449069.254497,0
+"721","Pacific herring single_stock","Pacific herring","SQ",1,"no_CS","illegal_fishing",2,650281759.159262,0
+"722","Pacific herring single_stock","Pacific herring","FMSY",1,"no_CS","illegal_fishing",2,624548774.435422,0
+"723","Pacific herring single_stock","Pacific herring","minRec",1,"no_CS","illegal_fishing",2,742562012.462044,0
+"724","Pacific herring single_stock","Pacific herring","econOpt",1,"no_CS","illegal_fishing",2,720701112.984805,0
+"725","Pacific herring single_stock","Pacific herring","close",1,"no_CS","illegal_fishing",2,7306913.41680867,0
+"726","Pacific herring single_stock","Pacific herring","openA",1,"no_CS","illegal_fishing",2,388476745.400437,0
+"727","Pacific herring single_stock","Pacific herring","SQ",1,"CS","illegal_fishing",2,1103519988.0047,0
+"728","Pacific herring single_stock","Pacific herring","FMSY",1,"CS","illegal_fishing",2,1291402819.33901,0
+"729","Pacific herring single_stock","Pacific herring","minRec",1,"CS","illegal_fishing",2,1264310915.3865,0
+"730","Pacific herring single_stock","Pacific herring","econOpt",1,"CS","illegal_fishing",2,1162085612.68367,0
+"731","Pacific herring single_stock","Pacific herring","close",1,"CS","illegal_fishing",2,7306913.41680867,0
+"732","Pacific herring single_stock","Pacific herring","openA",1,"CS","illegal_fishing",2,1043151897.2957,0
+"733","Pacific ocean perch single_stock","Pacific ocean perch","SQ",1,"no_CS","illegal_fishing",2,494953359.539517,0
+"734","Pacific ocean perch single_stock","Pacific ocean perch","FMSY",1,"no_CS","illegal_fishing",2,2475126210.03734,0
+"735","Pacific ocean perch single_stock","Pacific ocean perch","minRec",1,"no_CS","illegal_fishing",2,2672727561.90259,0
+"736","Pacific ocean perch single_stock","Pacific ocean perch","econOpt",1,"no_CS","illegal_fishing",2,2620167917.53627,0
+"737","Pacific ocean perch single_stock","Pacific ocean perch","close",1,"no_CS","illegal_fishing",2,6818153.65708491,0
+"738","Pacific ocean perch single_stock","Pacific ocean perch","openA",1,"no_CS","illegal_fishing",2,1827783575.61265,0
+"739","Pacific ocean perch single_stock","Pacific ocean perch","SQ",1,"CS","illegal_fishing",2,691786914.341889,0
+"740","Pacific ocean perch single_stock","Pacific ocean perch","FMSY",1,"CS","illegal_fishing",2,4659763999.94905,0
+"741","Pacific ocean perch single_stock","Pacific ocean perch","minRec",1,"CS","illegal_fishing",2,4567888210.62257,0
+"742","Pacific ocean perch single_stock","Pacific ocean perch","econOpt",1,"CS","illegal_fishing",2,4221437538.85129,0
+"743","Pacific ocean perch single_stock","Pacific ocean perch","close",1,"CS","illegal_fishing",2,6818153.65708491,0
+"744","Pacific ocean perch single_stock","Pacific ocean perch","openA",1,"CS","illegal_fishing",2,4346207754.11119,0
+"745","Pacific salmons nei single_stock","Pacific salmons nei","SQ",1,"no_CS","illegal_fishing",2,8251039728.97729,0
+"746","Pacific salmons nei single_stock","Pacific salmons nei","FMSY",1,"no_CS","illegal_fishing",2,9493782020.31598,0
+"747","Pacific salmons nei single_stock","Pacific salmons nei","minRec",1,"no_CS","illegal_fishing",2,9493782020.31598,0
+"748","Pacific salmons nei single_stock","Pacific salmons nei","econOpt",1,"no_CS","illegal_fishing",2,9849327648.54894,0
+"749","Pacific salmons nei single_stock","Pacific salmons nei","close",1,"no_CS","illegal_fishing",2,265590647.175477,0
+"750","Pacific salmons nei single_stock","Pacific salmons nei","openA",1,"no_CS","illegal_fishing",2,3669524075.97976,0
+"751","Pacific salmons nei single_stock","Pacific salmons nei","SQ",1,"CS","illegal_fishing",2,12423892057.7523,0
+"752","Pacific salmons nei single_stock","Pacific salmons nei","FMSY",1,"CS","illegal_fishing",2,14956100348.5148,0
+"753","Pacific salmons nei single_stock","Pacific salmons nei","minRec",1,"CS","illegal_fishing",2,14956100348.5148,0
+"754","Pacific salmons nei single_stock","Pacific salmons nei","econOpt",1,"CS","illegal_fishing",2,16195339668.2963,0
+"755","Pacific salmons nei single_stock","Pacific salmons nei","close",1,"CS","illegal_fishing",2,265590647.175477,0
+"756","Pacific salmons nei single_stock","Pacific salmons nei","openA",1,"CS","illegal_fishing",2,9891556019.03823,0
+"757","Pacific saury single_stock","Pacific saury","SQ",1,"no_CS","illegal_fishing",2,2464212365.50142,0
+"758","Pacific saury single_stock","Pacific saury","FMSY",1,"no_CS","illegal_fishing",2,2516730871.49667,0
+"759","Pacific saury single_stock","Pacific saury","minRec",1,"no_CS","illegal_fishing",2,2095865114.00217,0
+"760","Pacific saury single_stock","Pacific saury","econOpt",1,"no_CS","illegal_fishing",2,2723170353.59141,0
+"761","Pacific saury single_stock","Pacific saury","close",1,"no_CS","illegal_fishing",2,30091678.1727238,0
+"762","Pacific saury single_stock","Pacific saury","openA",1,"no_CS","illegal_fishing",2,1404061333.78195,0
+"763","Pacific saury single_stock","Pacific saury","SQ",1,"CS","illegal_fishing",2,5161958095.59885,0
+"764","Pacific saury single_stock","Pacific saury","FMSY",1,"CS","illegal_fishing",2,4742315564.62167,0
+"765","Pacific saury single_stock","Pacific saury","minRec",1,"CS","illegal_fishing",2,3338332399.49424,0
+"766","Pacific saury single_stock","Pacific saury","econOpt",1,"CS","illegal_fishing",2,4707084419.99077,0
+"767","Pacific saury single_stock","Pacific saury","close",1,"CS","illegal_fishing",2,30091678.1727238,0
+"768","Pacific saury single_stock","Pacific saury","openA",1,"CS","illegal_fishing",2,4440163112.77314,0
+"769","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","SQ",1,"no_CS","illegal_fishing",2,773130.363350946,0
+"770","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","FMSY",1,"no_CS","illegal_fishing",2,74671813.1966953,0
+"771","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","minRec",1,"no_CS","illegal_fishing",2,81302669.8366101,0
+"772","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","econOpt",1,"no_CS","illegal_fishing",2,79840864.8876669,0
+"773","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","close",1,"no_CS","illegal_fishing",2,2184374.68387539,0
+"774","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","openA",1,"no_CS","illegal_fishing",2,-6302634.44884136,0
+"775","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","SQ",1,"CS","illegal_fishing",2,102742837.835848,0
+"776","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","FMSY",1,"CS","illegal_fishing",2,139603300.746874,0
+"777","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","minRec",1,"CS","illegal_fishing",2,137557218.852492,0
+"778","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","econOpt",1,"CS","illegal_fishing",2,127231098.16678,0
+"779","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","close",1,"CS","illegal_fishing",2,2184374.68387539,0
+"780","Pufferfishes nei ise_mikawa_bay_stock","Pufferfishes nei","openA",1,"CS","illegal_fishing",2,27504400.1332026,0
+"781","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","SQ",1,"no_CS","illegal_fishing",2,-123563053.076672,0
+"782","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","FMSY",1,"no_CS","illegal_fishing",2,248104183.48981,0
+"783","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","minRec",1,"no_CS","illegal_fishing",2,275667109.606754,0
+"784","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","econOpt",1,"no_CS","illegal_fishing",2,272033736.890378,0
+"785","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","close",1,"no_CS","illegal_fishing",2,6563394.95699209,0
+"786","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","openA",1,"no_CS","illegal_fishing",2,-49747002.0325729,0
+"787","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","SQ",1,"CS","illegal_fishing",2,241922246.01037,0
+"788","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","FMSY",1,"CS","illegal_fishing",2,468415855.030871,0
+"789","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","minRec",1,"CS","illegal_fishing",2,467349919.548613,0
+"790","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","econOpt",1,"CS","illegal_fishing",2,432391172.409583,0
+"791","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","close",1,"CS","illegal_fishing",2,6563394.95699209,0
+"792","Pufferfishes nei sea_of_japan_east_china_sea_seto_inland_sea_stock","Pufferfishes nei","openA",1,"CS","illegal_fishing",2,40711647.5314715,0
+"793","Queen crab okhotsk_stock","Queen crab","SQ",1,"no_CS","illegal_fishing",2,110042718.751649,0
+"794","Queen crab okhotsk_stock","Queen crab","FMSY",1,"no_CS","illegal_fishing",2,106610619.076793,0
+"795","Queen crab okhotsk_stock","Queen crab","minRec",1,"no_CS","illegal_fishing",2,120517323.595727,0
+"796","Queen crab okhotsk_stock","Queen crab","econOpt",1,"no_CS","illegal_fishing",2,117166744.987831,0
+"797","Queen crab okhotsk_stock","Queen crab","close",1,"no_CS","illegal_fishing",2,1555512.01822114,0
+"798","Queen crab okhotsk_stock","Queen crab","openA",1,"no_CS","illegal_fishing",2,57563237.5111909,0
+"799","Queen crab okhotsk_stock","Queen crab","SQ",1,"CS","illegal_fishing",2,189922643.151476,0
+"800","Queen crab okhotsk_stock","Queen crab","FMSY",1,"CS","illegal_fishing",2,212743037.94072,0
+"801","Queen crab okhotsk_stock","Queen crab","minRec",1,"CS","illegal_fishing",2,204942951.858214,0
+"802","Queen crab okhotsk_stock","Queen crab","econOpt",1,"CS","illegal_fishing",2,189180422.771781,0
+"803","Queen crab okhotsk_stock","Queen crab","close",1,"CS","illegal_fishing",2,1555512.01822114,0
+"804","Queen crab okhotsk_stock","Queen crab","openA",1,"CS","illegal_fishing",2,160650581.751708,0
+"805","Queen crab sea_of_japan_stock","Queen crab","SQ",1,"no_CS","illegal_fishing",2,323705842.597548,0
+"806","Queen crab sea_of_japan_stock","Queen crab","FMSY",1,"no_CS","illegal_fishing",2,710946306.957373,0
+"807","Queen crab sea_of_japan_stock","Queen crab","minRec",1,"no_CS","illegal_fishing",2,803202906.916052,0
+"808","Queen crab sea_of_japan_stock","Queen crab","econOpt",1,"no_CS","illegal_fishing",2,781591488.643448,0
+"809","Queen crab sea_of_japan_stock","Queen crab","close",1,"no_CS","illegal_fishing",2,13961642.2835849,0
+"810","Queen crab sea_of_japan_stock","Queen crab","openA",1,"no_CS","illegal_fishing",2,57791340.9979367,0
+"811","Queen crab sea_of_japan_stock","Queen crab","SQ",1,"CS","illegal_fishing",2,1294393463.50245,0
+"812","Queen crab sea_of_japan_stock","Queen crab","FMSY",1,"CS","illegal_fishing",2,1408776330.81069,0
+"813","Queen crab sea_of_japan_stock","Queen crab","minRec",1,"CS","illegal_fishing",2,1363407988.07174,0
+"814","Queen crab sea_of_japan_stock","Queen crab","econOpt",1,"CS","illegal_fishing",2,1258303896.9957,0
+"815","Queen crab sea_of_japan_stock","Queen crab","close",1,"CS","illegal_fishing",2,13961642.2835849,0
+"816","Queen crab sea_of_japan_stock","Queen crab","openA",1,"CS","illegal_fishing",2,529957027.689695,0
+"817","Rays and skates nei single_stock","Rays and skates nei","SQ",1,"no_CS","illegal_fishing",2,163224529.165629,0
+"818","Rays and skates nei single_stock","Rays and skates nei","FMSY",1,"no_CS","illegal_fishing",2,163169209.82263,0
+"819","Rays and skates nei single_stock","Rays and skates nei","minRec",1,"no_CS","illegal_fishing",2,163169209.82263,0
+"820","Rays and skates nei single_stock","Rays and skates nei","econOpt",1,"no_CS","illegal_fishing",2,159867507.730689,0
+"821","Rays and skates nei single_stock","Rays and skates nei","close",1,"no_CS","illegal_fishing",2,5728210.13809349,0
+"822","Rays and skates nei single_stock","Rays and skates nei","openA",1,"no_CS","illegal_fishing",2,39089699.2156492,0
+"823","Rays and skates nei single_stock","Rays and skates nei","SQ",1,"CS","illegal_fishing",2,270211823.862341,0
+"824","Rays and skates nei single_stock","Rays and skates nei","FMSY",1,"CS","illegal_fishing",2,268959311.937639,0
+"825","Rays and skates nei single_stock","Rays and skates nei","minRec",1,"CS","illegal_fishing",2,268959311.937639,0
+"826","Rays and skates nei single_stock","Rays and skates nei","econOpt",1,"CS","illegal_fishing",2,253446664.217408,0
+"827","Rays and skates nei single_stock","Rays and skates nei","close",1,"CS","illegal_fishing",2,5728210.13809349,0
+"828","Rays and skates nei single_stock","Rays and skates nei","openA",1,"CS","illegal_fishing",2,123883325.49432,0
+"829","Red snow crab single_stock","Red snow crab","SQ",1,"no_CS","illegal_fishing",2,632969902.265272,0
+"830","Red snow crab single_stock","Red snow crab","FMSY",1,"no_CS","illegal_fishing",2,703089240.207789,0
+"831","Red snow crab single_stock","Red snow crab","minRec",1,"no_CS","illegal_fishing",2,703089240.207789,0
+"832","Red snow crab single_stock","Red snow crab","econOpt",1,"no_CS","illegal_fishing",2,700141483.362027,0
+"833","Red snow crab single_stock","Red snow crab","close",1,"no_CS","illegal_fishing",2,27978384.0994557,0
+"834","Red snow crab single_stock","Red snow crab","openA",1,"no_CS","illegal_fishing",2,108785420.896877,0
+"835","Red snow crab single_stock","Red snow crab","SQ",1,"CS","illegal_fishing",2,1211320617.17439,0
+"836","Red snow crab single_stock","Red snow crab","FMSY",1,"CS","illegal_fishing",2,1184284369.74422,0
+"837","Red snow crab single_stock","Red snow crab","minRec",1,"CS","illegal_fishing",2,1184284369.74422,0
+"838","Red snow crab single_stock","Red snow crab","econOpt",1,"CS","illegal_fishing",2,1102984902.47241,0
+"839","Red snow crab single_stock","Red snow crab","close",1,"CS","illegal_fishing",2,27978384.0994557,0
+"840","Red snow crab single_stock","Red snow crab","openA",1,"CS","illegal_fishing",2,431734878.798811,0
+"841","Red-eye round herring pacific_stock","Red-eye round herring","SQ",1,"no_CS","illegal_fishing",2,1262677238.23906,0
+"842","Red-eye round herring pacific_stock","Red-eye round herring","FMSY",1,"no_CS","illegal_fishing",2,1452779418.17829,0
+"843","Red-eye round herring pacific_stock","Red-eye round herring","minRec",1,"no_CS","illegal_fishing",2,1452779418.17829,0
+"844","Red-eye round herring pacific_stock","Red-eye round herring","econOpt",1,"no_CS","illegal_fishing",2,1477756316.30689,0
+"845","Red-eye round herring pacific_stock","Red-eye round herring","close",1,"no_CS","illegal_fishing",2,48843021.3335752,0
+"846","Red-eye round herring pacific_stock","Red-eye round herring","openA",1,"no_CS","illegal_fishing",2,363216422.648863,0
+"847","Red-eye round herring pacific_stock","Red-eye round herring","SQ",1,"CS","illegal_fishing",2,1845635915.36648,0
+"848","Red-eye round herring pacific_stock","Red-eye round herring","FMSY",1,"CS","illegal_fishing",2,2227212372.2767,0
+"849","Red-eye round herring pacific_stock","Red-eye round herring","minRec",1,"CS","illegal_fishing",2,2227212372.2767,0
+"850","Red-eye round herring pacific_stock","Red-eye round herring","econOpt",1,"CS","illegal_fishing",2,2319487271.6439,0
+"851","Red-eye round herring pacific_stock","Red-eye round herring","close",1,"CS","illegal_fishing",2,48843021.3335752,0
+"852","Red-eye round herring pacific_stock","Red-eye round herring","openA",1,"CS","illegal_fishing",2,1006540877.76581,0
+"853","Red-eye round herring tsushima_current_stock","Red-eye round herring","SQ",1,"no_CS","illegal_fishing",2,541072219.306837,0
+"854","Red-eye round herring tsushima_current_stock","Red-eye round herring","FMSY",1,"no_CS","illegal_fishing",2,617327368.787416,0
+"855","Red-eye round herring tsushima_current_stock","Red-eye round herring","minRec",1,"no_CS","illegal_fishing",2,617327368.787416,0
+"856","Red-eye round herring tsushima_current_stock","Red-eye round herring","econOpt",1,"no_CS","illegal_fishing",2,606276293.180529,0
+"857","Red-eye round herring tsushima_current_stock","Red-eye round herring","close",1,"no_CS","illegal_fishing",2,29686893.166091,0
+"858","Red-eye round herring tsushima_current_stock","Red-eye round herring","openA",1,"no_CS","illegal_fishing",2,74835165.8964559,0
+"859","Red-eye round herring tsushima_current_stock","Red-eye round herring","SQ",1,"CS","illegal_fishing",2,1049548976.70762,0
+"860","Red-eye round herring tsushima_current_stock","Red-eye round herring","FMSY",1,"CS","illegal_fishing",2,1012851471.66875,0
+"861","Red-eye round herring tsushima_current_stock","Red-eye round herring","minRec",1,"CS","illegal_fishing",2,1012851471.66875,0
+"862","Red-eye round herring tsushima_current_stock","Red-eye round herring","econOpt",1,"CS","illegal_fishing",2,954124746.3877,0
+"863","Red-eye round herring tsushima_current_stock","Red-eye round herring","close",1,"CS","illegal_fishing",2,29686893.166091,0
+"864","Red-eye round herring tsushima_current_stock","Red-eye round herring","openA",1,"CS","illegal_fishing",2,339153724.132977,0
+"865","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","SQ",1,"no_CS","illegal_fishing",2,421501745.993462,0
+"866","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","FMSY",1,"no_CS","illegal_fishing",2,671840871.969135,0
+"867","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","minRec",1,"no_CS","illegal_fishing",2,910072529.624972,0
+"868","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","econOpt",1,"no_CS","illegal_fishing",2,876847923.019951,0
+"869","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","close",1,"no_CS","illegal_fishing",2,406410.651248606,0
+"870","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","openA",1,"no_CS","illegal_fishing",2,175223650.344655,0
+"871","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","SQ",1,"CS","illegal_fishing",2,1472288950.78913,0
+"872","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","FMSY",1,"CS","illegal_fishing",2,1546115164.56041,0
+"873","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","minRec",1,"CS","illegal_fishing",2,1555245647.14929,0
+"874","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","econOpt",1,"CS","illegal_fishing",2,1417866540.40279,0
+"875","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","close",1,"CS","illegal_fishing",2,406410.651248606,0
+"876","Righteye flounders nei hokkaido_north_stock","Righteye flounders nei","openA",1,"CS","illegal_fishing",2,811830457.079503,0
+"877","Righteye flounders nei pacific_north","Righteye flounders nei","SQ",1,"no_CS","illegal_fishing",2,2109986805.32593,0
+"878","Righteye flounders nei pacific_north","Righteye flounders nei","FMSY",1,"no_CS","illegal_fishing",2,2034587390.50582,0
+"879","Righteye flounders nei pacific_north","Righteye flounders nei","minRec",1,"no_CS","illegal_fishing",2,3097181240.47675,0
+"880","Righteye flounders nei pacific_north","Righteye flounders nei","econOpt",1,"no_CS","illegal_fishing",2,2958764718.45768,0
+"881","Righteye flounders nei pacific_north","Righteye flounders nei","close",1,"no_CS","illegal_fishing",2,10794690.1494852,0
+"882","Righteye flounders nei pacific_north","Righteye flounders nei","openA",1,"no_CS","illegal_fishing",2,2493887562.06023,0
+"883","Righteye flounders nei pacific_north","Righteye flounders nei","SQ",1,"CS","illegal_fishing",2,3448362205.62499,0
+"884","Righteye flounders nei pacific_north","Righteye flounders nei","FMSY",1,"CS","illegal_fishing",2,5289953674.63438,0
+"885","Righteye flounders nei pacific_north","Righteye flounders nei","minRec",1,"CS","illegal_fishing",2,5282473010.13675,0
+"886","Righteye flounders nei pacific_north","Righteye flounders nei","econOpt",1,"CS","illegal_fishing",2,4802297742.21972,0
+"887","Righteye flounders nei pacific_north","Righteye flounders nei","close",1,"CS","illegal_fishing",2,10794690.1494852,0
+"888","Righteye flounders nei pacific_north","Righteye flounders nei","openA",1,"CS","illegal_fishing",2,5952267333.99381,0
+"889","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","SQ",1,"no_CS","illegal_fishing",2,1223690019.97702,0
+"890","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","FMSY",1,"no_CS","illegal_fishing",2,985526768.831567,0
+"891","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","minRec",1,"no_CS","illegal_fishing",2,1902004463.80185,0
+"892","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","econOpt",1,"no_CS","illegal_fishing",2,1801253469.07561,0
+"893","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","close",1,"no_CS","illegal_fishing",2,-16085619.4724472,0
+"894","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","openA",1,"no_CS","illegal_fishing",2,893032880.871237,0
+"895","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","SQ",1,"CS","illegal_fishing",2,3196990873.94991,0
+"896","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","FMSY",1,"CS","illegal_fishing",2,3177743080.76712,0
+"897","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","minRec",1,"CS","illegal_fishing",2,3258134338.79902,0
+"898","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","econOpt",1,"CS","illegal_fishing",2,2941584771.52757,0
+"899","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","close",1,"CS","illegal_fishing",2,-16085619.4724472,0
+"900","Righteye flounders nei sea_of_japan_stock","Righteye flounders nei","openA",1,"CS","illegal_fishing",2,2786265524.78042,0
+"901","Rudderfish single_stock","Rudderfish","SQ",1,"no_CS","illegal_fishing",2,87672006.8741577,0
+"902","Rudderfish single_stock","Rudderfish","FMSY",1,"no_CS","illegal_fishing",2,219333113.199656,0
+"903","Rudderfish single_stock","Rudderfish","minRec",1,"no_CS","illegal_fishing",2,225175108.221516,0
+"904","Rudderfish single_stock","Rudderfish","econOpt",1,"no_CS","illegal_fishing",2,222755710.634534,0
+"905","Rudderfish single_stock","Rudderfish","close",1,"no_CS","illegal_fishing",2,9514487.22104682,0
+"906","Rudderfish single_stock","Rudderfish","openA",1,"no_CS","illegal_fishing",2,-1497306.34541472,0
+"907","Rudderfish single_stock","Rudderfish","SQ",1,"CS","illegal_fishing",2,328939045.760189,0
+"908","Rudderfish single_stock","Rudderfish","FMSY",1,"CS","illegal_fishing",2,381475153.425619,0
+"909","Rudderfish single_stock","Rudderfish","minRec",1,"CS","illegal_fishing",2,378732269.600276,0
+"910","Rudderfish single_stock","Rudderfish","econOpt",1,"CS","illegal_fishing",2,351562109.973213,0
+"911","Rudderfish single_stock","Rudderfish","close",1,"CS","illegal_fishing",2,9514487.22104682,0
+"912","Rudderfish single_stock","Rudderfish","openA",1,"CS","illegal_fishing",2,87009854.1000971,0
+"913","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","SQ",1,"no_CS","illegal_fishing",2,105243918.166569,0
+"914","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","FMSY",1,"no_CS","illegal_fishing",2,106640775.934834,0
+"915","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","minRec",1,"no_CS","illegal_fishing",2,129769960.040203,0
+"916","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","econOpt",1,"no_CS","illegal_fishing",2,126666772.539954,0
+"917","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","close",1,"no_CS","illegal_fishing",2,1255376.25364643,0
+"918","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","openA",1,"no_CS","illegal_fishing",2,39794808.8507908,0
+"919","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","SQ",1,"CS","illegal_fishing",2,219755077.15599,0
+"920","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","FMSY",1,"CS","illegal_fishing",2,219567896.471899,0
+"921","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","minRec",1,"CS","illegal_fishing",2,221127448.546036,0
+"922","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","econOpt",1,"CS","illegal_fishing",2,203023134.86083,0
+"923","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","close",1,"CS","illegal_fishing",2,1255376.25364643,0
+"924","Sandlances nei ise_mikawa_bay_stock","Sandlances nei","openA",1,"CS","illegal_fishing",2,129826084.445045,0
+"925","Sandlances nei sea_of_japan_stock","Sandlances nei","SQ",1,"no_CS","illegal_fishing",2,9239951.86594714,0
+"926","Sandlances nei sea_of_japan_stock","Sandlances nei","FMSY",1,"no_CS","illegal_fishing",2,77481666.6535251,0
+"927","Sandlances nei sea_of_japan_stock","Sandlances nei","minRec",1,"no_CS","illegal_fishing",2,123084469.351984,0
+"928","Sandlances nei sea_of_japan_stock","Sandlances nei","econOpt",1,"no_CS","illegal_fishing",2,117485888.228693,0
+"929","Sandlances nei sea_of_japan_stock","Sandlances nei","close",1,"no_CS","illegal_fishing",2,82762.9873048129,0
+"930","Sandlances nei sea_of_japan_stock","Sandlances nei","openA",1,"no_CS","illegal_fishing",2,128369272.125592,0
+"931","Sandlances nei sea_of_japan_stock","Sandlances nei","SQ",1,"CS","illegal_fishing",2,12894598.7362872,0
+"932","Sandlances nei sea_of_japan_stock","Sandlances nei","FMSY",1,"CS","illegal_fishing",2,205768472.572306,0
+"933","Sandlances nei sea_of_japan_stock","Sandlances nei","minRec",1,"CS","illegal_fishing",2,210232781.339384,0
+"934","Sandlances nei sea_of_japan_stock","Sandlances nei","econOpt",1,"CS","illegal_fishing",2,190433310.322772,0
+"935","Sandlances nei sea_of_japan_stock","Sandlances nei","close",1,"CS","illegal_fishing",2,82762.9873048129,0
+"936","Sandlances nei sea_of_japan_stock","Sandlances nei","openA",1,"CS","illegal_fishing",2,209206740.708138,0
+"937","Sandlances nei sendai_bay_stock","Sandlances nei","SQ",1,"no_CS","illegal_fishing",2,345942751.226078,0
+"938","Sandlances nei sendai_bay_stock","Sandlances nei","FMSY",1,"no_CS","illegal_fishing",2,286189403.105352,0
+"939","Sandlances nei sendai_bay_stock","Sandlances nei","minRec",1,"no_CS","illegal_fishing",2,423197816.454699,0
+"940","Sandlances nei sendai_bay_stock","Sandlances nei","econOpt",1,"no_CS","illegal_fishing",2,406471448.013389,0
+"941","Sandlances nei sendai_bay_stock","Sandlances nei","close",1,"no_CS","illegal_fishing",2,1182599.74643895,0
+"942","Sandlances nei sendai_bay_stock","Sandlances nei","openA",1,"no_CS","illegal_fishing",2,252798088.900373,0
+"943","Sandlances nei sendai_bay_stock","Sandlances nei","SQ",1,"CS","illegal_fishing",2,618308473.959949,0
+"944","Sandlances nei sendai_bay_stock","Sandlances nei","FMSY",1,"CS","illegal_fishing",2,702997149.702775,0
+"945","Sandlances nei sendai_bay_stock","Sandlances nei","minRec",1,"CS","illegal_fishing",2,722729952.301557,0
+"946","Sandlances nei sendai_bay_stock","Sandlances nei","econOpt",1,"CS","illegal_fishing",2,656138114.639909,0
+"947","Sandlances nei sendai_bay_stock","Sandlances nei","close",1,"CS","illegal_fishing",2,1182599.74643895,0
+"948","Sandlances nei sendai_bay_stock","Sandlances nei","openA",1,"CS","illegal_fishing",2,657072434.947082,0
+"949","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","SQ",1,"no_CS","illegal_fishing",2,218631251.623616,0
+"950","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","FMSY",1,"no_CS","illegal_fishing",2,491027303.230666,0
+"951","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","minRec",1,"no_CS","illegal_fishing",2,665934244.068687,0
+"952","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","econOpt",1,"no_CS","illegal_fishing",2,642859085.648655,0
+"953","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","close",1,"no_CS","illegal_fishing",2,-559535.508806405,0
+"954","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","openA",1,"no_CS","illegal_fishing",2,88619845.5840188,0
+"955","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","SQ",1,"CS","illegal_fishing",2,1019364502.15718,0
+"956","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","FMSY",1,"CS","illegal_fishing",2,1122876133.03928,0
+"957","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","minRec",1,"CS","illegal_fishing",2,1139085847.80763,0
+"958","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","econOpt",1,"CS","illegal_fishing",2,1038271210.373,0
+"959","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","close",1,"CS","illegal_fishing",2,-559535.508806405,0
+"960","Sandlances nei seto_inland_sea_east_stock","Sandlances nei","openA",1,"CS","illegal_fishing",2,519040117.304729,0
+"961","Sandlances nei soya_strait","Sandlances nei","SQ",1,"no_CS","illegal_fishing",2,153450464.834709,0
+"962","Sandlances nei soya_strait","Sandlances nei","FMSY",1,"no_CS","illegal_fishing",2,126215372.684272,0
+"963","Sandlances nei soya_strait","Sandlances nei","minRec",1,"no_CS","illegal_fishing",2,190836638.667465,0
+"964","Sandlances nei soya_strait","Sandlances nei","econOpt",1,"no_CS","illegal_fishing",2,182669557.910095,0
+"965","Sandlances nei soya_strait","Sandlances nei","close",1,"no_CS","illegal_fishing",2,515989.326986139,0
+"966","Sandlances nei soya_strait","Sandlances nei","openA",1,"no_CS","illegal_fishing",2,123791874.357974,0
+"967","Sandlances nei soya_strait","Sandlances nei","SQ",1,"CS","illegal_fishing",2,272172533.91448,0
+"968","Sandlances nei soya_strait","Sandlances nei","FMSY",1,"CS","illegal_fishing",2,320698877.012745,0
+"969","Sandlances nei soya_strait","Sandlances nei","minRec",1,"CS","illegal_fishing",2,325780821.165919,0
+"970","Sandlances nei soya_strait","Sandlances nei","econOpt",1,"CS","illegal_fishing",2,295694742.305413,0
+"971","Sandlances nei soya_strait","Sandlances nei","close",1,"CS","illegal_fishing",2,515989.326986139,0
+"972","Sandlances nei soya_strait","Sandlances nei","openA",1,"CS","illegal_fishing",2,316981247.87035,0
+"973","Sea cucumbers nei single_stock","Sea cucumbers nei","SQ",1,"no_CS","illegal_fishing",2,1720690563.92766,0
+"974","Sea cucumbers nei single_stock","Sea cucumbers nei","FMSY",1,"no_CS","illegal_fishing",2,5817528269.0464,0
+"975","Sea cucumbers nei single_stock","Sea cucumbers nei","minRec",1,"no_CS","illegal_fishing",2,5817528269.0464,0
+"976","Sea cucumbers nei single_stock","Sea cucumbers nei","econOpt",1,"no_CS","illegal_fishing",2,5981694956.36558,0
+"977","Sea cucumbers nei single_stock","Sea cucumbers nei","close",1,"no_CS","illegal_fishing",2,54993655.2889889,0
+"978","Sea cucumbers nei single_stock","Sea cucumbers nei","openA",1,"no_CS","illegal_fishing",2,1735328322.07216,0
+"979","Sea cucumbers nei single_stock","Sea cucumbers nei","SQ",1,"CS","illegal_fishing",2,2341586558.18342,0
+"980","Sea cucumbers nei single_stock","Sea cucumbers nei","FMSY",1,"CS","illegal_fishing",2,9051358268.93232,0
+"981","Sea cucumbers nei single_stock","Sea cucumbers nei","minRec",1,"CS","illegal_fishing",2,9051358268.93232,0
+"982","Sea cucumbers nei single_stock","Sea cucumbers nei","econOpt",1,"CS","illegal_fishing",2,9308390941.47006,0
+"983","Sea cucumbers nei single_stock","Sea cucumbers nei","close",1,"CS","illegal_fishing",2,54993655.2889889,0
+"984","Sea cucumbers nei single_stock","Sea cucumbers nei","openA",1,"CS","illegal_fishing",2,3948059269.95455,0
+"985","Sea urchins nei single_stock","Sea urchins nei","SQ",1,"no_CS","illegal_fishing",2,2444136441.43129,0
+"986","Sea urchins nei single_stock","Sea urchins nei","FMSY",1,"no_CS","illegal_fishing",2,3445691607.37791,0
+"987","Sea urchins nei single_stock","Sea urchins nei","minRec",1,"no_CS","illegal_fishing",2,3445691607.37791,0
+"988","Sea urchins nei single_stock","Sea urchins nei","econOpt",1,"no_CS","illegal_fishing",2,3387153090.16765,0
+"989","Sea urchins nei single_stock","Sea urchins nei","close",1,"no_CS","illegal_fishing",2,67982893.960308,0
+"990","Sea urchins nei single_stock","Sea urchins nei","openA",1,"no_CS","illegal_fishing",2,1119290380.35112,0
+"991","Sea urchins nei single_stock","Sea urchins nei","SQ",1,"CS","illegal_fishing",2,3530033639.90711,0
+"992","Sea urchins nei single_stock","Sea urchins nei","FMSY",1,"CS","illegal_fishing",2,5502159351.13025,0
+"993","Sea urchins nei single_stock","Sea urchins nei","minRec",1,"CS","illegal_fishing",2,5502159351.13025,0
+"994","Sea urchins nei single_stock","Sea urchins nei","econOpt",1,"CS","illegal_fishing",2,5366482573.87879,0
+"995","Sea urchins nei single_stock","Sea urchins nei","close",1,"CS","illegal_fishing",2,67982893.960308,0
+"996","Sea urchins nei single_stock","Sea urchins nei","openA",1,"CS","illegal_fishing",2,2925038828.42921,0
+"997","Skipjack tuna single_stock","Skipjack tuna","SQ",1,"no_CS","illegal_fishing",2,7795591287.82636,0
+"998","Skipjack tuna single_stock","Skipjack tuna","FMSY",1,"no_CS","illegal_fishing",2,6933122354.40211,0
+"999","Skipjack tuna single_stock","Skipjack tuna","minRec",1,"no_CS","illegal_fishing",2,6229066370.0458,0
+"1000","Skipjack tuna single_stock","Skipjack tuna","econOpt",1,"no_CS","illegal_fishing",2,7651115357.41452,0
+"1001","Skipjack tuna single_stock","Skipjack tuna","close",1,"no_CS","illegal_fishing",2,277237130.610125,0
+"1002","Skipjack tuna single_stock","Skipjack tuna","openA",1,"no_CS","illegal_fishing",2,2854640904.79833,0
+"1003","Skipjack tuna single_stock","Skipjack tuna","SQ",1,"CS","illegal_fishing",2,14231264097.0007,0
+"1004","Skipjack tuna single_stock","Skipjack tuna","FMSY",1,"CS","illegal_fishing",2,11172941078.0658,0
+"1005","Skipjack tuna single_stock","Skipjack tuna","minRec",1,"CS","illegal_fishing",2,9716882764.34592,0
+"1006","Skipjack tuna single_stock","Skipjack tuna","econOpt",1,"CS","illegal_fishing",2,13144624501.7967,0
+"1007","Skipjack tuna single_stock","Skipjack tuna","close",1,"CS","illegal_fishing",2,277237130.610125,0
+"1008","Skipjack tuna single_stock","Skipjack tuna","openA",1,"CS","illegal_fishing",2,9489700888.63293,0
+"1009","Smelts nei pacific_stock","Smelts nei","SQ",1,"no_CS","illegal_fishing",2,41847063.6160275,0
+"1010","Smelts nei pacific_stock","Smelts nei","FMSY",1,"no_CS","illegal_fishing",2,41262229.161286,0
+"1011","Smelts nei pacific_stock","Smelts nei","minRec",1,"no_CS","illegal_fishing",2,42904653.3535405,0
+"1012","Smelts nei pacific_stock","Smelts nei","econOpt",1,"no_CS","illegal_fishing",2,42500264.7264323,0
+"1013","Smelts nei pacific_stock","Smelts nei","close",1,"no_CS","illegal_fishing",2,937523.680197463,0
+"1014","Smelts nei pacific_stock","Smelts nei","openA",1,"no_CS","illegal_fishing",2,13562572.1512924,0
+"1015","Smelts nei pacific_stock","Smelts nei","SQ",1,"CS","illegal_fishing",2,70410977.4673155,0
+"1016","Smelts nei pacific_stock","Smelts nei","FMSY",1,"CS","illegal_fishing",2,73359244.9040953,0
+"1017","Smelts nei pacific_stock","Smelts nei","minRec",1,"CS","illegal_fishing",2,72796046.7826797,0
+"1018","Smelts nei pacific_stock","Smelts nei","econOpt",1,"CS","illegal_fishing",2,67552412.0635318,0
+"1019","Smelts nei pacific_stock","Smelts nei","close",1,"CS","illegal_fishing",2,937523.680197463,0
+"1020","Smelts nei pacific_stock","Smelts nei","openA",1,"CS","illegal_fishing",2,39880212.0315057,0
+"1021","Smelts nei sea_of_japan_stock","Smelts nei","SQ",1,"no_CS","illegal_fishing",2,144755131.989004,0
+"1022","Smelts nei sea_of_japan_stock","Smelts nei","FMSY",1,"no_CS","illegal_fishing",2,142253155.971738,0
+"1023","Smelts nei sea_of_japan_stock","Smelts nei","minRec",1,"no_CS","illegal_fishing",2,149724191.38499,0
+"1024","Smelts nei sea_of_japan_stock","Smelts nei","econOpt",1,"no_CS","illegal_fishing",2,147801206.136323,0
+"1025","Smelts nei sea_of_japan_stock","Smelts nei","close",1,"no_CS","illegal_fishing",2,3089225.00851721,0
+"1026","Smelts nei sea_of_japan_stock","Smelts nei","openA",1,"no_CS","illegal_fishing",2,48933465.9894803,0
+"1027","Smelts nei sea_of_japan_stock","Smelts nei","SQ",1,"CS","illegal_fishing",2,247901715.823915,0
+"1028","Smelts nei sea_of_japan_stock","Smelts nei","FMSY",1,"CS","illegal_fishing",2,257148569.716149,0
+"1029","Smelts nei sea_of_japan_stock","Smelts nei","minRec",1,"CS","illegal_fishing",2,254139122.574839,0
+"1030","Smelts nei sea_of_japan_stock","Smelts nei","econOpt",1,"CS","illegal_fishing",2,235559278.705688,0
+"1031","Smelts nei sea_of_japan_stock","Smelts nei","close",1,"CS","illegal_fishing",2,3089225.00851721,0
+"1032","Smelts nei sea_of_japan_stock","Smelts nei","openA",1,"CS","illegal_fishing",2,145228981.843289,0
+"1033","Southern bluefin tuna single_stock","Southern bluefin tuna","SQ",1,"no_CS","illegal_fishing",2,295737955.263363,0
+"1034","Southern bluefin tuna single_stock","Southern bluefin tuna","FMSY",1,"no_CS","illegal_fishing",2,188815268.089968,0
+"1035","Southern bluefin tuna single_stock","Southern bluefin tuna","minRec",1,"no_CS","illegal_fishing",2,188815268.089968,0
+"1036","Southern bluefin tuna single_stock","Southern bluefin tuna","econOpt",1,"no_CS","illegal_fishing",2,364245096.529672,0
+"1037","Southern bluefin tuna single_stock","Southern bluefin tuna","close",1,"no_CS","illegal_fishing",2,31301785.1069986,0
+"1038","Southern bluefin tuna single_stock","Southern bluefin tuna","openA",1,"no_CS","illegal_fishing",2,35610486.597974,0
+"1039","Southern bluefin tuna single_stock","Southern bluefin tuna","SQ",1,"CS","illegal_fishing",2,676294774.618714,0
+"1040","Southern bluefin tuna single_stock","Southern bluefin tuna","FMSY",1,"CS","illegal_fishing",2,264479583.418541,0
+"1041","Southern bluefin tuna single_stock","Southern bluefin tuna","minRec",1,"CS","illegal_fishing",2,264479583.418541,0
+"1042","Southern bluefin tuna single_stock","Southern bluefin tuna","econOpt",1,"CS","illegal_fishing",2,625766503.175587,0
+"1043","Southern bluefin tuna single_stock","Southern bluefin tuna","close",1,"CS","illegal_fishing",2,31301785.1069986,0
+"1044","Southern bluefin tuna single_stock","Southern bluefin tuna","openA",1,"CS","illegal_fishing",2,264084155.936319,0
+"1045","Striped marlin single_stock","Striped marlin","SQ",1,"no_CS","illegal_fishing",2,132334490.659316,0
+"1046","Striped marlin single_stock","Striped marlin","FMSY",1,"no_CS","illegal_fishing",2,133866695.464181,0
+"1047","Striped marlin single_stock","Striped marlin","minRec",1,"no_CS","illegal_fishing",2,117302131.740505,0
+"1048","Striped marlin single_stock","Striped marlin","econOpt",1,"no_CS","illegal_fishing",2,155606905.747778,0
+"1049","Striped marlin single_stock","Striped marlin","close",1,"no_CS","illegal_fishing",2,372114.112664106,0
+"1050","Striped marlin single_stock","Striped marlin","openA",1,"no_CS","illegal_fishing",2,96319693.3411019,0
+"1051","Striped marlin single_stock","Striped marlin","SQ",1,"CS","illegal_fishing",2,288298016.154143,0
+"1052","Striped marlin single_stock","Striped marlin","FMSY",1,"CS","illegal_fishing",2,283788042.749235,0
+"1053","Striped marlin single_stock","Striped marlin","minRec",1,"CS","illegal_fishing",2,188629888.19848,0
+"1054","Striped marlin single_stock","Striped marlin","econOpt",1,"CS","illegal_fishing",2,269895011.151535,0
+"1055","Striped marlin single_stock","Striped marlin","close",1,"CS","illegal_fishing",2,372114.112664106,0
+"1056","Striped marlin single_stock","Striped marlin","openA",1,"CS","illegal_fishing",2,291624020.783042,0
+"1057","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","SQ",1,"no_CS","illegal_fishing",2,414111675.919849,0
+"1058","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","FMSY",1,"no_CS","illegal_fishing",2,409716511.966985,0
+"1059","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","minRec",1,"no_CS","illegal_fishing",2,426190719.540655,0
+"1060","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","econOpt",1,"no_CS","illegal_fishing",2,423585069.435895,0
+"1061","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","close",1,"no_CS","illegal_fishing",2,10069606.7838747,0
+"1062","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","openA",1,"no_CS","illegal_fishing",2,118437120.851512,0
+"1063","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","SQ",1,"CS","illegal_fishing",2,718390968.302345,0
+"1064","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","FMSY",1,"CS","illegal_fishing",2,726052648.834338,0
+"1065","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","minRec",1,"CS","illegal_fishing",2,722640296.135459,0
+"1066","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","econOpt",1,"CS","illegal_fishing",2,671407019.041124,0
+"1067","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","close",1,"CS","illegal_fishing",2,10069606.7838747,0
+"1068","Swimming crabs, etc. nei single_stock","Swimming crabs, etc. nei","openA",1,"CS","illegal_fishing",2,362542085.891483,0
+"1069","Swordfish single_stock","Swordfish","SQ",1,"no_CS","illegal_fishing",2,23449248.9170735,0
+"1070","Swordfish single_stock","Swordfish","FMSY",1,"no_CS","illegal_fishing",2,188924813.371519,0
+"1071","Swordfish single_stock","Swordfish","minRec",1,"no_CS","illegal_fishing",2,78089184.7440311,0
+"1072","Swordfish single_stock","Swordfish","econOpt",1,"no_CS","illegal_fishing",2,261700900.557392,0
+"1073","Swordfish single_stock","Swordfish","close",1,"no_CS","illegal_fishing",2,6810776.09180243,0
+"1074","Swordfish single_stock","Swordfish","openA",1,"no_CS","illegal_fishing",2,-12724616.168885,0
+"1075","Swordfish single_stock","Swordfish","SQ",1,"CS","illegal_fishing",2,522279508.131465,0
+"1076","Swordfish single_stock","Swordfish","FMSY",1,"CS","illegal_fishing",2,305030779.072991,0
+"1077","Swordfish single_stock","Swordfish","minRec",1,"CS","illegal_fishing",2,113606285.629651,0
+"1078","Swordfish single_stock","Swordfish","econOpt",1,"CS","illegal_fishing",2,473420445.07238,0
+"1079","Swordfish single_stock","Swordfish","close",1,"CS","illegal_fishing",2,6810776.09180243,0
+"1080","Swordfish single_stock","Swordfish","openA",1,"CS","illegal_fishing",2,265741715.504915,0
+"1081","Tilefishes nei single_stock","Tilefishes nei","SQ",1,"no_CS","illegal_fishing",2,346677779.595474,0
+"1082","Tilefishes nei single_stock","Tilefishes nei","FMSY",1,"no_CS","illegal_fishing",2,349611397.190897,0
+"1083","Tilefishes nei single_stock","Tilefishes nei","minRec",1,"no_CS","illegal_fishing",2,352480770.273714,0
+"1084","Tilefishes nei single_stock","Tilefishes nei","econOpt",1,"no_CS","illegal_fishing",2,347210214.498815,0
+"1085","Tilefishes nei single_stock","Tilefishes nei","close",1,"no_CS","illegal_fishing",2,11120602.7158421,0
+"1086","Tilefishes nei single_stock","Tilefishes nei","openA",1,"no_CS","illegal_fishing",2,85846132.4302172,0
+"1087","Tilefishes nei single_stock","Tilefishes nei","SQ",1,"CS","illegal_fishing",2,607354642.320255,0
+"1088","Tilefishes nei single_stock","Tilefishes nei","FMSY",1,"CS","illegal_fishing",2,597912655.20045,0
+"1089","Tilefishes nei single_stock","Tilefishes nei","minRec",1,"CS","illegal_fishing",2,596197056.130342,0
+"1090","Tilefishes nei single_stock","Tilefishes nei","econOpt",1,"CS","illegal_fishing",2,551791440.398796,0
+"1091","Tilefishes nei single_stock","Tilefishes nei","close",1,"CS","illegal_fishing",2,11120602.7158421,0
+"1092","Tilefishes nei single_stock","Tilefishes nei","openA",1,"CS","illegal_fishing",2,283212420.55146,0
+"1093","Trouts nei single_stock","Trouts nei","SQ",1,"no_CS","illegal_fishing",2,1068691487.4906,0
+"1094","Trouts nei single_stock","Trouts nei","FMSY",1,"no_CS","illegal_fishing",2,2056807814.97088,0
+"1095","Trouts nei single_stock","Trouts nei","minRec",1,"no_CS","illegal_fishing",2,2104478805.81599,0
+"1096","Trouts nei single_stock","Trouts nei","econOpt",1,"no_CS","illegal_fishing",2,2098825714.61258,0
+"1097","Trouts nei single_stock","Trouts nei","close",1,"no_CS","illegal_fishing",2,16619662.1376692,0
+"1098","Trouts nei single_stock","Trouts nei","openA",1,"no_CS","illegal_fishing",2,1309593633.85758,0
+"1099","Trouts nei single_stock","Trouts nei","SQ",1,"CS","illegal_fishing",2,1563637760.33077,0
+"1100","Trouts nei single_stock","Trouts nei","FMSY",1,"CS","illegal_fishing",2,3700074795.09223,0
+"1101","Trouts nei single_stock","Trouts nei","minRec",1,"CS","illegal_fishing",2,3523112712.88539,0
+"1102","Trouts nei single_stock","Trouts nei","econOpt",1,"CS","illegal_fishing",2,3433276480.68461,0
+"1103","Trouts nei single_stock","Trouts nei","close",1,"CS","illegal_fishing",2,16619662.1376692,0
+"1104","Trouts nei single_stock","Trouts nei","openA",1,"CS","illegal_fishing",2,3226971145.77378,0
+"1105","Turbans nei single_stock","Turbans nei","SQ",1,"no_CS","illegal_fishing",2,830732573.730564,0
+"1106","Turbans nei single_stock","Turbans nei","FMSY",1,"no_CS","illegal_fishing",2,833492222.639746,0
+"1107","Turbans nei single_stock","Turbans nei","minRec",1,"no_CS","illegal_fishing",2,833492222.639746,0
+"1108","Turbans nei single_stock","Turbans nei","econOpt",1,"no_CS","illegal_fishing",2,817916845.411789,0
+"1109","Turbans nei single_stock","Turbans nei","close",1,"no_CS","illegal_fishing",2,26939365.3937053,0
+"1110","Turbans nei single_stock","Turbans nei","openA",1,"no_CS","illegal_fishing",2,216751372.327792,0
+"1111","Turbans nei single_stock","Turbans nei","SQ",1,"CS","illegal_fishing",2,1354494869.75216,0
+"1112","Turbans nei single_stock","Turbans nei","FMSY",1,"CS","illegal_fishing",2,1381555470.26128,0
+"1113","Turbans nei single_stock","Turbans nei","minRec",1,"CS","illegal_fishing",2,1381555470.26128,0
+"1114","Turbans nei single_stock","Turbans nei","econOpt",1,"CS","illegal_fishing",2,1297226913.6684,0
+"1115","Turbans nei single_stock","Turbans nei","close",1,"CS","illegal_fishing",2,26939365.3937053,0
+"1116","Turbans nei single_stock","Turbans nei","openA",1,"CS","illegal_fishing",2,662684329.694885,0
+"1117","Whitebait smelt single_stock","Whitebait smelt","SQ",1,"no_CS","illegal_fishing",2,5662540999.66447,0
+"1118","Whitebait smelt single_stock","Whitebait smelt","FMSY",1,"no_CS","illegal_fishing",2,5838779145.2425,0
+"1119","Whitebait smelt single_stock","Whitebait smelt","minRec",1,"no_CS","illegal_fishing",2,5838779145.2425,0
+"1120","Whitebait smelt single_stock","Whitebait smelt","econOpt",1,"no_CS","illegal_fishing",2,5734084032.14521,0
+"1121","Whitebait smelt single_stock","Whitebait smelt","close",1,"no_CS","illegal_fishing",2,204034592.873088,0
+"1122","Whitebait smelt single_stock","Whitebait smelt","openA",1,"no_CS","illegal_fishing",2,1428556699.57183,0
+"1123","Whitebait smelt single_stock","Whitebait smelt","SQ",1,"CS","illegal_fishing",2,8719827896.81335,0
+"1124","Whitebait smelt single_stock","Whitebait smelt","FMSY",1,"CS","illegal_fishing",2,9312018444.22191,0
+"1125","Whitebait smelt single_stock","Whitebait smelt","minRec",1,"CS","illegal_fishing",2,9312018444.22191,0
+"1126","Whitebait smelt single_stock","Whitebait smelt","econOpt",1,"CS","illegal_fishing",2,9016269490.37452,0
+"1127","Whitebait smelt single_stock","Whitebait smelt","close",1,"CS","illegal_fishing",2,204034592.873088,0
+"1128","Whitebait smelt single_stock","Whitebait smelt","openA",1,"CS","illegal_fishing",2,4114751485.76272,0
+"1129","Yellowfin tuna single_stock","Yellowfin tuna","SQ",1,"no_CS","illegal_fishing",2,4386278351.8181,0
+"1130","Yellowfin tuna single_stock","Yellowfin tuna","FMSY",1,"no_CS","illegal_fishing",2,4338465536.89754,0
+"1131","Yellowfin tuna single_stock","Yellowfin tuna","minRec",1,"no_CS","illegal_fishing",2,4338465536.89754,0
+"1132","Yellowfin tuna single_stock","Yellowfin tuna","econOpt",1,"no_CS","illegal_fishing",2,4617149263.59098,0
+"1133","Yellowfin tuna single_stock","Yellowfin tuna","close",1,"no_CS","illegal_fishing",2,142671559.424426,0
+"1134","Yellowfin tuna single_stock","Yellowfin tuna","openA",1,"no_CS","illegal_fishing",2,1828038356.87073,0
+"1135","Yellowfin tuna single_stock","Yellowfin tuna","SQ",1,"CS","illegal_fishing",2,7033031623.1402,0
+"1136","Yellowfin tuna single_stock","Yellowfin tuna","FMSY",1,"CS","illegal_fishing",2,6919687239.13028,0
+"1137","Yellowfin tuna single_stock","Yellowfin tuna","minRec",1,"CS","illegal_fishing",2,6919687239.13028,0
+"1138","Yellowfin tuna single_stock","Yellowfin tuna","econOpt",1,"CS","illegal_fishing",2,7785957660.08883,0
+"1139","Yellowfin tuna single_stock","Yellowfin tuna","close",1,"CS","illegal_fishing",2,142671559.424426,0
+"1140","Yellowfin tuna single_stock","Yellowfin tuna","openA",1,"CS","illegal_fishing",2,5281762733.46476,0
+"1141","Yesso scallop single_stock","Yesso scallop","SQ",1,"no_CS","illegal_fishing",2,-8124278347.14547,0
+"1142","Yesso scallop single_stock","Yesso scallop","FMSY",1,"no_CS","illegal_fishing",2,7825796413.65375,0
+"1143","Yesso scallop single_stock","Yesso scallop","minRec",1,"no_CS","illegal_fishing",2,9326830470.38212,0
+"1144","Yesso scallop single_stock","Yesso scallop","econOpt",1,"no_CS","illegal_fishing",2,9158570294.51637,0
+"1145","Yesso scallop single_stock","Yesso scallop","close",1,"no_CS","illegal_fishing",2,81070868.7071819,0
+"1146","Yesso scallop single_stock","Yesso scallop","openA",1,"no_CS","illegal_fishing",2,-2386147190.85622,0
+"1147","Yesso scallop single_stock","Yesso scallop","SQ",1,"CS","illegal_fishing",2,5283297724.24723,0
+"1148","Yesso scallop single_stock","Yesso scallop","FMSY",1,"CS","illegal_fishing",2,15691475937.8465,0
+"1149","Yesso scallop single_stock","Yesso scallop","minRec",1,"CS","illegal_fishing",2,15904386868.3257,0
+"1150","Yesso scallop single_stock","Yesso scallop","econOpt",1,"CS","illegal_fishing",2,14638497801.3007,0
+"1151","Yesso scallop single_stock","Yesso scallop","close",1,"CS","illegal_fishing",2,81070868.7071819,0
+"1152","Yesso scallop single_stock","Yesso scallop","openA",1,"CS","illegal_fishing",2,453480447.444969,0
