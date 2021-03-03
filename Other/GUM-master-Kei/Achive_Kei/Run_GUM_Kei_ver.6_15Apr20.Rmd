@@ -1,0 +1,246 @@
+---
+title: "Run_GUM_by_Kei"
+author: "kei kawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output: html_document
+---
+
+The GUM package runs the Global Upside Model presented in Costello et al. 2016. Once installed, you just need to pass it a data frame with at minimum variables `IdOrig` (id), `Year` (year), `Catch` (catch), and `SpeciesCat`, the numeric ISSCAAP species category. `SciName` (scientific name) helps as well. The rest should take care of itself.
+
+**Important:** You must pass a data frame and **NOT** a data table as used with *dplyr* for the analysis to work. If you converted your data to a data table while preparing it be sure to convert it back to a true data frame using `data.frame()`
+
+Additional parameters that can be supplied to the data frame as available are:  
+
+Variable  | Description
+----------|------------
+MaxLength | The maximum length
+AgeMat    | Age at Maturity
+VonBertK  | Von Bert Growth Rate
+Temp      | Preferred temperature
+b_to_k_ratio | Ratio of bmsy to K
+
+Even if you only have these for selected stocks, the model will try and fill in missing values from FishBase.  
+
+~~~ Kei Note ~~~   
+<br />
+ISSCAAP short for International Standard Statistical Classification of Aquatic Animals and Plants   
+This explanation said data frame that using GUM require at minimum IdOring, Year, Catch and SpeciesCat. But, What id is IdOrig?  
+Note!! fishbase_lifehistory, isscaap and regs is included sysdata.rda file. Don't need create these data frame on this code.  
+regsに含まれている6つの回帰はそれぞれ説明変数が少しだけ違っている  
+<br />
+**[M1]**LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back +  
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch +  
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax +  
+    MaxLength + AgeMat + VonBertK + Temp + SpeciesCatName  
+<br />
+**[M2]**LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back +  
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch +  
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax +  
+    MaxLength + AgeMat + VonBertK + SpeciesCatName                             **#Tempが抜けた**  
+<br />
+**[M3]**LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back +  
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch +  
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax +  
+    MaxLength + VonBertK + SpeciesCatName                                      **#AgeMatが抜けた**  
+<br />
+**[M4]**LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back +  
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch +  
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax +   
+    VonBertK + SpeciesCatName                                                  **#MaxLengthが抜けた**  
+<br />
+**[M6]**LogBvBmsy ~ YearsBack + ScaledCatch + ScaledCatch1Back + ScaledCatch2Back +   
+    ScaledCatch3Back + ScaledCatch4Back + MaxCatch + TimeToMaxCatch +  
+    InitialScaledCatchSlope + MeanScaledCatch + CatchToRollingMax +  
+    SpeciesCatName                                                             **#VonBertKが抜けた**  
+<br />
+1個ずつ説明変数が抜けている。logBvBmsy==TorFでmodel_workedがつけられ、TRUEでモデルナンバーが最も小さいのを選択するので、logBvBmsyが算出できた中で最も説明変数が多いものを選択している。抜けていく説明変数は個体の特徴を表したものであるため、[M6]の様に生活史情報がなくても名前だけでシミューションを回すことも可能である。
+<br />  
+
+**日本の魚種のモデルは抜ける説明変数の順序が異なる。AgeMat-VonBertK-Temp-MaxLengthの順に抜いていく。  
+
+
+<br /> 
+~~~~~~~~~~~~~~~~  
+
+First, let's take a look at some sample data  
+```{r example, warning=F, message=F,include=FALSE}
+rm(list = ls(all=T))
+
+#library(remotes) #自作パッケージなのでCRANではなくGithubからインストールする必要があるためremoteパッケージを使う
+#remotes::install_github("DanOvando/GUM")
+#setwd("~/研究/自分用/GUM-master/data")
+#sample_data <- load("sample_data.rda") #rdaファイルのloadがうまくいかない。右下Filesペインで直接選択して読み込む。
+file.sources_r = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R_Kei",pattern = ".R")
+#file.sources_r = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R_Kei",pattern = ".R") #.Rファイルを一括指定
+file.sources_rda = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R_Kei",pattern=".rda")
+#file.sources_rda = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R",pattern=".rda") #.rdaファイルを一括指定
+file.sources_rda2 = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data",pattern=".rda")
+#file.sources_rda2 = list.files(path = "/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data",pattern=".rda") #.rdaファイルを一括指定
+setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data")
+#setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data")
+lapply(file.sources_rda2,load,.GlobalEnv) #.rdaファイルを一括読み込み
+
+
+setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R_Kei")
+#setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/R")
+lapply(file.sources_rda,load,.GlobalEnv) #.rdaファイルを一括読み込み
+lapply(file.sources_r, source,.GlobalEnv) #.Rファイルを一括読み込み
+```
+
+#いわて大漁ナビのデータでRun
+
+```{r message=F}
+#Create Date 3/24
+#いわて大漁ナビにあるイシガレイのデータでRunするかの確認のためだけのコード
+
+#Stevenさんの方のCatch-MSYのコードは正常に動いた
+
+#ここで重要なのは、Catch-MSYの前提となっている。
+#「使用する漁獲量は移出入の無い閉鎖的な資源の単位から得られたものである」と「高い利用率である」
+#を満たしているのかどうかである。
+
+#Upsideの前提をできるだけ満たしたい。しかし、県レベルで完結する系群は国内にほぼなく、岩手県内には皆無である。
+#従って、高い利用率を満たすべく、岩手県の漁業の中心を担うサンマで行う。(サンマは国際魚種のためより前提から外れている)
+
+
+#サンマのデータ作成 (IdOrig,Year,Catch,SpeciesCat,SciNameが必要)
+library(rfishbase)
+library(tidyverse)
+
+#Create_Modelで作成されるregs_JPをregsにすることで変更が少なく済む
+regs <- regs_JP
+
+#いわて大漁ナビのデータを読み込む。
+setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data")
+lifehistory <- read_csv("Upside_Iwate_TairyoNavi_Fishlist.csv")
+navi <- readRDS("IwateData_Cleaned_Kei_24Feb20.rds")
+
+#filterを使わない方法。ベクトルの要素の抽出方法の応用である。データフレーム全体に論理式を使用することはできないため、論理式を満たす行or列の指定が必要である。
+#fish <- navi[navi$Fish_Species=="pacific_saury",]
+#fish$IdOrig <- "Japan-68"
+#fish$SpeciesCat <- 37
+#fish$SciName <- "Cololabis saira"
+#fish$CommName <- "pacific_saury"
+
+#4/6kei:いわて大漁ナビにおいて全魚種でコードを回すために設計
+fish <- navi %>%
+  mutate(Year = as.numeric(Year),Landings_kg = floor(Landings_kg/1000)) %>% #単位をトンにして、切り捨て
+  group_by(Fish_Species,Year) %>%
+  summarise(Catch = sum(Landings_kg))
+
+fish <- fish %>%
+  left_join(lifehistory,by=c("Fish_Species"="CommName"))
+
+fish1 <- fish %>%
+  select(IdOrig,Year,Catch,SpeciesCat,SciName,CommName=Fish_Species) %>%
+  group_by(Year,IdOrig) %>%
+  mutate(Catch = floor(sum(Catch)/1000)) %>% #4/2kei:StevenさんのCatchMSYのコードを見るとCatchは1単位1000tにしている
+  ungroup() %>%
+  unique() %>%
+  data.frame() #dataframeにしておくと、if()で条件に該当しなくてもエラーが返ってこず、そのまま無視して進めてくれる
+
+results = run_gum_assessment_Kei(dat = fish1)
+
+#4/14kei:回帰の比較用
+setwd("/Volumes/GoogleDrive/共有ドライブ/gakuLab_Research_Upside/Upside-U.Iwate/Other/GUM-master-Kei/data")
+fish <- read.csv("Test.csv",stringsAsFactors = F)
+
+#学名を付与
+fish <- fish %>%
+  left_join(lifehistory,by=c("Fish_Species"="CommName","SciName","SpeciesCat"))
+
+
+#日本全体
+fish_JP <- RAM_JP_2 %>%
+  select(IdOrig,Year,Catch=Landing_t,SpeciesCat,SciName,Fish_Species = CommStockName) %>%
+  group_by(Year,IdOrig) %>%
+  mutate(Catch = floor(sum(Catch)/1000)) %>% #4/2kei:StevenさんのCatchMSYのコードを見るとCatchは1単位1000tにしている
+  ungroup() %>%
+  mutate(Year = as.integer(Year),SpeciesCat = as.integer(SpeciesCat)) %>%
+  unique() %>%
+  data.frame()
+
+```
+
+
+There's about 100 stocks in there, so let's subset this down to something smaller, and with less data to test the package
+
+```{r message=F,warning=F}
+
+
+#stocks = unique(sample_data$IdOrig)
+
+#sub = sample(stocks, 10, replace = F)
+
+#small_dat = filter(sample_data, IdOrig %in% sub)
+
+#less_dat = small_dat %>%   
+ # dplyr::select(IdOrig,SciName,SpeciesCat,CommName,Year,Catch,BvBmsy) %>%
+#  mutate(IdOrig = as.character(IdOrig))
+
+#less_dat = sample_data %>%   
+ # dplyr::select(IdOrig,SciName,SpeciesCat,CommName,Year,Catch,BvBmsy) %>%
+#  mutate(IdOrig = as.character(IdOrig)) %>%
+ # filter(CommName=="Chinook(=Spring=King) salmon")
+
+
+#no_dat <- less_dat %>%
+#  mutate(SpeciesCat = 36, SciName = 'Blah')
+
+#結果をリストで全て返すことも可能である。その場合は、run_gum_assessment_Kei()のapply_fun()の$CatchMSY以下を取り除く
+#results = run_gum_assessment_Kei(dat = fish_JP) #RAM
+results = run_gum_assessment_Kei(dat = fish1)
+#resukts = run_gum_assessment_Kei(dat = less_dat)
+
+#results_no_sciname = run_gum_assessment(dat = no_dat) #test when no scientific name
+
+```
+
+Compare with Japan Full Stock Assessment
+
+```{r}
+#Biomass_JP <- RAM_JP_2 %>%
+ # select(year=Year,Biomass_FSA,IdOrig) %>%
+#  mutate(Biomass_FSA = Biomass_FSA/1000) %>%
+ # na.omit()
+#stocks <- unique(RAM_JP_2$IdOrig)
+
+
+Biomass_JP <- fish %>%
+  select(year=Year,Biomass_FSA,IdOrig) %>%
+  mutate(Biomass_FSA = Biomass_FSA/1000) %>%
+  na.omit()
+stocks <- unique(fish$IdOrig)
+
+
+
+results1 <- results %>%
+  left_join(Biomass_JP,by=c("IdOrig","year"))
+
+for (i in 1:length(stocks)) {
+  a <- results1[results1$IdOrig==stocks[i],]
+  b <- a$CommName[1]
+  v <- ggplot(a,aes(x=year,y=Biomass))+
+    labs(title = paste("Timeseries Biomass ", b ,"(Black = estimate, Red = Stock Assessment)"))+
+    geom_line(color="Black") +
+    geom_line(data=a,aes(x=year,y=Biomass_FSA),color ="Red")
+  plot(v)
+  }
+
+
+
+
+```
+
+
+```{r plotthings}
+
+#ggplot(results,aes(MSY)) + 
+ # geom_histogram()
+
+#ggplot(results_no_sciname,aes(MSY)) + 
+ # geom_histogram()
+
+#a = ggKobe(dat = results)
+#a
+```

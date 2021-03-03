@@ -32,7 +32,7 @@ run_gum_assessment_Kei <- function(dat){
   #見知らぬ関数apply_prm()が出現。後に解説する。
   #regsの詳細が不明。sysdata.rdaに入っている。regsの中身を見ると回帰モデル?が6つ入っている
   for (i in 1 :length(regs) ){ 
-    temp_predicted[[i]] = apply_prm(dat = dat, reg = regs[[i]]) %>% 
+    temp_predicted[[i]] = apply_prm_Kei(dat = dat, reg = regs[[i]]) %>% 
       mutate(model = names(regs[i]), model_number = as.numeric(gsub('M','',model))) 
   }
   data <- bind_rows(temp_predicted) %>% #dataに初めに作った空のリストtemp_predictedを積み重ね。bind_rows()はリストを引数にできる
@@ -41,8 +41,8 @@ run_gum_assessment_Kei <- function(dat){
     ungroup() %>% 
     group_by(IdOrig) %>% 
     filter(model_number == min(model_number)) %>% #各IdOrigにおいて、モデル番号が小さいもの１つを残す。理由は不明。
-    mutate(BvBmsy = exp(LogBvBmsy)) %>% #対数を元に戻す
-    rename(year = Year, catch = Catch)#keep the best model that ran for each fishery
+    mutate(BvBmsy = exp(LogBvBmsy)) #%>% #対数を元に戻す
+    #rename(year = Year, catch = Catch)#keep the best model that ran for each fishery
   
   data <- FindResilience_Kei(data) %>% #FindResilience()でレジリエンスを付与
     rename(res = Res)
@@ -64,7 +64,7 @@ run_gum_assessment_Kei <- function(dat){
   
   #run_post_prm_pt_cmsy()の説明は後述
   apply_fun <- function(i,data,stocks){
-    out = run_post_prm_pt_cmsy(dat = filter(data, IdOrig == stocks[i]))$CatchMSY
+    out = run_post_prm_pt_cmsy_Kei(dat = filter(data, IdOrig == stocks[i]))$CatchMSY
   }
   
   results <- lapply(1:length(stocks), apply_fun, data = data, stocks = stocks) %>%

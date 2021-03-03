@@ -19,7 +19,7 @@ FindResilience_Kei<-function(Data)
   RESout<-stocks(ResData$SciName,fields = c("Species","Resilience")) #fieldsオプションはreturnする列の指定を行う
   RESout <- RESout %>%
     drop_na(Resilience) %>%
-    rename(SciName=Species,Res = Resilience) %>%
+    #rename(SciName=Species,Res = Resilience) %>%
     unique()
   #stocks()のfieldオプションで選択できる情報一覧
   #[1] "SpecCode"          "Species"           "StockCode"         "SynOC"             "StockDefs"        
@@ -103,7 +103,7 @@ FindResilience_Kei<-function(Data)
   # Calculate frequency of resilience categories for each ISSCAAP group 
   Data$Value[is.na(Data$Res)==F]<-1
 
-  ResCount<- Data %>%
+  ResCount <- Data %>%
     group_by(SpeciesCatName,Res) %>%
     summarize(Count=sum(Value,na.rm=T)) #各カテゴリーの頻度を集計
 
