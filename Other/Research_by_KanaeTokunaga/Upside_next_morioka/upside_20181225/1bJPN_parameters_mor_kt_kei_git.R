@@ -5,6 +5,7 @@
 
 #Kei Kawamuraが改訂(注釈を付加)した版
 #2021/1/25
+#2021/3/3
 
 #環境を初期化
 rm(list = ls(all=TRUE))
@@ -25,12 +26,12 @@ sapply(file.sources,source,.GlobalEnv)
 file.sources = list.files(pattern="*.rda")
 sapply(file.sources,load,.GlobalEnv)
 
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/GUM-master-Kei/data")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/GUM-master-Kei/data")
 data.sources = list.files(pattern="*.rda")
 sapply(data.sources,load,.GlobalEnv)
 
 # Step 0: Read the data
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225")
 
 
 #漁獲量データと生産額データの読み込み
@@ -76,14 +77,14 @@ japan.fishery <- subset(japan_results, select = c(Fishery, CommName, SciName))
 japan.fishery <- japan.fishery[!duplicated(japan.fishery),]
 write.csv(japan.fishery, file = "data/0Upside_inputs_prep_181228.csv")
 
-### Add BMSY
+### Add BMSY #この式の根拠は不明(21/3/4)
 BMSY = function(K,phi)
 {
         bmsy = K / (phi + 1) ^ (1 / phi)
         return(bmsy)
 }
 
-###
+### Bmsy,biomass,b/kを計算
 Japan_results100 <- japan_results %>%
         mutate(BMSY = BMSY(k, phi),
                Biomass = BMSY * BvBmsy,
@@ -101,17 +102,19 @@ write.csv(Japan_results100, "data/2japan_GUM_results_K100_190116.csv", row.names
 ## and will be filled in by the following code.
 
 ## 追加
-#3Upside_Input_...csvを擬似作成
-Input <- data.frame(
-  Fishery = dt.catch$Fishery,
-  Country = "Japan",
-  Species = dt.catch$CommName,
-  Scientific.x = dt.catch$SciName
-)
+#3Upside_Input_...csvを擬似作成　##恐らくアウトプットから逆算して作成した
+#Input <- data.frame(
+#  Fishery = dt.catch$Fishery,
+#  Country = "Japan",
+#  Species = dt.catch$CommName,
+#  Scientific.x = dt.catch$SciName
+#)
 
 
-japan_inputs <- Input #read.csv('data/3Upside_Input_0530.csv',stringsAsFactors=FALSE) #v3 is fine for this one.
-japan_results <- read.csv('data/2japan_GUM_results_K100_190116.csv', header = T, stringsAsFactors = F)
+#japan_inputs <- Input #read.csv('data/3Upside_Input_0530.csv',stringsAsFactors=FALSE) #v3 is fine for this one.
+japan_inputs <- read.csv('data/3Upside_Input_0530.csv',stringsAsFactors=FALSE)
+#japan_results <- read.csv('data/2japan_GUM_results_K100_190116.csv', header = T, stringsAsFactors = F)
+japan_results <- read.csv('data/2japan_GUM_results_K100_0727.csv', header = T, stringsAsFactors = F)
 
 # Fishery list
 #japan_inputs <- subset(japan_inputs, is.element(japan_inputs$Scientific, japan_results$SciName) == TRUE)
@@ -148,19 +151,19 @@ japan_inputs <- japan_inputs %>%
                 split = 1
         )
 
-## Change theta_domestic for international fisheries = 0.6
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/Research_by_KanaeTokunaga/Upside_next_morioka")
+## Change theta_domestic for international fisheries = 0.6 
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka")
 int <- read.csv("data/international.csv")
 japan_inputs <- merge(japan_inputs, int, by = "Fishery")
-japan_inputs$theta_domestic <- ifelse(japan_inputs$International == 1, 0.6, japan_inputs$theta_domestic)
-japan_inputs <- japan_inputs[, -c(54)]
+japan_inputs$theta_domestic <- ifelse(japan_inputs$International == 1, 0.6, japan_inputs$theta_domestic) ## 国際的に分布する魚種はtheta_domesticに0.6を代入
+japan_inputs <- japan_inputs[, -c(54)] ## japan_inputsを自作したために54行目がないのでコメントアウト (21/3/4)
 
 ### add inputs from GUM results
 ###KK: 2015 is not the most recent year for ALL species!! (This is why some species were removed)
 japan_results_max<-japan_results%>%
   group_by(Fishery)%>%
   filter(year==max(year)) %>% 
-  select(IdOrig, Fishery, SciName, year, BvBmsy, MSY, phi, g, k, FvFmsy) %>%
+  select(IdOrig, Fishery, SciName, year, BvBmsy, MSY, phi, g, k, FvFmsy) %>% #g -> rとする
   rename(Scientific = SciName)
 
 japan_results_max <- as.data.frame(japan_results_max)
@@ -179,8 +182,8 @@ japan_inputs2 <- japan_inputs1 %>%
                b0_upper = BvBmsy,
                f0_total_lower = FvFmsy,
                f0_total_expected = FvFmsy,
-               f0_total_upper = FvFmsy) # %>%
-        #select(Fishery:split, MSY)
+               f0_total_upper = FvFmsy)  %>%
+        select(Fishery:split, MSY)
 
 
 ### Add prices: Only need this if you don't have user input on prices! This code will pull price data from the 
@@ -189,14 +192,15 @@ japan_inputs2 <- japan_inputs1 %>%
 # Format price data
 ## STEP 1: Format data so it can be run in GUM package
 japan_price1 <- dt.price %>%
-        gather(Year, Price, X2003:X2015) %>%
-        mutate(Year = as.integer(substring(Year, 2))) 
+        gather(Year, Price, X2003:X2015) %>% #縦型データに整形
+        mutate(Year = as.integer(substring(Year, 2))) #Year列は頭に"X"がついているので削除
 
+#IdOrig(オリジナルID)、Year(年数)において順番に並べ直し
 japan_price1 <- japan_price1[order(japan_price1$IdOrig, japan_price1$Year), ]
 
-## Make final dataframe
+## Make final dataframe : データフレームを最終形態に変形
 japan_price2 <- japan_price1 %>%
-        mutate(X = seq.int(nrow(japan_price1))) %>%
+        mutate(X = seq.int(nrow(japan_price1))) %>% 
         mutate(IdOrig = paste("Japan",IdOrig, sep = "-"))
 japan_price3 <- japan_price2
 japan_price3$SciName <- as.character(japan_price3$SciName)
@@ -355,9 +359,9 @@ table(complete.cases(pdata) == FALSE)
 
 japan_inputs5 <- subset(japan_inputs4, complete.cases(japan_inputs4) == TRUE)
 
-col = names(dataInput)
-japan_inputs5 <- select(japan_inputs5,
-                        col)
+#col = names(dataInput)
+#japan_inputs5 <- select(japan_inputs5,
+#                        col)
 
 #write.csv(japan_inputs5, "4Inputs_for_proj_disc5per_200917.csv", row.names = FALSE)
 

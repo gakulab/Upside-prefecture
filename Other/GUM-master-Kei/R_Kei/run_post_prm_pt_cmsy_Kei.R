@@ -375,8 +375,8 @@ run_post_prm_pt_cmsy_Kei <-
       }
 
     if(any(colnames(dat) %in% "Year" == F)){
-      dat <- dat %>%
-        rename(year = Year, catch = Catch)
+      #dat <- dat %>%
+      #  rename(year = Year, catch = Catch)
     }
     
     #論理値TRUEは1とみなされるので、datのcathchがNAである場合は０をかけ、NAがない場合は１をかけることでNA処理をしている
