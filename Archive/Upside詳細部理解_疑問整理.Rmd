@@ -3,7 +3,7 @@ title: "Upside_Model_Function_Formula"
 output: html_document
 ---
 Catch-MSY Model
-$${\Large B_{t+1} = B_t + \frac{\phi+1}{\phi}gB_t \Biggl(1-\Biggl(\frac{B_t}{K}\Biggr)^φ\Biggr)-H_t}$$
+$${\Large B_{t+1} = B_t + \frac{\phi+1}{\phi}gB_t \Biggl(1-\Biggl(\frac{B_t}{K}\Biggr)^{\phi}\Biggr)-H_t}$$
 
 
 bioModel-b_next

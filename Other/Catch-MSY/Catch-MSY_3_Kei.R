@@ -106,7 +106,7 @@ for(stock in stock_id) {
           ell = 0
           if(bt[nyr+1]/k>=lam1 && bt[nyr+1]/k <=lam2 && min(bt) > 0 && max(bt) <=k && bt[which(yr==interyr)]/k>=interbio[1] && bt[which(yr==interyr)]/k<=interbio[2]) 
             ell = 1 ##全ての条件を満たし、ellに1が代入された時にforループが停止する。startbtを下から試行しているので、条件を満たす中で最小のstartbtの時の結果が出る
-                    ## 条件１：推定最終年度における環境収容力に対する資源量の割合が"lam1"以上
+                    ## 条件１：推定最終年度における環境収容力に対する資源量の割合が"lam1"以上 #lamはfinal_bioの範囲
                     ## 条件２：推定最終年度における環境収容力に対する資源量の割合が"lam2"以下
                     ## 条件３：最小漁獲量が０以上
                     ## 条件４：最大漁獲量が環境収容力以下

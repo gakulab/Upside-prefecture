@@ -208,6 +208,7 @@ japan_price3$CommName <- as.character(japan_price3$CommName)
 japan_price3$SpeciesCatName <- as.character(japan_price3$SpeciesCatName)
 japan_price3$Res1 <- as.character(japan_price3$Res1)
 
+#priceデータのみを抽出、p1とp2で差はない
 pdata <- ddply(japan_price3, .(Fishery), summarise,
                 p1_lower = min(Price, na.rm = TRUE),
                 p1_expected = mean(Price, na.rm = TRUE),
@@ -217,6 +218,7 @@ pdata <- ddply(japan_price3, .(Fishery), summarise,
                 p2_upper = max(Price, na.rm = TRUE))
 
 # Fill price information for Blackhead seabream single_stock & Pacific bluefin tuna single_stock_inc_sbf_exc_sml, Yellow croaker single_stock
+# bluefin tunaに関して、~~_exc_sbf_inc_smlデータから~~_inc_sbf_exc_smlデータに情報を移植（しかし、移植先のデータは存在しない名前のため意味を成さない挙動となっている）
 pdata_bft <- subset(pdata, pdata$Fishery == "Pacific bluefin tuna single_stock_exc_sbf_inc_sml")
 pdata$p1_lower <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_lower, pdata$p1_lower)
 pdata$p1_expected <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_expected, pdata$p1_expected)
@@ -225,6 +227,7 @@ pdata$p2_lower <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc
 pdata$p2_expected <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_expected, pdata$p2_expected)
 pdata$p2_upper <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_upper, pdata$p2_upper)
 
+#上書きしているようにしか見えない
 pdata_bsb <- subset(pdata, pdata$Fishery == "Blackhead seabream, Goldlined seabream single_stock")
 pdata$p1_lower <- ifelse(pdata$Fishery == "Blackhead seabream, Goldlined seabream single_stock", pdata_bsb$p1_lower, pdata$p1_lower)
 pdata$p1_expected <- ifelse(pdata$Fishery == "Blackhead seabream, Goldlined seabream single_stock", pdata_bsb$p1_expected, pdata$p1_expected)
@@ -235,7 +238,7 @@ pdata$p2_upper <- ifelse(pdata$Fishery == "Blackhead seabream, Goldlined seabrea
 
 
 
-
+#pdataで変更した内容をjapan_inputs2に加えて、新たにjapan_inputs3を作成
 japan_inputs3 <- japan_inputs2 %>%
         mutate(p1_lower = pdata$p1_lower[match(Fishery,pdata$Fishery)],
                p1_expected = pdata$p1_expected[match(Fishery,pdata$Fishery)],
@@ -321,22 +324,23 @@ japan_inputs3 <- japan_inputs2 %>%
 #          p2_upper = ifelse(Scientific %in% sci37, 1563.375, p2_upper))
 
 ###########
-### calculate cost
+### calculate cost #コスト計算
 
 ## Functions
-## Cost of fishing parameter calculation
+## Cost of fishing parameter calculation  
 fishMortSS <- function(phi, bbar) {
         fbar <- (phi + 1) / phi * (1 - (bbar ^ phi) / (phi + 1))
         return(fbar) ## storing output of function
 }
 
+#この式でコストが計算できる根拠は？？
 cost <- function(p_exp, phi, bbar, MSY, g_exp, beta) {
         fbar <- fishMortSS(phi, bbar)
         c_exp <-p_exp * fbar * bbar * MSY / ((g_exp * fbar) ^ beta)
         return(c_exp)
 }
 
-bbar <- 0.5 ##KK: used value from global paper rather than Cuba value
+bbar <- 0.5 ##KK: used value from global paper rather than Cuba value #cubaのUpsideではなく、globalのUpsideらしくて良かったです
 
 ### Add COSTS to data frame
 # RUN THE NEXT LINE IF YOU SUPPLY YOUR OWN COSTS:

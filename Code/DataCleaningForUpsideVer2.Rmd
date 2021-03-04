@@ -35,7 +35,7 @@ dt.catch -> t     dr.price -> 100万円      dt.comp : harvest1 -> t   profit ->
 #有効数字を999桁に設定
 options(scipen=999)
 #ディレクトリの変更
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Data_Working")
 
 #####  統計数値  #####
 #漁獲量データを読み込み、dt.catchに格納 
@@ -99,9 +99,12 @@ dt.c_and_p <- dt.c_and_p[,c(1,2,3,17,4,5,10,6,7,8,9,11)]
 #震災の影響を除くために2001-2010の期間にしている
 dt.c_and_p_Shinsai <- dt.c_and_p %>%
   filter(year<2011,year>2000)
-#震災の影響を受けない県に関しては、2005-2015の期間にしている
+#震災の影響を受けない県に関しては、2009-2019の期間にしている
 dt.c_and_p_Latest <- dt.c_and_p %>%
-  filter(year>2004,year<2016)
+  filter(year>2008,year<2020)
+#TACの設定には過去３カ年の漁獲実績シェアの平均値を用いる（３カ年周期で再度設定）
+dt.c_and_p_TAC <- dt.c_and_p %>%
+  filter(year<=max(unique(dt.c_and_p$year)),year>=max(unique(dt.c_and_p$year))-2)
 
 
 ##### 震災の影響を考慮　#####
@@ -144,6 +147,32 @@ dt.c_and_p2_Latest <- dt.c_and_p_Latest %>%
   mutate(check = sum(rate_catch,na.rm = T),
          check2 = sum(rate_price,na.rm = T))
 
+##### TAC設定に基づく３カ年平均 #####
+dt.c_and_p2_TAC <- dt.c_and_p_TAC %>%
+  #filter(catch_t>0, value_million_JPY>0) %>%
+  group_by(fish_stock,year) %>%
+  mutate(total_fish_catch = sum(catch_t,na.rm = T),
+         total_fish_price = sum(value_million_JPY,na.rm = T)) %>%
+  ungroup() %>%
+  group_by(fish_stock,year,alphabet) %>%
+  mutate(total_fish_catch_pref = sum(catch_t,na.rm = T),
+         total_fish_price_pref = sum(value_million_JPY,na.rm = T)) %>%
+  ungroup() %>%
+  select(alphabet,year, prefecture, fish_stock, total_fish_catch, total_fish_catch_pref, total_fish_price, total_fish_price_pref) %>%
+  unique() %>%
+  mutate(rate_catch0 = total_fish_catch_pref/total_fish_catch,
+         rate_price0 = total_fish_price_pref/total_fish_price) %>%
+  group_by(fish_stock,alphabet) %>%
+  mutate(rate_catch = mean(rate_catch0),
+         rate_price = mean(rate_price0)) %>%
+  ungroup() %>%
+  select(alphabet,prefecture,fish_stock,rate_catch,rate_price) %>%
+  unique() %>%
+  group_by(fish_stock) %>%
+  mutate(check = sum(rate_catch,na.rm = T),
+         check2 = sum(rate_price,na.rm = T)) %>%
+  ungroup()
+
 
 #震災の影響を受けた県のみ震災用の割合を使用する
 Shinsai_pref <- c("aomori","iwate","miyagi","fukushima")
@@ -156,9 +185,9 @@ dt.c_and_p3_Latest <- dt.c_and_p2_Latest %>%
 dt.c_and_p3 <- rbind(dt.c_and_p3_Shinsai,dt.c_and_p3_Latest)
 
 #最小限の情報に絞る
-dt.c_and_p3 <- dt.c_and_p3[,c(1,2,3,8,9)]
+#dt.c_and_p3 <- dt.c_and_p3[,c(1,2,3,8,9)]
 
-
+dt.c_and_p3 <- select(dt.c_and_p2_TAC,-c(check,check2))
 
 #かなえさんのデータを用いるか自分の(Illegalを含む)データを用いるかのスイッチ
 Temp_Data_Catch_Kei$management <- ifelse(Temp_Data_Catch_Kei$management=="BAU","SQ",Temp_Data_Catch_Kei$management)
@@ -217,12 +246,10 @@ dt.comp4 <- rbind(dt.comp3,timeseries) %>%
 dt.comp5 <- dt.c_and_p %>%
   filter(year < 2016) %>%
   filter(fish_stock %in% fish_list) %>%
-  mutate(management = "Historical",
-         BvBMSY = NA,
-         FvFMSY1 = NA) %>%
-  select(year,prefecture,alphabet,fish_stock,pref_catch=catch_t,pref_price=value_million_JPY,management,BvBMSY,FvFMSY1)
+  mutate(management = "Historical") %>%
+  select(year,prefecture,alphabet,fish_stock,pref_catch=catch_t,pref_price=value_million_JPY,management)
 
-dt.comp2_5 <- dt.comp2 %>% select(year,prefecture,alphabet,fish_stock,pref_catch,pref_price,management,BvBMSY,FvFMSY1)
+dt.comp2_5 <- dt.comp2 %>% select(year,prefecture,alphabet,fish_stock,pref_catch,pref_price,management)
 
 dt.comp5 <- rbind(dt.comp5,dt.comp2_5) %>%
   group_by(year,management,fish_stock) %>%
@@ -384,206 +411,13 @@ ProcessingDataDetail <- toukei2_rank
 
 
 #指定したオブジェクトをrdaとして保存する。
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Data_Working")
-save(list = c("UpsideResultDetail","UpsideResult","CatchRate","ProcessingData","ProcessingDataDetail"),file = "UpsideDataForResearch.rda")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Data_Working")
+save(list = c("UpsideResultDetail","UpsideResult","CatchRate","ProcessingData","ProcessingDataDetail"),file = "UpsideDataForResearch2.rda")
 
 #確認用
 #rm(list = ls(all=TRUE))
 #load("UpsideDataForResearch.rda")
+
+aa <- UpsideResult %>%
+  filter(alphabet %in% c("iwate","miyagi"))
 ```
-
-# msy plot
-重み付け
-
-```{r}
-dt.graph <- dt.comp5 %>%
-  filter(alphabet == "miyagi",pref_catch>0,management %in% c("SQ","FMSY"))
-  
-#各県の県内での漁獲割合を算出
-dt.sanriku <- dt.comp5 %>%
-  filter(alphabet %in% c("iwate","miyagi"),management %in% c("SQ","FMSY"),pref_catch>0)
-
-iwate <- dt.comp5 %>% filter(alphabet == "iwate",management %in% c("SQ","FMSY"),pref_catch>0)
-i=unique(iwate$fish_stock)
-
-miyagi <- dt.comp5 %>% filter(alphabet == "miyagi",management %in% c("SQ","FMSY"),pref_catch>0)
-m=unique(miyagi$fish_stock)
-
-sum(m %in% i)
-
-unique(dt.sanriku$fish_stock)
-#このコードより、dt.comp5において、iwateは54魚種、miyagiは55魚種、二つ合わせると58魚種（つまりiwateとmiyagiで3魚種異なる）ということが判明
-
-iwate2 <- iwate %>%
-  group_by(management,year) %>%
-  mutate(annual_catch = sum(pref_catch)) %>%
-  ungroup() %>%
-  mutate(Catch_rate = pref_catch / annual_catch,
-         Management  = management) %>%
-  group_by(Management,year) %>%
-  mutate(check = sum(Catch_rate)) %>%
-  ungroup()
-
-time_1_iwate <- iwate2 %>%
-  filter(year == 2016)
-
-time_50_iwate <- iwate2 %>%
-  filter(year == max(year))
-
-t1_iwate <- ggplot(time_1_iwate,aes(x = BvBMSY,y = FvFMSY1,col=Management,shape=Management,size=Catch_rate))+
-  theme_bw() +
-  #geom_point(position = "jitter",stat = "jitter")+
-  geom_jitter()+
-  theme(legend.position = "none",
-        plot.title = element_text(face = "bold",hjust = .5))+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "Iwate first year (n=54)",x = "B/Bmsy",y="F/Fmsy")
-
-#ggsave(filename = "IwateMsyPlotFirstYear.pdf",plot = t1_iwate)
-
-t2_iwate <- ggplot(time_50_iwate,aes(x = BvBMSY,y = FvFMSY1,col=Management,shape=Management,size = Catch_rate))+
-  theme_bw() +
-  geom_point(position = "jitter")+
-  theme(legend.position = c(0.8,0.6),
-        legend.title = element_text(face = "bold"),
-        plot.title = element_text(face = "bold",hjust = .5))+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "Iwate final year (n=54)",x = "B/Bmsy",y="F/Fmsy")
-
-#ggsave(filename = "IwateMsyPlotFinalYear.pdf",plot = t2_iwate)
-
-grid.arrange(t1_iwate,t2_iwate,ncol=2)
-g <- arrangeGrob(t1_iwate,t2_iwate,ncol = 2)
-ggsave("iwate_msy.pdf",g,width = 7.29,height = 4.51)
-
-
-
-
-
-### miyagi
-
-miyagi2 <- miyagi %>%
-  group_by(management,year) %>%
-  mutate(annual_catch = sum(pref_catch)) %>%
-  ungroup() %>%
-  mutate(Catch_rate = pref_catch / annual_catch,
-         Management  = management) %>%
-  group_by(Management,year) %>%
-  mutate(check = sum(Catch_rate)) %>%
-  ungroup()
-
-time_1_miyagi <- miyagi2 %>%
-  filter(year == 2016)
-
-time_50_miyagi <- miyagi2 %>%
-  filter(year == max(year))
-
-t1_miyagi <- ggplot(time_1_miyagi,aes(x = BvBMSY,y = FvFMSY1,col=Management,shape=Management,size=Catch_rate))+
-  theme_bw() +
-  #geom_point(position = "jitter",stat = "jitter")+
-  geom_jitter()+
-  theme(legend.position = "none",
-        plot.title = element_text(face = "bold",hjust = .5))+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "Miyagi first year (n=55)",x = "B/Bmsy",y="F/Fmsy")
-
-#ggsave(filename = "MiyagiMsyPlotFirstYear.pdf",plot = t1_miyagi)
-
-t2_miyagi <- ggplot(time_50_miyagi,aes(x = BvBMSY,y = FvFMSY1,col=Management,shape=Management,size = Catch_rate))+
-  theme_bw() +
-  geom_point(position = "jitter")+
-  theme(legend.position = c(0.8,0.6),
-        legend.title = element_text(face = "bold"),
-        plot.title = element_text(face = "bold",hjust = .5))+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "Miyagi final year (n=55)",x = "B/Bmsy",y="F/Fmsy")
-
-#ggsave(filename = "MiyagiMsyPlotFinalYear.pdf",plot = t2_miyagi)
-
-grid.arrange(t1_miyagi,t2_miyagi,ncol=2)
-g <- arrangeGrob(t1_miyagi,t2_miyagi,ncol = 2)
-ggsave("miyagi_msy.pdf",g,width = 7.29,height = 4.51)
-
-
-unique(filter(dt.comp5,year==2016,alphabet=="iwate",pref_catch>0)$fish_stock)
-
-#県内割合の算出
-dt.rate <- dt.comp5 %>%
-  filter(alphabet %in% c("iwate","miyagi"),pref_catch>0,year == 2016,management %in% c("SQ","FMSY")) %>%
-  group_by(alphabet,management) %>%
-  mutate(total_catch = sum(pref_catch,na.rm = T)) %>%
-  ungroup() %>%
-  #group_by(alphabet,management) %>%
-  summarise(fish_stock,
-            alphabet,
-            total_catch,
-            #total_total = sum(pref_catch,na.rm = T),
-            rate = round(pref_catch/total_catch,digits = 5)) %>%
-  ungroup() %>%
-  unique()
-
-
-sum(dt.rate$rate)
-
-
-
-
-
-
-
-time_1 <- dt.graph %>%
-  filter(year == 2016)
-
-time_50 <- dt.graph %>%
-  filter(year == 2065)
-
-
-t1 <- ggplot(time_1,aes(x = BvBMSY,y = FvFMSY1,col=management,shape=management))+
-  theme_bw() +
-  #geom_point(position = "jitter",stat = "jitter")+
-  geom_jitter()+
-  theme(legend.position = "none")+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "First year (n=55)",x = "B/Bmsy",y="F/Fmsy")
-
-ggsave(filename = "MsyPlotFirstYear.pdf",plot = t1)
-
-
-t2 <- ggplot(time_50,aes(x = BvBMSY,y = FvFMSY1,col=management,shape=management))+
-  theme_bw() +
-  geom_point(position = "jitter")+
-  theme(legend.position = "none")+
-  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800")) +
-  xlim(0,2.5)+
-  ylim(0,5)+
-  geom_vline(xintercept = 1)+
-  geom_hline(yintercept = 1)+
-  labs(title = "Final year (n=55)",x = "B/Bmsy",y="F/Fmsy")
-
-ggsave(filename = "MsyPlotFinalYear.pdf",plot = t2)
-
-
-
-
-```
-
