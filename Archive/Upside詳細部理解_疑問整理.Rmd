@@ -69,6 +69,8 @@ policy = function(s,g,K,phi,p1,p2,f0Int1,f0Int2,f0NonInt,c1,c2,beta,disc,bvec,sp
 
 ```
 
+#test_by_yuga
+
 
 
 
