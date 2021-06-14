@@ -27,9 +27,6 @@ dt.catch -> t     dr.price -> 100万円      dt.comp : harvest1 -> t   profit ->
 
 ## データの読み込み・Function作成
 
-・エンコーディング指定がいらないread.csvはfreadに置き換えて高速化する (2020/09/29)
-->そうしようと思ったが、mergeがうまくいかなくなるので戻した！
-
 
 ```{r}
 #有効数字を999桁に設定
