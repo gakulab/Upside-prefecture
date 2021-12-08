@@ -8,7 +8,7 @@ rm(list = ls(all=T))
 set.seed(999)  ## for same random sequence
 #require(hacks) ## 既にCRAN上からアーカイブ（もはや削除かも）されてしまったパッケージなのでコメントアウト
 
-?## Read Data for stock, year=yr, catch=ct, and resilience=res. Expects space delimited file with header yr  ct and years in integer and catch in real with decimal point
+## Read Data for stock, year=yr, catch=ct, and resilience=res. Expects space delimited file with header yr  ct and years in integer and catch in real with decimal point
 ## For example
 ## stock	res	 yr     ct       
 ## cap-icel	Medium 1984  1234.32 

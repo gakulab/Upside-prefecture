@@ -1420,7 +1420,7 @@ ggsave(file = "Miyagi.png",plot = gg2,dpi = 350,width = 7.29,height = 4.51)
 target_fish <- c("salmon_single_stock","japanese_anchovy_pacific_stock","japanese_sardine_pacific_stock","mackerel_pacific_stock","saury_single_stock","cod_pacific_north_stock","japanese_common_squid_winter_stock")
 
 UpsideResultDetail_target_fish <- UpsideResultDetail %>%
-  filter(prefecture == "岩手",management %in% c("Historical","SQ","FMSY"),fish_stock %in% target_fish)
+  filter(prefecture == "宮城",management %in% c("Historical","SQ","FMSY"),fish_stock %in% target_fish)
 
 lapply(1:length(target_fish), function(x){
   data <- UpsideResultDetail_target_fish %>%
