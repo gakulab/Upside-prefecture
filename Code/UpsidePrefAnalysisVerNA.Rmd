@@ -1,0 +1,499 @@
+---
+title: "UpsidePrefAnalysisVer6"
+author: "keikawamura"
+date: '`r format(Sys.Date(), "%y/%m/%d")`'
+output: html_document
+---
+
+## パッケージの読み込み  {.tabset .tabset-fade} 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+#緩衝の初期化
+rm(list = ls(all=TRUE))
+
+
+library(tidyverse) #pipe関数
+library(data.table) #データの読み込み
+library(gghighlight) #gghilightのため
+library(gridExtra) #grid.arrageのため
+library(magrittr) #複雑なpipe関数
+library(zoo) #移動平均用。zooは時系列分析用パッケージ
+library(ggrepel) #geom_text_repelのため
+library(ggthemes) #ggplotのテーマ集
+library(googlesheets4) #google spreadsheetを読み込むパッケージ
+
+```
+
+## データの読み込み
+
+```{r}
+#Upside関連の結果を読み込む
+## パッケージの読み込み  {.tabset .tabset-fade} 
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Data_Working")
+load("UpsideDataForResearch.rda")
+#系群データに資源状態(令和元年度版)を付与したもの
+multi_stock_plus <- read.csv("FishStock.csv",stringsAsFactors = F)
+
+
+#産業連関表関連の結果を読み込む。IOTs = Input Output Tables
+IOTs <- read.csv("DataSummaryIOTableSummary.csv")
+
+#岩手の産業連関表の単位は千円だが、宮城の産業連関表の単位は100万円である。
+IOTs_Iwate <- read.csv("DataSummaryIOTableIwate_H25_103.csv")
+IOTs_Miyagi <- read.csv("DataSummaryIOTableMiyagi_H27_101.csv")
+
+```
+
+## シミュレーション結果における、水産加工(食料品)産業維持に必要な漁獲量の過不足量算出
+
+```{r}
+#有効数字を999桁に設定
+options(scipen=999,digits = 6)
+
+#必要なデータのみを抜き出す（県名とシェア比）
+dt.iots <- IOTs %>%
+  select(prefecture = 県名,share = 海面漁業生産額における水産食料品の占める割合)
+
+#維持する基準のなる2015年の各県の漁獲量にシェアを掛け、水産加工に流れる・必要とする漁獲量を算出する
+dt.standard <- UpsideResult %>%
+  filter(year == 2015) %>%
+  left_join(dt.iots,by="prefecture") %>%
+  summarise(prefecture,share,base_catch_t = total_pref_catch * share)
+
+#基準値の入ったデータフレームをシミュレーション結果に結合していく
+dt.comp <- UpsideResult %>%
+  filter(year > 2015) %>%
+  left_join(dt.standard,by = "prefecture") %>%
+  summarise(time = year-2015,
+            prefecture,
+            alphabet,
+            管理シナリオ = ifelse(management == "SQ","現状維持政策",
+                            ifelse(management == "FMSY", "MSY漁獲政策", "経済最適化政策")), #図示するときのために名前を変更
+            require_catch_t = total_pref_catch * share, #その年に水産食料品に流れる量を算出
+            compare_t = require_catch_t - base_catch_t, #その年に水産食料品に流れる量と基準年(2015)に水産食料品が必要とした量の比較
+            rate = compare_t/base_catch_t, #過不足量が基準年(2015)に水産食料品が必要とした量と比べてどのくらいの比率なのか。
+            management) %>%
+  na.omit()
+
+#算出できた県の数を確認
+unique(dt.comp$alphabet)
+
+```
+
+## <学会誌> 過去漁獲量とシミュレーション結果による将来漁獲量を合わせたグラフ
+
+```{r}
+#指数表現を避けるために設定
+options(scipen=1000)
+
+
+#岩手県,宮城県のみを抽出
+b <- UpsideResult %>%
+  filter(alphabet %in% c("iwate","miyagi")) %>%
+  filter(management %in% c("FMSY","SQ","Historical")) %>%
+  mutate(alphabet = ifelse(alphabet == "iwate","Iwate","Miyagi"),
+         Management = factor(management,levels = c("SQ","FMSY","Historical")),
+         total_pref_catch = total_pref_catch/10000)
+
+
+
+#修正案１(修正箇所：x軸,y軸,ハイライト追加)
+#開始年と終了年は軸から除くべきではないと判断。また、シミュレーション開始年である2015年も除くべきではないと判断したので、等間隔ではなくなるが、最初だけ9年間隔、残りを10年間隔で表現。
+#ggplot(b,aes(x=year,y=total_pref_catch,color = Management)) +
+#  theme_bw() +
+#  facet_wrap(~alphabet) +
+#  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+#  scale_y_continuous(breaks = c(0,10,20,30,40,50,60))+
+#  labs(y="Annual Catch (10000t)",x="Year") +
+#  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+#  theme(axis.text=element_text(size=15,face ="bold"),
+#        axis.text.x = element_text(angle = 90,hjust = 1),
+#        axis.title=element_text(size=20,face="bold"),
+#        legend.position = c(0.1, 0.8),
+#        strip.text.x = element_text(size = 30))+
+#  geom_line(size=1.5)+
+#  annotate("rect", xmin=2016,xmax=2065, ymin=0,ymax=Inf,
+#             fill="#a9a9a9",alpha = .3)
+
+```
+
+### 修正案２（修正箇所：x軸,y軸,ハイライト追加,拡大図追加）
+```{r}
+#facetを用いた図に個別に拡大図を入れることができないので、facetを使わずに別々に作成し、外部で合成する。
+
+####  岩手県の場合  ####
+#岩手県のデータを抽出
+b1 <- filter(b,alphabet == "Iwate")
+
+#ベースとなるプロットを作成
+base <- ggplot(b1,aes(x = year, y = total_pref_catch, colour = Management,shape = Management)) +
+  theme_bw() +
+  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+  scale_y_continuous(breaks = c(0,10,20,30,40,50,60))+
+  ylim(0,60)+
+  labs(title = "Iwate",y="Catch (10000t)",x="Year") +
+  theme(axis.text=element_text(size=12,face ="bold"),
+        axis.text.x = element_text(angle = 90,hjust = 1),
+        axis.title=element_text(size=20,face="bold"),
+        legend.position = c(0.03,0.97),
+        legend.justification = c(0,1),
+        legend.background = element_rect(colour = "black"),
+        legend.title = element_text(size = 10),
+        plot.title = element_text(hjust = .5),
+        title = element_text(size = 20,face = "bold"))+
+  geom_line(size=.5)+
+  geom_point(size=1.5)+
+  scale_color_manual(values=c("SQ"="#ff2800","FMSY"="#35a16b","Historical"="gray")) +
+  scale_shape_manual(values=c("SQ"= 16,"FMSY" = 17,"Historical"= 15))+
+  annotate("rect", xmin=2016,xmax=2065, ymin=7.5,ymax=12,
+             fill="#a9a9a9",alpha = .3)
+
+#拡大図用データ
+b2 <- b %>%
+  filter(year > 2015,alphabet=="Iwate")
+
+#拡大図の作成
+add <- ggplot(b2,aes(x=year,y=total_pref_catch,color = Management)) +
+  theme_bw() +
+  #facet_wrap(~alphabet) +
+  scale_x_continuous(breaks = c(2015,2025,2035,2045,2055,2065)) + 
+  labs(title = "Enlarged view",
+       y="Catch (10000t)",
+       x="Year") +
+  ylim(7,12)+
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=10,face ="bold"),
+        axis.text.x = element_text(angle = 45,hjust = 1,size = 10,face = "bold"),
+        axis.text.y = element_text(size = 10,face = "bold"),
+        axis.title.x = element_text(size = 10,face = "bold"),
+        axis.title.y=element_text(size = 10,face="bold"),
+        legend.position = "none",
+        plot.title = element_text(size=12,face="bold",hjust = 0.5),
+        plot.background = element_rect(colour = "black",size=1.2,fill="#f5f5f5"),
+        panel.background = element_rect(fill = "#f5f5f5")
+        )+
+  geom_line(size=.5)+
+  geom_point(aes(shape=Management),size=1)
+
+#ベースとなるプロットに拡大図を載せる
+add2 <- ggplotGrob(add)
+iwate <- base + annotation_custom(add2,xmin = 2002,xmax = 2068,ymin = 23,ymax = 60)
+
+iwate
+
+#保存
+#setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/<English> 時系列とシミュレーション結果の混合")
+#ggsave(file = "IwateTimeseries.png",plot = iwate,dpi = 350, width = 4.8, height = 5.5)
+
+
+
+####  宮城県の場合  ####
+#宮城県のデータを抽出
+b1 <- filter(b,alphabet == "Miyagi")
+
+#ベースとなるプロットを作成
+base <- ggplot(b1,aes(x = year, y = total_pref_catch, color = Management)) +
+  theme_bw() +
+  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+  scale_y_continuous(breaks = c(0,10,20,30,40,50,60))+
+  ylim(0,60)+
+  labs(title = "Miyagi",y="Catch (10000t)",x="Year") +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=12,face ="bold"),
+        axis.text.x = element_text(angle = 90,hjust = 1),
+        #axis.text.y = element_blank(),
+        axis.title=element_text(size=20,face="bold"),
+        axis.title.y = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = .5),
+        title = element_text(size = 20,face = "bold"))+
+  geom_line(size=.5)+
+  geom_point(aes(shape = Management),size=1.5)+
+  annotate("rect", xmin=2016,xmax=2065, ymin=12,ymax=20,
+             fill="#a9a9a9",alpha = .3)
+
+#拡大図用のデータ
+b2 <- b %>%
+  filter(year > 2015,alphabet=="Miyagi")
+
+#拡大図の作成
+add <- ggplot(b2,aes(x=year,y=total_pref_catch,color = Management)) +
+  theme_bw() +
+  #facet_wrap(~alphabet) +
+  scale_x_continuous(breaks = c(2015,2025,2035,2045,2055,2065)) + 
+  labs(title = "Enlarged view",y="Catch (10000t)",x="Year") +
+  ylim(12,20)+
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=10,face ="bold"),
+        axis.text.x = element_text(angle = 45,hjust = 1,size = 10,face = "bold"),
+        axis.text.y = element_text(size = 10,face = "bold"),
+        axis.title.x = element_text(size = 10,face = "bold"),
+        axis.title.y=element_text(size = 10,face="bold"),
+        legend.position = "none",
+        plot.title = element_text(size=12,face="bold",hjust = 0.5),
+        plot.background = element_rect(colour = "black",size=1.2,fill="#f5f5f5"),
+        panel.background = element_rect(fill = "#f5f5f5")
+        )+
+  geom_line(size=.5)+
+  geom_point(aes(shape=Management),size=1)
+
+#ベースとなるプロットに拡大図を載せる
+add2 <- ggplotGrob(add)
+miyagi <- base + annotation_custom(add2,xmin = 2002,xmax = 2068,ymin = 25,ymax = 62)
+
+miyagi
+
+#保存
+#setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/<English> 時系列とシミュレーション結果の混合")
+#ggsave(file = "MiyagiTimeseries.png",plot = miyagi,dpi = 350)
+
+
+#一つのグラフにする
+sanriku <- grid.arrange(iwate,miyagi,nrow=1)
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/論文プロット")
+ggsave(file = "Sanriku1.png",plot = sanriku,dpi = 350,width = 7.4,height = 5) #縦横比はハガキと同じ
+
+```
+
+### 修正案３（岩手県・宮城県を個別に作成）
+```{r}
+####  岩手県の場合  ####
+#岩手県のデータを抽出
+b1 <- filter(b,alphabet == "Iwate")
+
+#ベースとなるプロットを作成
+base <- ggplot(b1,aes(x = year, y = total_pref_catch, colour = Management,shape = Management)) +
+  theme_bw() +
+  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+  scale_y_continuous(breaks = c(0,10,20,30,40,50,60))+
+  ylim(0,60)+
+  labs(title = "Iwate",y="Catch (10000t)",x="Year") +
+  theme(axis.text=element_text(size=12,face ="bold"),
+        axis.text.x = element_text(angle = 90,hjust = 1),
+        axis.title=element_text(size=20,face="bold"),
+        legend.position = "top",
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = .5),
+        title = element_text(size = 20,face = "bold"))+
+  geom_line(size=.5)+
+  geom_point(size=1.5)+
+  scale_color_manual(values=c("SQ"="#ff2800","FMSY"="#35a16b","Historical"="gray")) +
+  scale_shape_manual(values=c("SQ"= 16,"FMSY" = 17,"Historical"= 15))+
+  annotate("rect", xmin=2016,xmax=2065, ymin=7.5,ymax=12,
+             fill="#a9a9a9",alpha = .3)
+
+#拡大図用データ
+b2 <- b %>%
+  filter(year > 2015,alphabet=="Iwate")
+
+#拡大図の作成
+add <- ggplot(b2,aes(x=year,y=total_pref_catch,color = Management)) +
+  theme_bw() +
+  #facet_wrap(~alphabet) +
+  scale_x_continuous(breaks = c(2015,2025,2035,2045,2055,2065)) + 
+  labs(title = "Enlarged view",
+       y="Catch (10000t)",
+       x="Year") +
+  ylim(7,12)+
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=10,face ="bold"),
+        axis.text.x = element_text(angle = 45,hjust = 1,size = 10,face = "bold"),
+        axis.text.y = element_text(size = 10,face = "bold"),
+        axis.title.x = element_text(size = 10,face = "bold"),
+        axis.title.y=element_text(size = 10,face="bold"),
+        legend.position = "none",
+        plot.title = element_text(size=12,face="bold",hjust = 0.5),
+        plot.background = element_rect(colour = "black",size=1.2,fill="#f5f5f5"),
+        panel.background = element_rect(fill = "#f5f5f5")
+        )+
+  geom_line(size=.5)+
+  geom_point(aes(shape=Management),size=1)
+
+#ベースとなるプロットに拡大図を載せる
+add2 <- ggplotGrob(add)
+iwate <- base + annotation_custom(add2,xmin = 2002,xmax = 2068,ymin = 23,ymax = 60)
+
+iwate
+
+#保存
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/論文プロット")
+ggsave(file = "iwate.png",plot = iwate,dpi = 350,  width = 5,height = 5)
+
+
+
+####  宮城県の場合  ####
+#宮城県のデータを抽出
+b1 <- filter(b,alphabet == "Miyagi")
+
+#ベースとなるプロットを作成
+base <- ggplot(b1,aes(x = year, y = total_pref_catch, color = Management)) +
+  theme_bw() +
+  scale_x_continuous(breaks = c(1956,1965,1975,1985,1995,2005,2015,2025,2035,2045,2055,2065)) + 
+  scale_y_continuous(breaks = c(0,10,20,30,40,50,60))+
+  ylim(0,60)+
+  labs(title = "Miyagi",y="Catch (10000t)",x="Year") +
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=12,face ="bold"),
+        axis.text.x = element_text(angle = 90,hjust = 1),
+        axis.title=element_text(size=20,face="bold"),
+        legend.position = "top",
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = .5),
+        title = element_text(size = 20,face = "bold"))+
+  geom_line(size=.5)+
+  geom_point(aes(shape = Management),size=1.5)+
+  scale_color_manual(values=c("SQ"="#ff2800","FMSY"="#35a16b","Historical"="gray")) +
+  scale_shape_manual(values=c("SQ"= 16,"FMSY" = 17,"Historical"= 15))+
+  annotate("rect", xmin=2016,xmax=2065, ymin=12,ymax=20,
+             fill="#a9a9a9",alpha = .3)
+
+#拡大図用のデータ
+b2 <- b %>%
+  filter(year > 2015,alphabet=="Miyagi")
+
+#拡大図の作成
+add <- ggplot(b2,aes(x=year,y=total_pref_catch,color = Management)) +
+  theme_bw() +
+  #facet_wrap(~alphabet) +
+  scale_x_continuous(breaks = c(2015,2025,2035,2045,2055,2065)) + 
+  labs(title = "Enlarged view",y="Catch (10000t)",x="Year") +
+  ylim(12,20)+
+  scale_color_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800","Historical"="gray")) +
+  theme(axis.text=element_text(size=10,face ="bold"),
+        axis.text.x = element_text(angle = 45,hjust = 1,size = 10,face = "bold"),
+        axis.text.y = element_text(size = 10,face = "bold"),
+        axis.title.x = element_text(size = 10,face = "bold"),
+        axis.title.y=element_text(size = 10,face="bold"),
+        legend.position = "none",
+        plot.title = element_text(size=12,face="bold",hjust = 0.5),
+        plot.background = element_rect(colour = "black",size=1.2,fill="#f5f5f5"),
+        panel.background = element_rect(fill = "#f5f5f5")
+        )+
+  geom_line(size=.5)+
+  geom_point(aes(shape=Management),size=1)
+
+#ベースとなるプロットに拡大図を載せる
+add2 <- ggplotGrob(add)
+miyagi <- base + annotation_custom(add2,xmin = 2002,xmax = 2068,ymin = 25,ymax = 62)
+
+miyagi
+
+#保存
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/論文プロット")
+ggsave(file = "miyagi.png",plot = miyagi,dpi = 350, width = 5,height = 5)
+
+
+
+``` 
+
+## <学会誌>移動平均で示す供給割合
+
+```{r}
+#特定の県を指定
+  dt.graph <- dt.comp %>%
+    filter(alphabet %in% c("iwate","miyagi") &
+           #year > 2015 &
+           management %in% c("SQ","FMSY")) %>%
+    group_by(管理シナリオ,prefecture) %>%
+    summarise(alphabet,
+              Time = time,
+              rate,
+              Management = management,
+              compare_moving_mean5 = rollmean(rate, k = 5, fill = NA),
+              compare_moving_mean10 = rollmean(rate, k = 10, fill = NA),
+              compare_moving_mean15 = rollmean(rate, k = 15, fill = NA),
+              compare_moving_mean20 = rollmean(rate, k = 20, fill = NA)) %>%
+    ungroup() %>%
+    mutate(alphabet = ifelse(alphabet == "iwate","Iwate","Miyagi"))
+  
+  #移動平均の年数ごとにデータを分割し、年数を付与して統合
+  dt.ere1 <- dt.graph %>%
+    #filter(管理シナリオ == "FMSY") %>%
+    select(Time,alphabet,moving = rate,Management) %>%
+    mutate(Type = "Time series") 
+  dt.ere10 <- dt.graph %>%
+    #filter(管理シナリオ == "FMSY") %>%
+    select(Time,alphabet,moving = compare_moving_mean10,Management) %>%
+    mutate(Type = "10 years") 
+  dt.ere20 <- dt.graph %>%
+    #filter(管理シナリオ == "FMSY") %>%
+    select(Time,alphabet,moving = compare_moving_mean20,Management) %>%
+    mutate(Type = "20 years")
+  #食料品製造業用設備の法定耐用年数は10年、阿部長からのヒアリングだと20年が実際の耐用年数
+  dt.stack <- rbind(dt.ere1,dt.ere10,dt.ere20)
+
+
+　#移動平均でfacetを使うため、県は手動で分ける
+  dt.stack1 <- filter(dt.stack,alphabet == "Iwate")
+  dt.stack2 <- filter(dt.stack,alphabet == "Miyagi")
+  
+  #岩手県の場合
+  gg1 <- ggplot(dt.stack1,aes(x = Time, y = moving, fill=Management)) +
+  　theme_hc(base_family = "Osaka") +
+  　geom_bar(stat = "identity",position = "dodge") +
+  　labs(title = "Iwate",
+  　     x = "Time",
+    　   y = "Ratio") +
+    facet_wrap(~factor(Type,levels = c("Time series","10 years","20 years"))) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#c7c7c7",fill = "#c7c7c7", alpha = 0.009) +
+    theme(
+        axis.text=element_text(size=8,face ="bold"),
+        axis.title=element_text(size=10,face="bold"),
+        strip.text.x = element_text(size = 10),
+        legend.position = "top",
+        legend.key.size = unit(0.4,"cm"),
+        legend.title = element_text(size = 8,face="bold"),
+        legend.text = element_text(size = 8),
+        #legend.background = element_rect(linetype = 1, size = 1, colour = 1),
+        plot.title = element_text(hjust = 0.5,face = "bold",size = 10),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800"))
+  
+gg1
+  
+  
+  #保存
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/移動平均で示す原料供給割合")
+#ggsave(file = "Iwate.png",plot = gg1,dpi = 350)
+  
+
+
+　#宮城県の場合
+gg2 <- ggplot(dt.stack2,aes(x = Time, y = moving, fill=Management)) +
+  　theme_hc(base_family = "Osaka") +
+  　geom_bar(stat = "identity",position = "dodge") +
+  　labs(title = "Miyagi",
+  　     x = "Time",
+    　   y = "Ratio") +
+    facet_wrap(~factor(Type,levels = c("Time series","10 years","20 years"))) +
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = -Inf),col = "#c7c7c7",fill = "#c7c7c7", alpha = 0.009) +
+    theme(
+        axis.text=element_text(size=8,face ="bold"),
+        axis.title=element_text(size=10,face="bold"),
+        strip.text.x = element_text(size = 10),
+        legend.position = "top",
+        legend.key.size = unit(0.4,"cm"),
+        legend.title = element_text(size = 8,face="bold"),
+        legend.text = element_text(size = 8),
+        #legend.background = element_rect(linetype = 1, size = 1, colour = 1),
+        plot.title = element_text(hjust = 0.5,face = "bold",size = 10),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  　scale_fill_manual(values=c("FMSY"="#35a16b","SQ"="#ff2800"))
+
+gg2
+
+  #保存
+#setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/移動平均で示す原料供給割合")
+#ggsave(file = "Miyagi.png",plot = gg2,dpi = 350,width = 7.29,height = 4.51)
+
+
+#図形の統合
+sanriku2 <- grid.arrange(gg1,gg2)
+#保存
+setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Outputs/UpsidePrefAnalysisOutput/論文プロット")
+ggsave(file = "Sanriku2.png",plot = sanriku2,dpi = 350, width = 4.8, height = 5.5)
+
+```
+
