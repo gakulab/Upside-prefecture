@@ -4,12 +4,9 @@ author: "keikawamura"
 date: '`r format(Sys.Date(), "%y/%m/%d")`'
 output: html_document
 ---
-======= Ver.11の変更点 =======
+======= 英論用の変更点 =======
 
-・「<修論用>三陸の魚種リスト」チャンクを追加
-・漁獲データ（海面漁業生産統計調査）において2019年確報値がリリースされたので内容を更新
-※更新データを使用しているのは、今回追加したチャンクのみである！！！
-
+英論に使わないコードは削除
 
 
 
@@ -54,10 +51,10 @@ IOTs_Iwate <- read_sheet("1PDzMRzgPt0ctCOrD76lgrqTjea3TGMFD-8vtkPOdeQA",sheet = 
 IOTs_Miyagi <- read_sheet("1PDzMRzgPt0ctCOrD76lgrqTjea3TGMFD-8vtkPOdeQA",sheet = "miyagi_H27_101")
 
 #稼ぐ力関係
- setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/産業連関表/For_Analysis")
-TokkaKeisu <- read_csv("全国市町村_修正特化係数_2016_稼ぐ力.csv")
-Jugyouin <- read_csv("全国市町村_修正特化係数_2016_従業員比率.csv")
-Jisokuritsu <- read_csv("全国市町村_修正特化係数_2016_自足率.csv")
+# setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/産業連関表/For_Analysis")
+#TokkaKeisu <- read_csv("全国市町村_修正特化係数_2016_稼ぐ力.csv")
+#Jugyouin <- read_csv("全国市町村_修正特化係数_2016_従業員比率.csv")
+#Jisokuritsu <- read_csv("全国市町村_修正特化係数_2016_自足率.csv")
 ```
 
 ## 時系列グラフ
