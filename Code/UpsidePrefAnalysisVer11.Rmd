@@ -18,7 +18,7 @@ output: html_document
 ```{r, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
-#緩衝の初期化
+#環境の初期化
 rm(list = ls(all=TRUE))
 
 
