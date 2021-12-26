@@ -61,6 +61,7 @@ multi_stock<-read.csv("multi_Stock_complete_All.csv", stringsAsFactors = F)
 multi_stock_plus <- read.csv("FishStock.csv",stringsAsFactors = F)
 #佳奈恵さんのRunしたUpsideの結果データの読み込み
 Temp_Data_Catch <- fread("Japan_20190118_mo_opt.csv", header=T,stringsAsFactors = F)
+Temp_Data_Catch <- read.csv("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/output/japan_20211219_mo_opt.csv")
 #Temp_Data_Catch_another <- read.csv("Japan_master_output_2019_opt.csv",header=T,stringsAsFactors=F)
 Temp_Data_Catch_Kei <- read.csv("ResultUpsideJPN20200917.csv",header = T,stringsAsFactors = F)
 #過去の資源量データ
@@ -188,14 +189,15 @@ dt.c_and_p3 <- select(dt.c_and_p2_TAC,-c(check,check2))
 
 #かなえさんのデータを用いるか自分の(Illegalを含む)データを用いるかのスイッチ
 Temp_Data_Catch_Kei$management <- ifelse(Temp_Data_Catch_Kei$management=="BAU","SQ",Temp_Data_Catch_Kei$management)
-Temp_Data_Catch <- Temp_Data_Catch_Kei #このスイッチをオフにする際は、以下のコードのharvestを消すべし
+#Temp_Data_Catch <- Temp_Data_Catch_Kei #このスイッチをオフにする際は、以下のコードのharvestを消すべし
 
 
 #Upsideの結果
 Temp_Data_Catch1 <- dplyr::left_join(Temp_Data_Catch,translation_kanae_kei,by="fishery") %>%
-  mutate(year = time + 2015,
+  mutate(year = time + 2019,
          profit1 = (profit1*110)/1000000) %>% #$->¥に変換(1ドル110円)し、単位を100万円にする
-  select(year,fish_stock,management,biomass,harvest1,profit1,BvBMSY,FvFMSY1,harvest) %>%
+  #select(year,fish_stock,management,biomass,harvest1,profit1,BvBMSY,FvFMSY1,harvest) %>% #Temp_Data_Catch_Keiを使用する場合
+  select(year,fish_stock,management,biomass,harvest1,profit1,BvBMSY,FvFMSY1) %>%
   filter(management %in% c("SQ","FMSY","econOpt")) %>% #政策シナリオも限定
   filter(!fish_stock %in% c("octopus_single_stock","sea_urchin_single_stock","sea_cucumber_single_stock","southern_bluefin_tuna_single_stock"))
 
@@ -204,7 +206,7 @@ dt.comp <- merge(Temp_Data_Catch1,dt.c_and_p3,by="fish_stock",all = T)
 
 #シミュレーション値に漁獲割合を掛け合わせ、各年各県の漁獲量を算出する
 dt.comp2 <- dt.comp %>%
-  mutate(pref_catch = harvest*rate_catch,
+  mutate(pref_catch = harvest1*rate_catch,
          pref_price = profit1*rate_price)
 
 #県の合計漁獲量の算出
@@ -220,7 +222,7 @@ fish_list <- unique(Temp_Data_Catch1$fish_stock)
 
 #県別の時系列データ(県・年・シナリオ別)を作成。Upsideのために2015年までにしている
 timeseries <- dt.c_and_p %>%
-  filter(year<2016) %>% #期間を2015までに
+  filter(year<2020) %>% #期間を2019までに
   filter(fish_stock %in% fish_list) %>% #魚種をUpsideに合わせる
   mutate(management = "Historical") %>% 
   group_by(year,prefecture,alphabet,management) %>%
@@ -241,7 +243,7 @@ dt.comp4 <- rbind(dt.comp3,timeseries) %>%
 
 #dt.comp4の魚種別の詳細版(dt.comp2に似て非なるオブジェクト)
 dt.comp5 <- dt.c_and_p %>%
-  filter(year < 2016) %>%
+  filter(year < 2020) %>%
   filter(fish_stock %in% fish_list) %>%
   mutate(management = "Historical") %>%
   select(year,prefecture,alphabet,fish_stock,pref_catch=catch_t,pref_price=value_million_JPY,management)
@@ -409,7 +411,7 @@ ProcessingDataDetail <- toukei2_rank
 
 #指定したオブジェクトをrdaとして保存する。
 setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Data_Working")
-save(list = c("UpsideResultDetail","UpsideResult","CatchRate","ProcessingData","ProcessingDataDetail"),file = "UpsideDataForResearch2.rda")
+save(list = c("UpsideResultDetail","UpsideResult","CatchRate","ProcessingData","ProcessingDataDetail"),file = "UpsideDataForResearch3.rda")
 
 #確認用
 #rm(list = ls(all=TRUE))
