@@ -12,7 +12,7 @@ output: html_document
 
 # 環境構築
 ```{r setup, include=FALSE}
-#rm(list = ls(all=TRUE)) #環境を初期状態にする
+rm(list = ls(all=TRUE)) #環境を初期状態にする
 
 library(estatapi) #データ取得
 library(tidyverse) #データ加工
@@ -73,7 +73,7 @@ CatchData_Fishery_2018 <- estat_getStatsData(appId, statsDataId = "0001803957")
 
 
 #市町村別データ　魚種別漁獲量　全国
-CatchData_Species_City <- estat_getStatsData(appId, statsDataId = "0003229541")
+CatchData_Species_City <- estat_getStatsData(appId, statsDataId = "0003238629")
 
 #市町村別データ　漁業種類別漁獲量　全国
 CatchData_Fishery_City <- estat_getStatsData(appId, statsDataId = "0003229541")
@@ -81,7 +81,11 @@ CatchData_Fishery_City <- estat_getStatsData(appId, statsDataId = "0003229541")
 
 ## 産出額
 ```{r}
-#都道府県別の産出額はxlsx形式でしか取得できない。また、データベース化されていない。
+#大海区都道府県別　海面漁業・養殖業産出額、主要魚種別海面漁業産出額
+PriceData_Species_2019 <- estat_getStatsData(appId, statsDataId = "0001876613")
+
+#大海区都道府県別　主要魚種別海面養殖業産出額
+PriceData_AquaCulture_Species_2019 <- estat_getStatsData(appId, statsDataId = "0001876614")
 
 ```
 
@@ -90,26 +94,44 @@ CatchData_Fishery_City <- estat_getStatsData(appId, statsDataId = "0003229541")
 ```{r}
 #長期累年データを加工
 #2017年以降は都道府県名から"都","県","府"が取り除かれているため、area_codeで結合する
+#手順
+#1) 半角・全角などの文字の混乱を調整
+#2) データ結合時の共通鍵となる県名・県コードの対照表を作成
+#3) 結合される側(近年のデータ)のデータを結合する側(長期累計)のデータの形に合うように整える
+#4) データを結合する(rbind)
+
+
+#混乱ポイント
+#半角・全角が入り混じっている
+#area_codeの全国を示す値が長期累計は00000、2017年以降は00001である
 
 ## 魚種別
+
+# 長期累計データの整形
 CatchData_Species_all <- CatchData_Species %>%
-  mutate(year = as.numeric(str_sub(.$年次,end = -2)),
-         area_code = ifelse(都道府県=="全国","00001",area_code),
+  mutate(year = as.numeric(str_sub(.$年次,end = -2)), #"年"を除く
+         #area_code = ifelse(都道府県=="全国","00001",area_code),
          `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="計","合計",`漁業魚種（長期累年）`),
-         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_さけ･ます類_小計","魚類_さけ・ます類_小計",`漁業魚種（長期累年）`),
+         `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_さけ･ます類_小計","魚類_さけ・ます類_小計",`漁業魚種（長期累年）`), #半角と全角の"・"を調整
          `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_さけ･ます類","魚類_さけ・ます類",`漁業魚種（長期累年）`),
          `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_ひらめ･かれい類_小計","魚類_ひらめ・かれい類_小計",`漁業魚種（長期累年）`),
          `漁業魚種（長期累年）` = ifelse(`漁業魚種（長期累年）`=="魚類_ひらめ･かれい類","魚類_ひらめ・かれい類",`漁業魚種（長期累年）`)) %>%
   select(year, area_code, prefecture_plus = 都道府県, category = `漁業魚種（長期累年）`, Catch_t = value)
 
-#長期累年データの都道府県（沿岸県+全国）に合わせるためのリスト作成
-PrefList <- unique(CatchData_Species_all[,c("area_code","prefecture_plus")])
-PrefList2 <- unique(CatchData_Species_2017[,c("area_code","(C001-2017-1)都道府県・大海区・支庁")])
+#長期累年データの都道府県（沿岸県+全国）に合わせるためのリスト作成。area_codeで結合する。area_codeにおいて2017年以降は全国が00000に対し、長期累計は00001である。
+#長期累計データの都道府県リスト
+PrefList <- unique(CatchData_Species_all[,c("area_code","prefecture_plus")]) #長期累計の県コード・県名を抽出。県が付いているので_plus
+#近年データの都道府県リスト
+PrefList2 <- unique(CatchData_Species_2017[,c("area_code","(C001-2017-1)都道府県・大海区・支庁")]) #2017年以降は"県"が付かない
+
 PrefList3 <- left_join(PrefList,PrefList2,by="area_code") 
 names(PrefList3) <- c("area_code","prefecture_plus","prefecture")
 
+#長期累計に合わせて整形
 CatchData_Species_2016_Working <- CatchData_Species_2016 %>%
-  mutate(year = 2016,area_code = ifelse(`(C001-28-1)都道府県・大海区・支庁`=="全国","00001",area_code)) %>%
+  mutate(year = 2016
+         #area_code = ifelse(`(C001-28-1)都道府県・大海区・支庁`=="全国","00001",area_code)
+         ) %>%
   left_join(PrefList3) %>%
   select(year, prefecture, category = `(C001-28-6)魚種`, Catch_t = value) %>%
   filter(!is.na(prefecture))

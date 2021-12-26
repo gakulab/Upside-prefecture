@@ -19,7 +19,7 @@ FindResilience_Kei<-function(Data)
   RESout<-stocks(ResData$SciName,fields = c("Species","Resilience")) #fieldsオプションはreturnする列の指定を行う
   RESout <- RESout %>%
     drop_na(Resilience) %>%
-    rename(SciName=Species,Res = Resilience) %>%
+    dplyr::rename(SciName=Species,Res = Resilience) %>%
     unique()
   #stocks()のfieldオプションで選択できる情報一覧
   #[1] "SpecCode"          "Species"           "StockCode"         "SynOC"             "StockDefs"        

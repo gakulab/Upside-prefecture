@@ -5,7 +5,9 @@
 ## 編集履歴
 ## 21/3/4-
 
-
+## 最終章第２章　2021/12/17-
+## 1bJPN_parameters_mor_ke.RでGUMを実行して、Priceデータからコストを算出し付加する。
+## 本スクリプトでは、政策シミュレーションの実行を行う
 
 # Japan Run File (TS >= 1964, Queen crab stock revised)
 ## Kanae Tokunaga
@@ -22,9 +24,13 @@ setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTo
 ## Read in data input file
 #dataInput = read.csv("data/4Inputs_for_proj_disc5per_190116.csv", header=TRUE,stringsAsFactors=FALSE)
 dataInput = read.csv("data/4Inputs_for_proj_disc5per_0727.csv", header = T, stringsAsFactors = F)
+dataInput = read.csv("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/data/4Inputs_for_proj_disc5per_2_211219.csv")
+#魚種名を行(95)としてパラメタが列(52)という構成
+
 
 ## Read in functions file
 source("2FunctionsJapan_update.R")
+#16個の関数
 
 ## Read in libraries
 library(ggplot2)
@@ -59,32 +65,36 @@ delayVec <- c(2)
 for (i in 1:nrow(dataInput))  ## 魚種別に試行を行う
 {
     ## projectionModelに理解に入る
-    outputs = projectionModel(dataInput[i,],scenarios,catchShareLoop,illegalLoop)
+    outputs = projectionModel(dataInput[i,],scenarios,catchShareLoop,illegalLoop) #25要素のリスト
 
-    masterOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$BProjections))),
-                          rep(dataInput[i,]$Species,nrow(melt(outputs$BProjections))),
-                          melt(outputs$BProjections),
-                          melt(outputs$HInt1Projections)$value,
-                          melt(outputs$HInt2Projections)$value,
-                          melt(outputs$HNonIntProjections)$value,
-                          melt(outputs$profit1Projections)$value,
-                          melt(outputs$profit2Projections)$value,
-                          melt(outputs$bProjections)$value,
-                          melt(outputs$fInt1Projections)$value,
-                          melt(outputs$fInt2Projections)$value,
-                          melt(outputs$fNonIntProjections)$value,
-                          melt(outputs$fTotalProjections)$value)
+    #1魚種の結果
+    #meltはgatherのプロトタイプ。wideをlongに。
+    masterOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$BProjections))), #fishery
+                          rep(dataInput[i,]$Species,nrow(melt(outputs$BProjections))), #species
+                          melt(outputs$BProjections), #7列：management,MC,catchShare,illegalFishing,ImplementYear,time,biomass
+                          melt(outputs$HInt1Projections)$value, #harvest1
+                          melt(outputs$HInt2Projections)$value, #harvest2
+                          melt(outputs$HNonIntProjections)$value, #harvest_ill_for
+                          melt(outputs$profit1Projections)$value, #profit1
+                          melt(outputs$profit2Projections)$value, #profit2
+                          melt(outputs$bProjections)$value, #BvBMSY
+                          melt(outputs$fInt1Projections)$value, #FvFMSY1
+                          melt(outputs$fInt2Projections)$value, #FvFMSY2
+                          melt(outputs$fNonIntProjections)$value, #FvFMSYill
+                          melt(outputs$fTotalProjections)$value) #FvFMSYtotal
 
     colnames(masterOutputi) = c("fishery","species","management","MC", "catchShare","illegalFishing","implementYear", "time","biomass",
                                 "harvest1", "harvest2", "harvest_ill_for","profit1","profit2", "BvBMSY","FvFMSY1",
                                 "FvFMSY2", "FvFMSYill", "FvFMSYtotal")
 
+    #1魚種の場合はrbindしないだけの条件分岐
     if (i == 1) {
         masterOutput = masterOutputi
     } else {
         masterOutput = rbind(masterOutput,masterOutputi)
     }
 
+    #数値から名称に変更
     masterOutput$management[masterOutput$management == 1] = "SQ"
     masterOutput$management[masterOutput$management == 2] = "FMSY"
     masterOutput$management[masterOutput$management == 3] = "minRec"
@@ -96,9 +106,9 @@ for (i in 1:nrow(dataInput))  ## 魚種別に試行を行う
     masterOutput$illegalFishing[masterOutput$illegalFishing == 1] = "illegal_fishing"
     masterOutput$illegalFishing[masterOutput$illegalFishing == 2] = "no_illegal_fishing"
 
-    recoveryOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$timeToRecovery))),
-                            rep(dataInput[i,]$Species,nrow(melt(outputs$timeToRecovery))),
-                            melt(outputs$timeToRecovery))
+    recoveryOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$timeToRecovery))), #fishery
+                            rep(dataInput[i,]$Species,nrow(melt(outputs$timeToRecovery))), #species
+                            melt(outputs$timeToRecovery)) #6列：management,MC,catchShare,illegalFishing,implementYear,recTime
 
     colnames(recoveryOutputi) = c("fishery","species","management", "MC", "catchShare","illegalFishing","implementYear", "recTime")
 
@@ -119,10 +129,10 @@ for (i in 1:nrow(dataInput))  ## 魚種別に試行を行う
     recoveryOutput$illegalFishing[recoveryOutput$illegalFishing == 1] = "illegal_fishing"
     recoveryOutput$illegalFishing[recoveryOutput$illegalFishing == 2] = "no_illegal_fishing"
 
-    npvOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$npv1))),
-                       rep(dataInput[i,]$Species,nrow(melt(outputs$npv1))),
-                            melt(outputs$npv1),
-                            melt(outputs$npv2)$value)
+    npvOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$npv1))), #fishery
+                       rep(dataInput[i,]$Species,nrow(melt(outputs$npv1))), #species
+                            melt(outputs$npv1), #management,MC,catchShare,illegalFishing,implementYear,npv1
+                            melt(outputs$npv2)$value) #npv2
 
     colnames(npvOutputi) = c("fishery", "species","management", "MC", "catchShare","illegalFishing","implementYear", "npv1", "npv2")
 
@@ -148,6 +158,7 @@ for (i in 1:nrow(dataInput))  ## 魚種別に試行を行う
 
 masterOutput$implementYear = (masterOutput$implementYear + 1)
 write.csv(masterOutput,file="output/japan_20190118_mo_opt.csv")
+#write.csv(masterOutput,file="output/japan_20211219_mo_opt.csv")
 
 
 recoveryOutput$implementYear = (recoveryOutput$implementYear + 1)

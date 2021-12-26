@@ -32,13 +32,14 @@ library(googlesheets4) #google spreadsheetを読み込むパッケージ
 #Upside関連の結果を読み込む
 ## パッケージの読み込み  {.tabset .tabset-fade} 
 setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Data_Working")
-load("UpsideDataForResearch.rda")
+#load("UpsideDataForResearch.rda")
+#load("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Data_Working/UpsideDataForResearch3.rda")
 #系群データに資源状態(令和元年度版)を付与したもの
-multi_stock_plus <- read.csv("FishStock.csv",stringsAsFactors = F)
+#multi_stock_plus <- read.csv("FishStock.csv",stringsAsFactors = F)
 
 
 #産業連関表関連の結果を読み込む。IOTs = Input Output Tables
-IOTs <- read.csv("DataSummaryIOTableSummary.csv")
+#IOTs <- read.csv("DataSummaryIOTableSummary.csv")
 
 #岩手の産業連関表の単位は千円だが、宮城の産業連関表の単位は100万円である。
 IOTs_Iwate <- read.csv("DataSummaryIOTableIwate_H25_103.csv")

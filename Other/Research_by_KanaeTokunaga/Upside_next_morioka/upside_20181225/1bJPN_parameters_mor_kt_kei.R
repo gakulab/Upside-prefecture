@@ -4,7 +4,7 @@
 ## Updated on December 28, 2018
 
 #Kei Kawamuraが改訂(注釈を付加)した版
-#2021/1/25
+#2021/1/25、2021/12/19
 
 #環境を初期化
 rm(list = ls(all=TRUE))
@@ -18,29 +18,34 @@ library(stringr)
 library(stats)
 library(rfishbase)
 
+
+
 #ディレクトリの変更(佳奈恵さんのコードでやるとエラーが生じるので修正したKeiのコードで実行する)
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/GUM-master-Kei/R_Kei")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/GUM-master-Kei/R_Kei")
 file.sources = list.files(pattern="*.R")
 sapply(file.sources,source,.GlobalEnv)
 file.sources = list.files(pattern="*.rda")
 sapply(file.sources,load,.GlobalEnv)
 
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/GUM-master-Kei/data")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/GUM-master-Kei/data")
 data.sources = list.files(pattern="*.rda")
 sapply(data.sources,load,.GlobalEnv)
 
 # Step 0: Read the data
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/")
 
 
 #漁獲量データと生産額データの読み込み
-dt.catch <- read.csv("data/cleaned/1japan_production.old.csv")
+#dt.catch <- read.csv("data/cleaned/1japan_production.old.csv")
+#dt.catch <- read.csv("data/cleaned/1japan_production.csv")
+dt.catch <- read.csv("data/cleaned/1japan_production.2021.csv", fileEncoding = "Shift-JIS")
+#dt.catch2 <- readRDS("/Users/keikawamura/PrivateResearch/DataLake/Catch1956_2020.rds")
 dt.price <- read.csv("data/cleaned/1japan_price.csv")
 
 ## STEP 1: Format data so it can be run in GUM package
 #ここでデフォルトで使っているデータでは年数ごとに列が作成されているので、tidyな縦型データにする
 japan_catch1 <- dt.catch %>%
-        gather(Year, Catch, X1964:X2015) %>%
+        gather(Year, Catch, X1964:X2019) %>%
         mutate(Year = as.integer(substring(Year, 2))) 
 
 #魚種ごとに並べ替える
@@ -74,7 +79,7 @@ japan.fishery <- subset(japan_results, select = c(Fishery, CommName, SciName))
 
 #重複した列を除き、"0Upside_inputs_prep_181228.csv"として出力
 japan.fishery <- japan.fishery[!duplicated(japan.fishery),]
-write.csv(japan.fishery, file = "data/0Upside_inputs_prep_181228.csv")
+#write.csv(japan.fishery, file = "data/0Upside_inputs_prep_181228.csv")
 
 ### Add BMSY
 BMSY = function(K,phi)
@@ -90,7 +95,8 @@ Japan_results100 <- japan_results %>%
                B_over_K = Biomass / k)
 
 ## STEP 2: write csv of GUM results:
-write.csv(Japan_results100, "data/2japan_GUM_results_K100_190116.csv", row.names = FALSE)
+#write.csv(Japan_results100, "data/2japan_GUM_results_K100_190116.csv", row.names = FALSE)
+#write.csv(Japan_results100, "data/2japan_GUM_results_K100_211219.csv", row.names = FALSE)
 
 ## STEP 3:
 ######################################################
@@ -110,7 +116,8 @@ Input <- data.frame(
 )
 
 
-japan_inputs <- Input #read.csv('data/3Upside_Input_0530.csv',stringsAsFactors=FALSE) #v3 is fine for this one.
+japan_inputs <- read.csv('/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka/upside_20181225/data/3Upside_Input_0530.csv',stringsAsFactors=FALSE) #v3 is fine for this one.
+#japan_inputs <- Input
 japan_results <- read.csv('data/2japan_GUM_results_K100_190116.csv', header = T, stringsAsFactors = F)
 
 # Fishery list
@@ -149,7 +156,7 @@ japan_inputs <- japan_inputs %>%
         )
 
 ## Change theta_domestic for international fisheries = 0.6
-setwd("/Volumes/GoogleDrive/Shared drives/gakuLab_Research_Upside/Upside-U.Iwate/Other/Research_by_KanaeTokunaga/Upside_next_morioka")
+setwd("/Volumes/GoogleDrive/My Drive/Upside-prefecture/Other/Research_by_KanaeTokunaga/Upside_next_morioka")
 int <- read.csv("data/international.csv")
 japan_inputs <- merge(japan_inputs, int, by = "Fishery")
 japan_inputs$theta_domestic <- ifelse(japan_inputs$International == 1, 0.6, japan_inputs$theta_domestic)
@@ -157,18 +164,20 @@ japan_inputs <- japan_inputs[, -c(54)]
 
 ### add inputs from GUM results
 ###KK: 2015 is not the most recent year for ALL species!! (This is why some species were removed)
+#魚種ごとに最新年を抽出
 japan_results_max<-japan_results%>%
   group_by(Fishery)%>%
   filter(year==max(year)) %>% 
-  select(IdOrig, Fishery, SciName, year, BvBmsy, MSY, phi, g, k, FvFmsy) %>%
+  select(IdOrig, Fishery, SciName, year, BvBmsy, MSY, phi, g=r, k, FvFmsy) %>% #gと書かれていたが、恐らくrであろう
   rename(Scientific = SciName)
 
 japan_results_max <- as.data.frame(japan_results_max)
 
 japan_inputs1 <- left_join(japan_inputs, japan_results_max, by = c("Fishery"))
 
+#japan_resultsにあるg,kなどを別の列にコピー
 japan_inputs2 <- japan_inputs1 %>%
-        mutate(g_lower = g,
+        mutate(g_lower = g, #gはrであり、run_gum_assessmentの結果
                g_expected = g,
                g_upper = g,
                K_lower = k,
@@ -192,6 +201,7 @@ japan_price1 <- dt.price %>%
         gather(Year, Price, X2003:X2015) %>%
         mutate(Year = as.integer(substring(Year, 2))) 
 
+#魚種ごとに年順に並び替え
 japan_price1 <- japan_price1[order(japan_price1$IdOrig, japan_price1$Year), ]
 
 ## Make final dataframe
@@ -204,6 +214,7 @@ japan_price3$CommName <- as.character(japan_price3$CommName)
 japan_price3$SpeciesCatName <- as.character(japan_price3$SpeciesCatName)
 japan_price3$Res1 <- as.character(japan_price3$Res1)
 
+#Fisheryでデータを分割して、summariseする。
 pdata <- ddply(japan_price3, .(Fishery), summarise,
                 p1_lower = min(Price, na.rm = TRUE),
                 p1_expected = mean(Price, na.rm = TRUE),
@@ -213,6 +224,7 @@ pdata <- ddply(japan_price3, .(Fishery), summarise,
                 p2_upper = max(Price, na.rm = TRUE))
 
 # Fill price information for Blackhead seabream single_stock & Pacific bluefin tuna single_stock_inc_sbf_exc_sml, Yellow croaker single_stock
+#特定の魚種はデータを個別設定
 pdata_bft <- subset(pdata, pdata$Fishery == "Pacific bluefin tuna single_stock_exc_sbf_inc_sml")
 pdata$p1_lower <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_lower, pdata$p1_lower)
 pdata$p1_expected <- ifelse(pdata$Fishery == "Pacific bluefin tuna single_stock_inc_sbf_exc_sml", pdata_bft$p1_expected, pdata$p1_expected)
@@ -359,7 +371,7 @@ col = names(dataInput)
 japan_inputs5 <- select(japan_inputs5,
                         col)
 
-#write.csv(japan_inputs5, "4Inputs_for_proj_disc5per_200917.csv", row.names = FALSE)
+#write.csv(japan_inputs5, "4Inputs_for_proj_disc5per_2_211219.csv", row.names = FALSE)
 
 
 

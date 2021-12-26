@@ -43,10 +43,10 @@ run_gum_assessment_Kei <- function(dat){
     group_by(IdOrig) %>%
     filter(model_number == min(model_number)) %>% #各IdOrigにおいて、モデル番号が小さいもの１つを残す。理由は不明。
     mutate(BvBmsy = exp(LogBvBmsy)) %>% #対数を元に戻す
-    rename(year = Year, catch = Catch)#keep the best model that ran for each fishery
+    dplyr::rename(year = Year, catch = Catch) #keep the best model that ran for each fishery
 
   data <- FindResilience_Kei(data) %>% #FindResilience()でレジリエンスを付与
-    rename(res = Res)
+    dplyr::rename(res = Res)
 
   stocks <- unique(data$IdOrig)
 

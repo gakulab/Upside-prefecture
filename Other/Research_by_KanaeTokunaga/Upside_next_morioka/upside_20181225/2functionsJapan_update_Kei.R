@@ -388,7 +388,7 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
   breakEven = array(NA,dim=c(length(S),N,L,M,length(delayVec)))
   
   ## Loop over all delay scenarios
-  for (h in 1:length(delayVec)){  ## added this loop
+  for (h in 1:length(delayVec)){  ## added this loop #delayVecは固定値 2
     
     ## Loop over all policy scenarios
     for (i in 1:length(S)){
@@ -523,7 +523,7 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
                 if (S[i] < 6) {
                   if (n >= delayVec[h]) { # Only implement improved policy if implementation year is reached
                     if (bProjections[i,j,l,m,h,n] < bVEC[1]) {
-                      fInt1Projections[i,j,l,m,h,n] = approx(bVEC,policies[i,j,l,m,],bVEC[1])$y
+                      fInt1Projections[i,j,l,m,h,n] = approx(bVEC,policies[i,j,l,m,],bVEC[1])$y #approx関数は内挿関数
                       fInt2Projections[i,j,l,m,h,n] = approx(bVEC,policies2[i,j,l,m,],bVEC[1])$y 
                       
                     } else {
