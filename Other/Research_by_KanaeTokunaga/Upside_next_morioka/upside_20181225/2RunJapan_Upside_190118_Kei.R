@@ -41,6 +41,7 @@ library(pander)
 library(tidyr)
 
 ################################################
+## モデルのセットアップ
 #### Set up model run
 ## Enter management scenarios to loop over - select 1 through 5 #政策シナリオを1~6で設定
 scenarios = c(1,2,3,4,5,6)
@@ -53,7 +54,7 @@ illegalLoop = "no"
 
 ################################################
 ################################################
-### Implementation vector #直訳すると実装ベクトル
+### Implementation vector #直訳すると実装ベクトル。意味は分からない。
 # delayVec <- c(2:20)
 delayVec <- c(2)
 
@@ -64,11 +65,11 @@ delayVec <- c(2)
 ## Loop over all fisheries   
 for (i in 1:nrow(dataInput))  ## 魚種別に試行を行う
 {
-    ## projectionModelに理解に入る
-    outputs = projectionModel(dataInput[i,],scenarios,catchShareLoop,illegalLoop) #25要素のリスト
+    ## projectionModelに理解に入るべし
+    outputs = projectionModel(dataInput[i,],scenarios,catchShareLoop,illegalLoop) #25要素のリストを返す。InputデータはdataInput(パラメタセット)のみで残りは定数。
 
     #1魚種の結果
-    #meltはgatherのプロトタイプ。wideをlongに。
+    #meltはgatherのプロトタイプ。wideをlongにする。
     masterOutputi = cbind(rep(dataInput[i,]$Fishery,nrow(melt(outputs$BProjections))), #fishery
                           rep(dataInput[i,]$Species,nrow(melt(outputs$BProjections))), #species
                           melt(outputs$BProjections), #7列：management,MC,catchShare,illegalFishing,ImplementYear,time,biomass
