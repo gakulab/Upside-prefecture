@@ -130,6 +130,7 @@ japan_results <- read.csv('data/2japan_GUM_results_K100_190116.csv', header = T,
 # Changed to now use the thetas in the 3Upside_Input_Rom.csv file (user to input these, if not, use the settings
 # below (theta_domestic, theta_legal1 = 1 and theta_legal2 = 0))
 # Change discount rate as desired (here we are going to produce files with 0, 5 and 10%)
+
 japan_inputs <- japan_inputs %>%
         mutate(#Fishery2 = Fishery,
                Time = 50,
@@ -147,7 +148,7 @@ japan_inputs <- japan_inputs %>%
                disc_lower = 0.01,
                disc_expected = 0.02,
                disc_upper = 0.03,
-               beta_lower = 1,
+               beta_lower = 1,  #コストの部分で使用
                beta_expected = 1.3,
                beta_upper = 1.5,
                gamma_p1 = 1.31,

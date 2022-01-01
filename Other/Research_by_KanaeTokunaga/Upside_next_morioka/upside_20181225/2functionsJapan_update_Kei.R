@@ -85,6 +85,7 @@ profitMSY = function(g,K,phi,p,b,c,beta)
 ################################################
 ## parameterPull function
 ## Pulls random value from truncated normal distribution
+## lower,expected,upperが同じ時はexpectedを使用、同じではない時はrtruncnormという切断正規分布からランダム値を得る関数からランダム値を取得。
 
 parameterPull = function(upper,lower,expected)
 {
@@ -118,12 +119,13 @@ log_normal_pull = function(mean, SD)
 
 ### Recovery year function
 #########################
-
+#50年のシミュレーションが終わった後に一括で処理する。bProjはBvBMSY。
 recoveryTime = function(bProjectionVec,recoveryCutoff,t)
 {
-  
+  #BvBMSYが全timeの中で最小値の位置を格納
   minimumSlot = which(bProjectionVec == min(bProjectionVec))[1]
   
+  #最大のbProj(BvBMSY)がcutoff(デフォルト0.8)を下回る時timeをNAにし、cutoffを超える場合はcutoffを超える最小年を返す。which[1]にするため元のminimumSlotの場所が消えるので、再度minimumSlotを足す方法を取っている
   if (max(bProjectionVec) < recoveryCutoff) time = NA else time = which(bProjectionVec[minimumSlot:t] >= recoveryCutoff)[1] + minimumSlot - 1
   
   return(time)
@@ -214,6 +216,7 @@ dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,sp
 ################################################
 ## policy function
 ## Generates four policy functions, one for each scenario
+## シナリオ(s)は1=SQ, 2=FMSY, 4=econOptである。 
 
 policy = function(s,g,K,phi,p1,p2,f0Int1,f0Int2,f0NonInt,c1,c2,beta,disc,bvec,split)
 {
@@ -269,10 +272,13 @@ NPV = function(discount,P)
 ################################################
 ## annuity function
 ## Calculate annuity given a discount rate and vector of profits
+## 年単位のprofitを算出。　P:全年のProfit
 
 annuityFunc = function(discount,P)
 {
-  n = length(P)
+  n = length(P)  #年数
+  
+  # 割引率が0の時は、年単位で等分割する。そうでは無い場合、割引率を考慮して年単位のprofitを算出。
   if (discount == 0) annuity = NPV(discount,P)/n else{
     annuity = NPV(discount,P) / ((1 - 1/(1+discount)^n)/discount)
   }
@@ -299,21 +305,25 @@ breakEvenNPV = function(discount,P1,P2)
 ################################################
 ## projectionModel
 
-projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別の生物モデルの結果、SはSenario
+projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別の生物モデルの結果パラメタセット、SはSenario、CatchShoreLoop,LegalLoopは文字通り
 { 
   ##Set up loops
   N = params$N ##固定値 1
   time = params$Time ##固定値 50
-  if (CatchShareLoop == "yes") L = 2 else L = 1
-  if (LegalLoop == "yes") M = 2 else M = 1
+  if (CatchShareLoop == "yes") L = 2 else L = 1 ##デフォルトではFalse
+  if (LegalLoop == "yes") M = 2 else M = 1  ##デフォルトではFalse
   
-  ## Set recovery definition cutoff in terms of B/BMSY  ##
+  ## Set recovery definition cutoff in terms of B/BMSY  ##推察するにB/Bmsyの回復基準値の設定
   cutoff = 0.8
   
+  ## K / Bmsy = (phi + 1) ^ (1 / phi)となる。従って、K以上のBはあり得ないので、KをBと置き換えると、maxbは実質的なBvBmsyの上限値という意味を持つことが分かる。
+  ## bioModelでBvBMSYの上限となる値
   maxb = (params$phi_expected+1)^(1/params$phi_expected)
   
-  ## initialize vector that contains range of b values from 0 to maxbN
+  ## initialize vector that contains range of b values from 0 to maxbN  #phiに依存してbのレンジが変わる
   bVEC = seq(0,maxb+.1,.1) 
+  
+  #### 枠組み作り
   
   ## initialize policies array
   policies = array(NA,dim=c(length(S),N,L,M,length(bVEC)))
@@ -387,48 +397,58 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
   ## initialize NPV break-even point matrix
   breakEven = array(NA,dim=c(length(S),N,L,M,length(delayVec)))
   
+  
+  ### loop開始
+  
   ## Loop over all delay scenarios
   for (h in 1:length(delayVec)){  ## added this loop #delayVecは固定値 2
     
-    ## Loop over all policy scenarios
+    ## Loop over all policy scenarios #シナリオの数だけloop
     for (i in 1:length(S)){
       
-      ## Loop over all Monte-Carlo iterations
-      for (j in 1:N){
+      ## Loop over all Monte-Carlo iterations  #固定値 1
+      for (j in 1:N){ 
         
         # ## Loop over legal theta values
         # for (k in 1:Thetas){
         
-        ## Loop over catch share price and cost scalars
+        ## Loop over catch share price and cost scalars  #固定値 1
         for (l in 1:L){
           
-          ## Loop over illegal harvest elimination
+          ## Loop over illegal harvest elimination  #固定値 1
           for (m in 1:M){
             
+            #loopはデフォルトでは、delayVecの2 * シナリオ5つで、合計10loopになる。
+            
+            
+            ### パラメタの設定
+            
+            ## 各パラメにおいて、j==1の時Catch-MSYの結果を使う。しかし、デフォルトではjは1しか取らない
             ## For the first monte-carlo iteration, use the expected values of each parameter
             if (j == 1){
-              discN = params$disc_expected
-              gN = params$g_expected
-              phiN = params$phi_expected
-              maxFN = (phiN+1)/phiN
-              KN = params$K_expected
-              b0N = min(maxb,params$b0_expected)
-              f0_totalN = min(maxFN,params$f0_total_expected)
-              theta1N_legal = params$theta_legal1_expected
-              theta2N_legal = params$theta_legal2_expected
-              thetaN_domestic = params$theta_domestic
-              p1N = params$p1_expected
-              p2N = params$p2_expected
-              betaN = params$beta_expected	
-              c1N = params$c1_expected
-              c2N = params$c2_expected
-              gamma_p1N = params$gamma_p1
-              gamma_p2N = params$gamma_p2
-              gamma_c1N = params$gamma_c1
-              gamma_c2N = params$gamma_c2
-              lambdaN = params$lambda
-              splitN = params$split
+              discN = params$disc_expected   #割引率
+              gN = params$g_expected   #成長率(C-MSY)
+              phiN = params$phi_expected   #形状変数(0.188)
+              maxFN = (phiN+1)/phiN   #phiから導く漁獲効率F
+              KN = params$K_expected   #環境収容力(C-MSY)
+              b0N = min(maxb,params$b0_expected)   #BvBMSY(PRM)
+              f0_totalN = min(maxFN,params$f0_total_expected)   #FvFMSY
+              theta1N_legal = params$theta_legal1_expected   #固定値 1
+              theta2N_legal = params$theta_legal2_expected   #固定値 0
+              thetaN_domestic = params$theta_domestic    #固定値 1
+              p1N = params$p1_expected   #生産額の平均値
+              p2N = params$p2_expected   #生産額の平均値
+              betaN = params$beta_expected   #コストの形状変数
+              c1N = params$c1_expected   #推定コストの平均値
+              c2N = params$c2_expected   #推定コストの平均値
+              gamma_p1N = params$gamma_p1   #econOptで価格が31%増える
+              gamma_p2N = params$gamma_p2   #econOptで価格が31%増える
+              gamma_c1N = params$gamma_c1   #econOptでコストが23%減る
+              gamma_c2N = params$gamma_c2   #econOptでコストが23%減る
+              lambdaN = params$lambda   #オープンアクセスの時にfを調整する変数 (fに対して、t時点とMSYの時で利益πの比率導出して乗じる)
+              splitN = params$split   #下部のpolicy()で使う
 
+              ## parameterPull()を使う：upper,expected,lowerがある時はexpectedを使用し、無い時は切断正規分布からサンプリングする。
               ## For all other iterations, pull a parameter from a truncated normal distribution
               ## defined by the upper bound, lower bound, and expected mean
             } else {
@@ -455,21 +475,24 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
               splitN = params$split
             }
             
+            
             ## Set policies for current Monte-Carlo iteration parameters - assume perfect information
-            f0Int1N = f0_totalN * theta1N_legal * thetaN_domestic
+            ## theta1N_legalは1,theta2N_legalは0,thetaN_domesticは1がデフォルト。1や0ならcatch-MSYのf0を使うか否かという意味になる
+            f0Int1N = f0_totalN * theta1N_legal * thetaN_domestic  #theta1N_legal,thetaN_domestic が 1なので、f0_totalNになる
             
-            f0Int2N = f0_totalN * theta2N_legal * thetaN_domestic
+            f0Int2N = f0_totalN * theta2N_legal * thetaN_domestic  #theta2N_legal が 0なので、0になる
             
-            f0NonIntN = f0_totalN * (1 - (theta1N_legal * thetaN_domestic) - (theta2N_legal * thetaN_domestic))
+            f0NonIntN = f0_totalN * (1 - (theta1N_legal * thetaN_domestic) - (theta2N_legal * thetaN_domestic))  #0になる。
             
+            #iはシナリオ数(5)、j,l,mは固定値1
             policies[i,j,l,m,] = policy(S[i],gN,KN,phiN,p1N,p2N,f0Int1N,f0Int2N,f0NonIntN,c1N,c2N,betaN,discN,bVEC,splitN)$f1 
             policies2[i,j,l,m,] = policy(S[i],gN,KN,phiN,p1N,p2N,f0Int1N,f0Int2N,f0NonIntN,c1N,c2N,betaN,discN,bVEC,splitN)$f2
             
-            ## Set non-intervention f0 depending on illegal harvest elimination loop
-            if (m == 1) f0NonIntN = f0_totalN * (1 - (theta1N_legal * thetaN_domestic) - (theta2N_legal * thetaN_domestic)) 
+            ## Set non-intervention f0 depending on illegal harvest elimination loop   #m==1がデフォルト
+            if (m == 1) f0NonIntN = f0_totalN * (1 - (theta1N_legal * thetaN_domestic) - (theta2N_legal * thetaN_domestic))   #0になる。
             if (m == 2) f0NonIntN = f0_totalN * (1 - thetaN_domestic)
             
-            ## Set price and cost depending on catch share loop
+            ## Set price and cost depending on catch share loop  #l == 1なのでgamma関係なし
             if (l == 2) { 
               p1N = p1N * gamma_p1N
               p2N = p2N * gamma_p2N
@@ -479,6 +502,7 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
             
             # policies[i,j,l,m,] = policy(S[i],gN,KN,phiN,pN,f0IntN,f0NonIntN,cN,betaN,discN,bVEC)$f1
             
+            # 将来シミュレーションパート
             ## Loop over all time steps
             for (n in 1:time){
               
@@ -488,19 +512,19 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
                 bProjections[i,j,l,m,h,n] = b0N
                 fInt1Projections[i,j,l,m,h,n] = f0Int1N
                 fInt2Projections[i,j,l,m,h,n] = f0Int2N
-                fNonIntProjections[i,j,l,m,h,n] = f0NonIntN
+                fNonIntProjections[i,j,l,m,h,n] = f0NonIntN   #0
                 p1N = params$p1_expected
                 p2N = params$p2_expected
                 c1N = params$c1_expected
                 c2N = params$c2_expected
-              } else {
-                if (l == 2 & n >= delayVec[h]) {  ## added code here
+              } else {  ## l == 1がデフォルトであるため、gamma関係なし
+                if (l == 2 & n >= delayVec[h]) {  ## added code here  ## gammaは2年目以降一定に掛けている。よく分からない。
                   p1N = params$p1_expected * gamma_p1N
                   p2N = params$p2_expected * gamma_p2N
                   c1N = params$c1_expected * gamma_c1N
                   c2N = params$c2_expected * gamma_c2N
                 }
-                if (m == 1) fNonIntProjections[i,j,l,m,h,n] = f0NonIntN
+                if (m == 1) fNonIntProjections[i,j,l,m,h,n] = f0NonIntN   #2年目以降はこの行が実行される
                 if (m == 2 & n < delayVec[h]) fNonIntProjections[i,j,l,m,h,n] = f0NonIntN
                 if (m == 2 & n >= delayVec[h]) fNonIntProjections[i,j,l,m,h,n] = f0_totalN * (1 - thetaN_domestic)
                 ## Open access policy scenario
@@ -520,62 +544,77 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
                   }
                 }  
                 ## All other policy scenarios
-                if (S[i] < 6) {
+                if (S[i] < 6) { #2年目以降は、ここが実行される
                   if (n >= delayVec[h]) { # Only implement improved policy if implementation year is reached
                     if (bProjections[i,j,l,m,h,n] < bVEC[1]) {
                       fInt1Projections[i,j,l,m,h,n] = approx(bVEC,policies[i,j,l,m,],bVEC[1])$y #approx関数は内挿関数
                       fInt2Projections[i,j,l,m,h,n] = approx(bVEC,policies2[i,j,l,m,],bVEC[1])$y 
                       
-                    } else {
-                      fInt1Projections[i,j,l,m,h,n] = approx(bVEC,policies[i,j,l,m,],bProjections[i,j,l,m,h,n])$y
-                      fInt2Projections[i,j,l,m,h,n] = approx(bVEC,policies2[i,j,l,m,],bProjections[i,j,l,m,h,n])$y
+                    } else {  #政策でコントロールできるのはfであり、政策ごとに異なるfをfInt1,2に格納する
+                      fInt1Projections[i,j,l,m,h,n] = approx(bVEC,policies[i,j,l,m,],bProjections[i,j,l,m,h,n])$y  ##approxという内挿関数は、x,yを指定して,xoutで指定したx値に相当するx,yの値を返す
+                      fInt2Projections[i,j,l,m,h,n] = approx(bVEC,policies2[i,j,l,m,],bProjections[i,j,l,m,h,n])$y  ##yはpoliciesであり、この値はシナリオ別のfに相当する。b(BvBMSY)の値に依存して用いられるf(policies)も変わる。
+                      #bVECはmaxbというBvBmsyの想定可能な範囲を表しており、想定可能なBvBMSYの範囲内でSPMによって得られたBvBmsy(bProj)に対応するf(policies)を返すという内容である。policiesは回帰の様に考えるとわかりやすい。
                     }
-                  } else {
+                  } else {   
                     fInt1Projections[i,j,l,m,h,n] = f0Int1N
                     fInt2Projections[i,j,l,m,h,n] = f0Int2N
                   }
                 }
               }
               
-              
+              #fInt1ProjにはFvFMSYが入っているが、fInt2Projは0であり、fNonIntProjは0であるため、fTotalProjにはFvFMSYが入っている。
               fTotalProjections[i,j,l,m,h,n] = fInt1Projections[i,j,l,m,h,n] + fInt2Projections[i,j,l,m,h,n] + fNonIntProjections[i,j,l,m,h,n]
               
+              #iはシナリオ,j,l,m,は固定値1,hは2,nはtime
+              #bProjはBvBMSYなので、BMSYを乗じて約分し、Bとなる。従って、BProjはBが入る。
               BProjections[i,j,l,m,h,n] = bProjections[i,j,l,m,h,n] * BMSY(KN,phiN)
               
+              #fInt1~はFvFMSY、gNは成長率、bPro~はBvBMSYとし、Ht=FtBtである。g=FMSY(gはBの最大増加割合でFMSYはBの最大漁獲割合であるため両者が等しくなるのはMSYと言える)と仮定すると、gとFMSY・BMSYが約分されてFとBのみが残りHt=FtBtが成立する
               HInt1Projections[i,j,l,m,h,n] = fInt1Projections[i,j,l,m,h,n] * gN * bProjections[i,j,l,m,h,n] * BMSY(KN,phiN)
               
-              HInt2Projections[i,j,l,m,h,n] = fInt2Projections[i,j,l,m,h,n] * gN * bProjections[i,j,l,m,h,n] * BMSY(KN,phiN)
+              HInt2Projections[i,j,l,m,h,n] = fInt2Projections[i,j,l,m,h,n] * gN * bProjections[i,j,l,m,h,n] * BMSY(KN,phiN)    #fInt2Projが0なので結果も0
               
+              #fNonIntProjは0なので、0になる
               HNonIntProjections[i,j,l,m,h,n] = fNonIntProjections[i,j,l,m,h,n] * gN * bProjections[i,j,l,m,h,n] * BMSY(KN,phiN)
               
+              #Hの合計
               HTotalProjections[i,j,l,m,h,n] = HInt1Projections[i,j,l,m,h,n] + HInt2Projections[i,j,l,m,h,n] + HNonIntProjections[i,j,l,m,h,n]
               
+              #生産額
               revenue1Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p1N,fInt1Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c1N,betaN)$revenue
               
-              revenue2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$revenue
+              revenue2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$revenue   #fInt2Projが0なので結果も0
               
+              #費用
               cost1Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p1N,fInt1Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c1N,betaN)$cost
               
-              cost2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$cost
+              cost2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$cost   #fInt2Projが0なので結果も0
               
+              #利益 = 生産額 - 費用
               profit1Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p1N,fInt1Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c1N,betaN)$pi
               
-              profit2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$pi
+              profit2Projections[i,j,l,m,h,n] = econModel(gN,KN,phiN,p2N,fInt2Projections[i,j,l,m,h,n],bProjections[i,j,l,m,h,n],c2N,betaN)$pi   #fInt2Projが0なので結果も0
               
+              # 最終年が来るまで、資源動態モデルを更新する
               if (n < time) bProjections[i,j,l,m,h,n+1] =  bioModel(bProjections[i,j,l,m,h,n],phiN,gN,fInt1Projections[i,j,l,m,h,n],fInt2Projections[i,j,l,m,h,n],fNonIntProjections[i,j,l,m,h,n])
               
             } ## End loop over time steps
             
+            #BvBMSYがcutoff(デフォルト0.8)を超える最小timeを記録。全年共通。
             timeToRecovery[i,j,l,m,h] = recoveryTime(bProjections[i,j,l,m,h,],cutoff,time)
             
+            #割引現在価値。割引現在価値にして、全年総額。
             npv1[i,j,l,m,h] = NPV(discN,profit1Projections[i,j,l,m,h,])
             
             npv2[i,j,l,m,h] = NPV(discN,profit2Projections[i,j,l,m,h,])
             
+            #年単位のprofit
             annuity1[i,j,l,m,h] = annuityFunc(discN,profit1Projections[i,j,l,m,h,])
             
             annuity2[i,j,l,m,h] = annuityFunc(discN,profit2Projections[i,j,l,m,h,])
             
+            
+            #使わない
             breakEven[i,j,l,m,h] = breakEvenNPV(discN,profit1Projections[i,j,l,m,h,],profit2Projections[i,j,l,m,h,])
             
           } ## End loop over illegal harvest
@@ -592,23 +631,23 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
   
   return(list(bVEC=bVEC,
               policies=policies,
-              bProjections=bProjections,
-              BProjections=BProjections,
-              fInt1Projections=fInt1Projections,
-              fInt2Projections=fInt2Projections,
-              fNonIntProjections=fNonIntProjections,
-              fTotalProjections=fTotalProjections,
-              HInt1Projections=HInt1Projections,
-              HInt2Projections=HInt2Projections,
-              HNonIntProjections=HNonIntProjections,
-              HTotalProjections=HTotalProjections,
+              bProjections=bProjections, #BvBMSY
+              BProjections=BProjections, #7列：management,MC,catchShare,illegalFishing,ImplementYear,time,biomass
+              fInt1Projections=fInt1Projections, #FvFMSY1
+              fInt2Projections=fInt2Projections, #FvFMSY2
+              fNonIntProjections=fNonIntProjections, #FvFMSYill
+              fTotalProjections=fTotalProjections, #FvFMSYtotal
+              HInt1Projections=HInt1Projections, #harvest1
+              HInt2Projections=HInt2Projections, #harvest2
+              HNonIntProjections=HNonIntProjections, #harvest_ill_for
+              HTotalProjections=HTotalProjections, 
               revenue1Projections=revenue1Projections,
               revenue2Projections=revenue2Projections,
               cost1Projections=cost1Projections,
               cost2Projections=cost2Projections,
-              profit1Projections=profit1Projections,
-              profit2Projections=profit2Projections,
-              timeToRecovery=timeToRecovery,
+              profit1Projections=profit1Projections, #profit1
+              profit2Projections=profit2Projections, #profit2
+              timeToRecovery=timeToRecovery, #6列：management,MC,catchShare,illegalFishing,implementYear,recTime
               npv1=npv1,
               npv2=npv2,
               breakEven=breakEven,
