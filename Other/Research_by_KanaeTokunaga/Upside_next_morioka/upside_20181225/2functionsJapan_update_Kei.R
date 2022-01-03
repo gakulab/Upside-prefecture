@@ -28,13 +28,13 @@ g_legend<-function(a.gplot){
 ## Biological model in terms of reference points b and f
 ## b defined as B/BMSY and f defined as F/FMSY
 ## Uses Pella-Tomlinson model
-
+# fが複数あるのは、違法操業など（漁法を分けるためとも推察される）
 
 bioModel = function(b,phi,g,f_intervention1,f_intervention2,f_nonintervention)
 {
   b_next = b + ((phi + 1) / phi ) * g * b * (1 -  (b ^ phi)  / (phi + 1)) - g * f_intervention1 * b - g * f_intervention2 * b - g * f_nonintervention * b
-  bmax = (phi+1)^(1/phi) - 0.1
-  return(max(0,min(bmax,b_next)))
+  bmax = (phi+1)^(1/phi) - 0.1　　　#0.1は不明だが、bmaxに近づきすぎないような安全装置的な役割だと思う。
+  return(max(0,min(bmax,b_next)))  #bmaxを超えないような処理
 }
 
 ################################################
@@ -73,6 +73,7 @@ econModel = function(g,K,phi,p,f,b,c,beta)
 ################################################
 ## profitMSY function
 ## Determine profit at MSY and BMSY
+# MSYを規定しているからf(FvFMSY)もb(BvBMSY)も1になる
 
 profitMSY = function(g,K,phi,p,b,c,beta)
 {
@@ -136,26 +137,38 @@ recoveryTime = function(bProjectionVec,recoveryCutoff,t)
 ## Internal Optimization Function 
 ## To be used with dynamicPolicy function
 ## Gives (negative) value function value for value function iteration code
+# f_interventionには、dynamicPolicy()のoptimでguessとされているfが入力される。つまり、optimで動かすのはf(intervention)のみ
+# bVECごとにloopを回す（最適化を行う）
 
 profitOptim = function(f_intervention, f_nonintervention, b, p1, p2,  K, c1, c2, g, phi, beta, V, bvec, delta, split)
 {  
   
+  #0を下回らない様な処理
   f_intervention = max(0,f_intervention)
   
   f_nonintervention = max(0,f_nonintervention)
   
+  #漁法別の推定向けなのか分割係数splitによってfを2つに分割
   f_intervention1 = split * f_intervention
   f_intervention2 = (1-split) * f_intervention
   
+  #それぞれのprofitを推定
   profit1 = econModel(g ,K, phi, p1, f_intervention1, b, c1, beta)$pi
   profit2 = econModel(g, K, phi, p2, f_intervention2, b, c2, beta)$pi
   
+  #分割して導出したprofitを元に戻す
   profit = profit1 + profit2
   
+  #翌年の資源量を推定
   bnext = bioModel(b, phi, g, f_intervention1, f_intervention2, f_nonintervention)
   
+  # 翌年の資源量がbvec(BvBMSYの範囲)の下限値を下回った時、Vnext=0とする。Vnexには、前回のloopの結果(negout)が入っている
+  # 初期のV=0の時も翌年のprofitが算出されなくなるだけで、更新される中で2回目以降は問題ない。
   if (bnext < bvec[1]) Vnext = 0 else Vnext = approx(bvec,V,bnext, method = "linear")$y #spline(bvec,V,xout=bnext)
   
+  # deltaは割引率。最小化を目指す最適化なので - を掛ける。
+  # 割引率を乗じた翌年(Vnext)の利益も足して利益最大化になるようにする。
+  # negoutは前施行+現在の利益なので施行をloopで繰り返す度に増えていく。
   negout= -(profit + delta * Vnext)
   
   if(!is.numeric(negout)) browser()
@@ -168,6 +181,7 @@ profitOptim = function(f_intervention, f_nonintervention, b, p1, p2,  K, c1, c2,
 ## dynamicPolicy function
 ## Run Dynamic Optimization
 ## Solves for optimal policy function f (as function of bvec) given model parameters
+# 最低5年のNPVの最大化を目指す
 
 dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,split)
 {
@@ -181,11 +195,12 @@ dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,sp
   Vnew= matrix(0,length(bvec),1)
   diff= 10*tol
   
+  # tが5回以上もしくは、diff(f1 - oldf1)がtol(0.01)を下回った時(前回からの差分が減り、収束判定した時)にloop解除
   while (t<4 | diff>tol)
   {
     t= t+1
-    V= Vnew
-    oldf1= f1
+    V= Vnew  #loopするたびに増え続ける。
+    oldf1 = f1
     
     for (i in 1:length(bvec))
     {
@@ -197,12 +212,13 @@ dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,sp
       
       FishOut= optim(par=guess,fn=profitOptim,gr=NULL,lower=0,upper=((phi+1)/phi-0.01-f_nonintervention), f_nonintervention=f_nonintervention,b=b,p1=p1, p2=p2,K=K,c1=c1, c2=c2,g=g,phi=phi,beta=beta,V=V,bvec=bvec,delta=delta,split=split,method="L-BFGS-B")
       
-      Vnew[i]= -FishOut$value
-      f1[i]= FishOut$par
+      Vnew[i]= -FishOut$value #Vnewはloop内で使い回す(更新し続ける)。Vnewは施行を経る度に増大する。
+      f1[i]= FishOut$par  #
       
       
     } ## Close bvec loop
     
+    #収束判定には、目的の変数であるfの変化量の減少を用いる。
     diff= sum(abs(f1-oldf1))
     #print(diff)
     
@@ -216,19 +232,23 @@ dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,sp
 ################################################
 ## policy function
 ## Generates four policy functions, one for each scenario
-## シナリオ(s)は1=SQ, 2=FMSY, 4=econOptである。 
+# シナリオ(s)は1=SQ, 2=FMSY, 4=econOptである。 
+# bVEC(BvBMSYの範囲)に対応するfを政策シナリオ別に導出している。
 
 policy = function(s,g,K,phi,p1,p2,f0Int1,f0Int2,f0NonInt,c1,c2,beta,disc,bvec,split)
 {
   
+  # SQ：全年を通じて、同じf1を使う
   ## Policy vector for status quo; maintain f0_Intervention
   if (s==1) {f1 = rep(f0Int1,length(bvec))
   f2 = rep(f0Int2,length(bvec))}
   
-  ## Policy vector that maximimzes food production; set at f=1 for all conditions, including f_NonIntervention
+  # FMSY：f(FvFMSY) = 1 の漁獲を行う。
+  # 1-f0NonIntは、違法操業を含めてf(FvFMSY) = 1にするために、総量の1から違法操業による割合を引いていると推察される。
+  ## Policy vector that maximimzes food production; set at f=1 for all conditions, including f_NonIntervention(non interventionは不介入という意味。)
   ## Split betwen two legal fleets using split
-  if (s==2) {f1 = rep(max(0, (1 - f0NonInt) * split),length(bvec))
-  f2 = rep(max(0, (1 - f0NonInt) * (1 - split)), length(bvec))}
+  if (s==2) {f1 = rep(max(0, (1 - f0NonInt) * split),length(bvec))  #splitはデフォルト1、f0NonIntはデフォルト0であるため、1になる
+  f2 = rep(max(0, (1 - f0NonInt) * (1 - split)), length(bvec))}  #従ってデフォルトでは、f1は1、f2は0になる
   
   ## Policy vector that minimizes recovery time; set at 0 until b=1 then set at f=1, including f_NonIntervention
   ## Split between two legal fleets using split
@@ -237,15 +257,20 @@ policy = function(s,g,K,phi,p1,p2,f0Int1,f0Int2,f0NonInt,c1,c2,beta,disc,bvec,sp
   if (s==3) {f1 = c(rep(0,length(zeros)),rep(max(0,(1-f0NonInt) * split),length(ones)))
   f2 = c(rep(0,length(zeros)),rep(max(0,(1-f0NonInt) * (1 - split)),length(ones)))}
   
+  # econOptシナリオ：
   ## Policy vector that dynamically maximizes NPV
   ## Split between two legal fleets using split
   if (s==4) {f1 = dynamicPolicy(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f0NonInt,split)$f1 * split
   f2 = dynamicPolicy(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f0NonInt,split)$f1 * (1-split)}
   
+  # closeシナリオ
+  # 当シナリオでf(FvFMSY) = 0にしているということは、Intervention(介入)は漁業による自然への介入という意味だと推察される。ちなみに悩んだもう一方は政策による漁業への介入。
+  # しかし、違法操業は介入不可能な漁業であるため、その他の場所ではf0NonInterventionとしてfが設定されると推察される。
   ## Policy vector for closing the fishery; f0_Intervention = 0
   if (s==5) {f1 = 0
   f2 = 0}
   
+  # オープンアクセスシナリオ
   ## Policy vector for open access; maintain f0_Intervention. 
   ## Mortality will be modified in projection loop depending on lambda
   if (s==6) {f1 = rep(f0Int1,length(bvec))
@@ -477,14 +502,18 @@ projectionModel = function(params,S,CatchShareLoop,LegalLoop) #paramは魚種別
             
             
             ## Set policies for current Monte-Carlo iteration parameters - assume perfect information
-            ## theta1N_legalは1,theta2N_legalは0,thetaN_domesticは1がデフォルト。1や0ならcatch-MSYのf0を使うか否かという意味になる
-            f0Int1N = f0_totalN * theta1N_legal * thetaN_domestic  #theta1N_legal,thetaN_domestic が 1なので、f0_totalNになる
+            # theta1N_legalは1,theta2N_legalは0,thetaN_domesticは1がデフォルト。1や0ならcatch-MSYのf0を使うか否かという意味になる
+            # legalは合法操業割合になる。違法操業分を引く必要があるためにこの手法が用いられている。
+            # fを2分割している理由として考えられるのは、漁法別にするため？
+            f0Int1N = f0_totalN * theta1N_legal * thetaN_domestic  #theta1N_legal,thetaN_domestic が 1なので、f0_totalNになる。thetaは情報付けを意味するだろう。
             
             f0Int2N = f0_totalN * theta2N_legal * thetaN_domestic  #theta2N_legal が 0なので、0になる
             
+            # 違法操業のf(FvFMSY)を導出するために、合計1から合法操業分(theta1・2N_legal)を引く。
             f0NonIntN = f0_totalN * (1 - (theta1N_legal * thetaN_domestic) - (theta2N_legal * thetaN_domestic))  #0になる。
             
             #iはシナリオ数(5)、j,l,mは固定値1
+            #シナリオ毎にbVec(BvBMSYの0.1刻みの範囲)に対応する f を決定する。下部のapprox()でbioModelによって導かれたBvBMSYに応じてfを設定する。
             policies[i,j,l,m,] = policy(S[i],gN,KN,phiN,p1N,p2N,f0Int1N,f0Int2N,f0NonIntN,c1N,c2N,betaN,discN,bVEC,splitN)$f1 
             policies2[i,j,l,m,] = policy(S[i],gN,KN,phiN,p1N,p2N,f0Int1N,f0Int2N,f0NonIntN,c1N,c2N,betaN,discN,bVEC,splitN)$f2
             
