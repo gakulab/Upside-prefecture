@@ -181,7 +181,8 @@ profitOptim = function(f_intervention, f_nonintervention, b, p1, p2,  K, c1, c2,
 ## dynamicPolicy function
 ## Run Dynamic Optimization
 ## Solves for optimal policy function f (as function of bvec) given model parameters
-# 最低5年のNPVの最大化を目指す
+# 最低5年のNPVの最大化を目指す。
+# 1時点ずつfを決めていく(過去のfを変えられない)という方式は現実に即した仕様だが、シミュレーションであるならば、ランダムなfで全年のシミュレーションを行い、最大利益をもたらすfを採用するというMCMCに近い方式をとるのもアリだと考える。
 
 dynamicPolicy = function(K,g,phi,p1,p2,c1,c2,beta,disc,bvec,f_nonintervention,split)
 {
